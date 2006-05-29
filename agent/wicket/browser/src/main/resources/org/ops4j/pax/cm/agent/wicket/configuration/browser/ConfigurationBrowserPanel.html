@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/" xml:lang="en" lang="en">
+<body>
+    <wicket:panel>
+        <span wicket:id="navigator">[dataview navigator]</span>
+        <table cellspacing="0" class="dataview">
+            <tr>
+                <th wicket:id="orderByPID">
+                    <span wicket:id="columnHeaderPID"></span>
+                </th>
+                <th wicket:id="orderByBundleLocation">
+                    <span wicket:id="columnHeaderBundleLocation"></span>
+                </th>
+            </tr>
+
+            <tr wicket:id="sorting">
+                <td wicket:id="pidLink"><span wicket:id="pidLabel"></span></td>
+                <td><span wicket:id="bundleLocation">[bundleLocation]</span></td>
+            </tr>
+        </table>
+    </wicket:panel>
+</body>
+</html>

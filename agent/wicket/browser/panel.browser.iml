@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4" relativePaths="true" type="JAVA_MODULE">
+  <component name="ModuleRootManager" />
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="config.admin.agent.api" />
+    <orderEntry type="library" name="wicket-1.2" level="project" />
+    <orderEntry type="library" name="wicket-extensions-1.2" level="project" />
+    <orderEntry type="library" name="pax-logging-client-0.6.5" level="project" />
+    <orderEntry type="library" name="pax-wicket-service-0.1.0" level="project" />
+    <orderEntry type="library" name="ops4j-base-0.1.0" level="project" />
+    <orderEntry type="library" name="osgi_R4_core-1.0" level="project" />
+    <orderEntry type="library" name="osgi_R4_compendium-1.0" level="project" />
+    <orderEntry type="module" module-name="page.configuration.edit" />
+    <orderEntryProperties />
+  </component>
+</module>
+

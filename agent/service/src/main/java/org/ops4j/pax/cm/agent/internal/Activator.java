@@ -1,0 +1,90 @@
+/*
+ * Copyright 2006 Edward Yakop.
+ *
+ * Licensed  under the  Apache License,  Version 2.0  (the "License");
+ * you may not use  this file  except in  compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed  under the  License is distributed on an "AS IS" BASIS,
+ * WITHOUT  WARRANTIES OR CONDITIONS  OF ANY KIND, either  express  or
+ * implied.
+ *
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
+ */
+package org.ops4j.pax.cm.agent.internal;
+
+import org.apache.commons.logging.LogFactory;
+import org.ops4j.pax.cm.agent.ApplicationConstant;
+import org.ops4j.pax.cm.agent.wicket.configuration.browser.ConfigurationBrowserPanelContent;
+import org.ops4j.pax.cm.agent.wicket.overview.OverviewPage;
+import org.ops4j.pax.cm.agent.wicket.overview.OverviewPageContent;
+import org.ops4j.pax.wicket.service.DefaultPageContainer;
+import org.ops4j.pax.wicket.service.PaxWicketApplicationFactory;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+
+/**
+ * {@code Activator} responsibles to activate the pax config admin.
+ *
+ * @author Edward Yakop
+ * @since 0.1.0
+ */
+public final class Activator
+    implements BundleActivator
+{
+
+    private OverviewPageContent m_overviewPageContent;
+    private ServiceRegistration m_overviewPageContainerSerReg;
+    private ConfigurationBrowserPanelContent m_configurationBrowserPanelContent;
+    private ConfigAdminTracker m_configAdminTracker;
+
+    public void start( BundleContext bundleContext )
+        throws Exception
+    {
+        LogFactory.setBundleContext( bundleContext );
+
+        m_configurationBrowserPanelContent = new ConfigurationBrowserPanelContent(
+            bundleContext, ApplicationConstant.Overview.DESTINATION_ID_MENU_TAB
+        );
+
+        m_configurationBrowserPanelContent.register();
+
+        DefaultPageContainer overviewPageContainer = new DefaultPageContainer(
+            bundleContext, ApplicationConstant.Overview.CONTAINMENT_ID, ApplicationConstant.APPLICATION_NAME
+        );
+        m_overviewPageContainerSerReg = overviewPageContainer.register();
+        m_overviewPageContent = new OverviewPageContent( bundleContext, overviewPageContainer );
+        m_overviewPageContent.register();
+
+        PaxWicketApplicationFactory application = new PaxWicketApplicationFactory(
+            bundleContext, OverviewPage.class, ApplicationConstant.MOUNT_POINT, ApplicationConstant.APPLICATION_NAME
+        );
+        application.setDeploymentMode( true );
+
+        m_configAdminTracker = new ConfigAdminTracker( bundleContext, application );
+        m_configAdminTracker.open();
+
+ 
+    }
+
+    /**
+     * Unregister all registered services.
+     *
+     * @since 0.1.0
+     */
+    public void stop( BundleContext bundleContext )
+        throws Exception
+    {
+        m_configurationBrowserPanelContent.dispose();
+
+        m_overviewPageContainerSerReg.unregister();
+        m_overviewPageContent.dispose();
+
+        m_configAdminTracker.close();
+    }
+}
