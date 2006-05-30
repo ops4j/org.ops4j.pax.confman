@@ -19,6 +19,7 @@ package org.ops4j.pax.cm.agent;
 
 public final class ApplicationConstant
 {
+
     public static final String APPLICATION_NAME = "ops4j:pax:configadmin";
     public static final String MOUNT_POINT = "pax/configadmin";
 
@@ -28,8 +29,13 @@ public final class ApplicationConstant
 
     public static final class Overview
     {
+
         public static final String CONTAINMENT_ID = "overview";
         public static final String COMPONENT_MENU_TAB = "menu";
         public static final String DESTINATION_ID_MENU_TAB = CONTAINMENT_ID + "." + COMPONENT_MENU_TAB;
+
+        public static final String PAGE_PARAM_TAB_NAME = "tabName";
+        
+        public static final String TAB_NAME_BROWSER = "browser";
     }
 }

@@ -21,6 +21,7 @@
     <orderEntry type="module" module-name="page.overview" />
     <orderEntry type="module" module-name="config.admin.agent.api" />
     <orderEntry type="module" module-name="panel.browser" />
+    <orderEntry type="module" module-name="page.configuration.edit" />
     <orderEntryProperties />
   </component>
 </module>

@@ -25,6 +25,7 @@ import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.ApplicationConstant;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import wicket.Component;
+import wicket.PageParameters;
 import wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import wicket.extensions.markup.html.tabs.AbstractTab;
 import wicket.extensions.markup.html.tabs.ITab;
@@ -39,6 +40,7 @@ import wicket.model.Model;
  */
 public final class OverviewPage extends WebPage
 {
+
     private static final Log m_logger = LogFactory.getLog( OverviewPage.class );
     private static final String WICKET_ID_MENU = "menu";
 
@@ -51,17 +53,31 @@ public final class OverviewPage extends WebPage
      * @throws IllegalArgumentException Thrown if the specified {@code container} is {@code null}.
      * @since 0.1.0
      */
-    public OverviewPage( DefaultPageContainer container )
+    public OverviewPage( DefaultPageContainer container, PageParameters parameters )
     {
         NullArgumentException.validateNotNull( container, "container" );
+        NullArgumentException.validateNotNull( parameters, "parameters" );
 
         final List<Component> menus =
             container.createComponents( ApplicationConstant.Overview.COMPONENT_MENU_TAB );
         List<ITab> tabs = new ArrayList<ITab>();
 
+        String tabNameToSelect = parameters.getString( ApplicationConstant.Overview.PAGE_PARAM_TAB_NAME, "" );
+        int selectedTab = 0;
+
+        int i = 0;
         for( final Component menu : menus )
         {
             String tabName = (String) menu.getModelObject();
+            if( tabNameToSelect.equals( tabName ) )
+            {
+                selectedTab = i;
+            }
+            else
+            {
+                i++;
+            }
+
             tabs.add( new AbstractTab( new Model( tabName ) )
             {
                 public Panel getPanel( String panelId )
@@ -72,6 +88,7 @@ public final class OverviewPage extends WebPage
                 }
             }
             );
+
         }
 
         if( tabs.isEmpty() )
@@ -88,7 +105,10 @@ public final class OverviewPage extends WebPage
             {
                 m_logger.debug( tabs.size() + " menu items are installed." );
             }
-            add( new AjaxTabbedPanel( WICKET_ID_MENU, tabs ) );
+
+            AjaxTabbedPanel tabPanel = new AjaxTabbedPanel( WICKET_ID_MENU, tabs );
+            tabPanel.setSelectedTab( selectedTab );
+            add( tabPanel );
         }
     }
 }

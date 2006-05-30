@@ -36,13 +36,14 @@ import wicket.PageParameters;
  */
 public final class EditConfigurationPageContent extends AbstractPageContent
 {
+
     private static final Log m_logger = LogFactory.getLog( EditConfigurationPageContent.class );
     private final BundleContext m_bundleContext;
 
     public EditConfigurationPageContent(
-        BundleContext bundleContext, String applicationName, String pageName )
+        BundleContext bundleContext, String applicationName )
     {
-        super( bundleContext, EditConfigurationPage.PAGE_ID, applicationName, pageName );
+        super( bundleContext, EditConfigurationPage.PAGE_ID, applicationName, EditConfigurationPage.PAGE_ID );
 
         m_bundleContext = bundleContext;
     }

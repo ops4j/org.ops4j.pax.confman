@@ -19,6 +19,7 @@ package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.ConfigurationConstant;
+import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPage;
 import org.osgi.service.cm.Configuration;
 import wicket.AttributeModifier;
@@ -80,8 +81,8 @@ final class ConfigurationBrowserPanel extends Panel
         {
             protected void populateItem( final Item item )
             {
-                ConfigurationDataProvider.PaxConfiguration configuration =
-                    (ConfigurationDataProvider.PaxConfiguration) item.getModelObject();
+                PaxConfiguration configuration =
+                    (PaxConfiguration) item.getModelObject();
 
                 String pid = configuration.getPid();
                 String bundleLocation = configuration.getBundleLocation();

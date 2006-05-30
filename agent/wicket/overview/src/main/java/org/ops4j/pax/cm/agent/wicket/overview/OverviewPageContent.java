@@ -31,7 +31,6 @@ import wicket.PageParameters;
  */
 public final class OverviewPageContent extends AbstractPageContent
 {
-
     private final DefaultPageContainer m_container;
 
     public OverviewPageContent( BundleContext bundleContext, DefaultPageContainer container )
@@ -59,6 +58,11 @@ public final class OverviewPageContent extends AbstractPageContent
 
     public Page createPage( PageParameters params )
     {
-        return new OverviewPage( m_container );
+        if( params == null )
+        {
+            params = new PageParameters();
+        }
+        
+        return new OverviewPage( m_container, params );
     }
 }

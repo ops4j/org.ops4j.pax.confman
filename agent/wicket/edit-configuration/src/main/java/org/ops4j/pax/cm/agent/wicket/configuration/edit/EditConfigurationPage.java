@@ -17,18 +17,12 @@
  */
 package org.ops4j.pax.cm.agent.wicket.configuration.edit;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
+import java.text.MessageFormat;
 import org.ops4j.lang.NullArgumentException;
 import org.osgi.service.cm.Configuration;
-import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
-import wicket.extensions.markup.html.repeater.data.table.IColumn;
+import wicket.Localizer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.TextField;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
-import wicket.model.StringResourceModel;
 
 /**
  * @author Edward Yakop
@@ -36,64 +30,35 @@ import wicket.model.StringResourceModel;
  */
 public final class EditConfigurationPage extends WebPage
 {
+
     static final String PAGE_ID = "editConfigurationPage";
 
-    private static final String WICKET_ID_PID = "pid";
-    private static final String WICKET_ID_CONFIG_PROPERTIES = "configProperties";
-    private static final String WICKET_ID_FACTORY_PID = "factorypid";
-    private static final String WICKET_ID_DELETED_MESSAGE = "configurationDeletedMessage";
-    private static final String WICKET_ID_BUNDLE_LOCATION = "bundleLocation";
-    private static final String WICKET_ID_PID_LABEL = "pidLabel";
-    private static final String WICKET_ID_FACTORY_PID_LABEL = "factoryPidLabel";
+    private static final String LOCALE_DELETED_CONFIGURATION_MESSAGE = "deletedConfigurationMessage";
+    private static final String WICKET_ID_EDIT_PANEL = "editPanel";
+    private static final String DEFAULT_DELETED_CONFIGURATION_MESSAGE = "Configuration \"{0}\" is deleted.";
 
-    EditConfigurationPage( String configurationPid, Configuration configuration )
+    EditConfigurationPage( String configurationPID, Configuration configuration )
         throws IllegalArgumentException
     {
+        NullArgumentException.validateNotEmpty( configurationPID, "configurationPID" );
+        NullArgumentException.validateNotNull( configurationPID, "configuration" );
+
         if( !testValidityOfConfiguration( configuration ) )
         {
-            displayConfigurationHasBeenDeleted( configurationPid );
+            Localizer localizer = getLocalizer();
+            String deletedMessageString = localizer.getString(
+                LOCALE_DELETED_CONFIGURATION_MESSAGE, this, DEFAULT_DELETED_CONFIGURATION_MESSAGE
+            );
+            deletedMessageString = MessageFormat.format( deletedMessageString, configurationPID );
+            Label message = new Label( WICKET_ID_EDIT_PANEL, deletedMessageString );
+            add( message );
         }
-
-        Label deletedMessage = new Label( WICKET_ID_DELETED_MESSAGE, "" );
-        deletedMessage.setVisible( false );
-        add( deletedMessage );
-
-        Model emptyModel = new Model();
-        StringResourceModel pidLabelResMdl = new StringResourceModel( WICKET_ID_PID_LABEL, this, emptyModel );
-        Label pidLabel = new Label( WICKET_ID_PID_LABEL, pidLabelResMdl );
-        add( pidLabel );
-
-        PropertyModel pidConfigModel = new PropertyModel( configuration, "pid" );
-        TextField pidTextInput = new TextField( WICKET_ID_PID, pidConfigModel );
-        add( pidTextInput );
-
-        StringResourceModel facPidResMdl = new StringResourceModel( WICKET_ID_FACTORY_PID_LABEL, this, emptyModel );
-        Label factoryPidLabel = new Label( WICKET_ID_FACTORY_PID_LABEL, facPidResMdl );
-        add( factoryPidLabel );
-
-        PropertyModel factoryPropertyModel = new PropertyModel( configuration, "factoryPid" );
-        TextField factoryLabel = new TextField( WICKET_ID_FACTORY_PID, factoryPropertyModel );
-        String factoryPid = configuration.getFactoryPid();
-        if( factoryPid == null )
+        else
         {
-            factoryLabel.setVisible( false );
+            EditConfigurationPanel editConfigurationPanel =
+                new EditConfigurationPanel( WICKET_ID_EDIT_PANEL, configuration );
+            add( editConfigurationPanel );
         }
-        add( factoryLabel );
-
-        String bundleLocation = configuration.getBundleLocation();
-        if( bundleLocation == null )
-        {
-            bundleLocation = "no bound to any location";
-        }
-
-        Label bundleLocLabel = new Label( WICKET_ID_BUNDLE_LOCATION, bundleLocation );
-        add( bundleLocLabel );
-
-        Dictionary properties = configuration.getProperties();
-        ConfigurationItemDataProvider dataProvider = new ConfigurationItemDataProvider( properties );
-        ConfigurationItemDataTable configurationDataTable =
-            new ConfigurationItemDataTable( WICKET_ID_CONFIG_PROPERTIES, dataProvider, 8 );
-        add( configurationDataTable );
     }
 
     private boolean testValidityOfConfiguration( Configuration configuration )
@@ -102,34 +67,14 @@ public final class EditConfigurationPage extends WebPage
         NullArgumentException.validateNotNull( configuration, "configuration" );
         try
         {
+            // R4 specs says that configuration.getPID() must throw IllegalStateException when it is deleted.
             configuration.getPid();
+
             return true;
         } catch( IllegalStateException e )
         {
             // Means the configuration has been deleted.
             return false;
         }
-    }
-
-    private void displayConfigurationHasBeenDeleted( String configurationPid )
-        throws IllegalArgumentException
-    {
-        NullArgumentException.validateNotEmpty( configurationPid, "configurationPid" );
-
-        Label message = new Label( WICKET_ID_DELETED_MESSAGE, "Configuration [" + configurationPid + "] is deleted." );
-        add( message );
-
-        Label pidLabel = new Label( WICKET_ID_PID, "" );
-        pidLabel.setVisible( false );
-        add( pidLabel );
-
-        Label factoryLabel = new Label( WICKET_ID_FACTORY_PID, "" );
-        factoryLabel.setVisible( false );
-        add( factoryLabel );
-
-        DefaultDataTable propertiesDataTable =
-            new DefaultDataTable( WICKET_ID_CONFIG_PROPERTIES, new ArrayList<IColumn>(), null, 10 );
-        propertiesDataTable.setVisible( false );
-        add( propertiesDataTable );
     }
 }

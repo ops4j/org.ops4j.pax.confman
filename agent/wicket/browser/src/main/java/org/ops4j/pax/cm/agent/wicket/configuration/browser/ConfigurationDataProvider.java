@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.osgi.service.cm.Configuration;
 import wicket.extensions.markup.html.repeater.util.SortParam;
 import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -111,42 +112,4 @@ final class ConfigurationDataProvider extends SortableDataProvider
         return m_configurations.size();
     }
 
-    static final class PaxConfiguration
-        implements Serializable
-    {
-
-        private static final long serialVersionUID = 1L;
-
-        private final String m_pid;
-        private final String m_bundleLocation;
-
-        private PaxConfiguration( String pid, String bundleLocation )
-        {
-            NullArgumentException.validateNotEmpty( pid, "pid" );
-            m_pid = pid;
-            m_bundleLocation = bundleLocation;
-        }
-
-        public String getBundleLocation()
-        {
-            return m_bundleLocation;
-        }
-
-        public String getPid()
-        {
-            return m_pid;
-        }
-
-        private String getPropertyValue( String sortProperty )
-        {
-            if( sortProperty.equals( "pid" ) )
-            {
-                return getPid();
-            }
-            else
-            {
-                return getBundleLocation();
-            }
-        }
-    }
 }
