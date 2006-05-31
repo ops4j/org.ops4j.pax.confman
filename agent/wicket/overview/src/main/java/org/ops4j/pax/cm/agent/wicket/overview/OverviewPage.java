@@ -26,6 +26,7 @@ import org.ops4j.pax.cm.agent.ApplicationConstant;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import wicket.Component;
 import wicket.PageParameters;
+import wicket.Localizer;
 import wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import wicket.extensions.markup.html.tabs.AbstractTab;
 import wicket.extensions.markup.html.tabs.ITab;
@@ -58,18 +59,18 @@ public final class OverviewPage extends WebPage
         NullArgumentException.validateNotNull( container, "container" );
         NullArgumentException.validateNotNull( parameters, "parameters" );
 
-        final List<Component> menus =
-            container.createComponents( ApplicationConstant.Overview.COMPONENT_MENU_TAB );
+        final List<Component> menus = container.createComponents( ApplicationConstant.Overview.COMPONENT_MENU_TAB );
         List<ITab> tabs = new ArrayList<ITab>();
 
-        String tabNameToSelect = parameters.getString( ApplicationConstant.Overview.PAGE_PARAM_TAB_NAME, "" );
+        String tabIDToSelect = parameters.getString( ApplicationConstant.Overview.PAGE_PARAM_TAB_ID, "" );
         int selectedTab = 0;
 
         int i = 0;
         for( final Component menu : menus )
         {
-            String tabName = (String) menu.getModelObject();
-            if( tabNameToSelect.equals( tabName ) )
+            OverviewTabItem tabPanel = (OverviewTabItem) menu;
+            String tabID = tabPanel.getOverviewTabItemIdentifier();
+            if( tabIDToSelect.equals( tabID ) )
             {
                 selectedTab = i;
             }
@@ -78,7 +79,9 @@ public final class OverviewPage extends WebPage
                 i++;
             }
 
-            tabs.add( new AbstractTab( new Model( tabName ) )
+            Localizer menuLocalizer = menu.getLocalizer();
+            String tabLabel = menuLocalizer.getString( OverviewTabItem.LOCALE_TAB_ITEM_LABEL, menu, tabID );
+            tabs.add( new AbstractTab( new Model( tabLabel ) )
             {
                 public Panel getPanel( String panelId )
                 {

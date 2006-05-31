@@ -34,7 +34,7 @@ public final class ApplicationConstant
         public static final String COMPONENT_MENU_TAB = "menu";
         public static final String DESTINATION_ID_MENU_TAB = CONTAINMENT_ID + "." + COMPONENT_MENU_TAB;
 
-        public static final String PAGE_PARAM_TAB_NAME = "tabName";
+        public static final String PAGE_PARAM_TAB_ID = "tabName";
         
         public static final String TAB_NAME_BROWSER = "browser";
     }

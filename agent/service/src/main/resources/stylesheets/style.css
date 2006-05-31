@@ -1,0 +1,116 @@
+h3 {
+    font-weight: bold;
+    color: #765;
+}
+
+.tab-row {
+    margin: 0px;
+    float: left;
+    width: 100%;
+    background: #DAE0D2 url( "tabs/bg.gif" ) repeat-x bottom;
+    line-height: normal;
+}
+
+.tab-row ul {
+    margin: 0;
+    padding: 10px 10px 0;
+    list-style: none;
+}
+
+.tab-row li {
+    float: left;
+    background: url( "tabs/left.gif" ) no-repeat left top;
+    margin: 0;
+    padding: 0 0 0 9px;
+}
+
+.tab-row a {
+    display: block;
+    background: url( "tabs/right.gif" ) no-repeat right top;
+    padding: 5px 15px 4px 6px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #765;
+    white-space: nowrap;
+}
+
+.tab-row a:hover {
+    color: #333;
+}
+
+.tab-row li.selected {
+    background-image: url( "tabs/left_on.gif" );
+}
+
+.tab-row li.selected a {
+    background-image: url( "tabs/right_on.gif" );
+    color: #333;
+    padding-bottom: 5px;
+}
+
+table.dataview caption {
+    text-align: left;
+}
+
+table.dataview tr {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+table.dataview tr.even {
+    background-color: #ffebcd;
+}
+
+table.dataview tr.odd {
+    background-color: #fff;
+}
+
+table.dataview tr td {
+    padding-left: 8px;
+    padding-right: 30px;
+}
+
+table.dataview tr th {
+    color: black;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 8px;
+    padding-right: 24px;
+    background-color: #c1e4ff;
+    border-bottom: 1px solid #0079d6;
+    border-top: 1px solid #0079d6;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+table.dataview tr th {
+    background-position: right;
+    background-repeat: no-repeat;
+}
+
+table.dataview tr th.wicket_orderDown {
+    background-color: #87cbff;
+    background-image: url( "displaytag/img/arrow_down.png" );
+}
+
+table.dataview tr th.wicket_orderUp {
+    background-color: #87cbff;
+    background-image: url( "displaytag/img/arrow_up.png" );
+}
+
+table.dataview tr th.wicket_orderNone {
+    background-image: url( "displaytag/img/arrow_off.png" );
+}
+
+table.dataview tr th a {
+    font-weight: normal;
+}
+
+table.dataview #message {
+    padding-left: 3px;
+}
+
+table.dataview caption {
+    padding-bottom: 2px;
+}

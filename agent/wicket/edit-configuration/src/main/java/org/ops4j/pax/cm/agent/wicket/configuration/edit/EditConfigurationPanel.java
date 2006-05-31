@@ -182,7 +182,7 @@ final class EditConfigurationPanel extends Panel
                 Application application = getApplication();
                 Class homePage = application.getHomePage();
                 PageParameters pageParameters = new PageParameters();
-                String pageParamTabName = ApplicationConstant.Overview.PAGE_PARAM_TAB_NAME;
+                String pageParamTabName = ApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
                 String tabNameBrowser = ApplicationConstant.Overview.TAB_NAME_BROWSER;
                 pageParameters.add( pageParamTabName, tabNameBrowser );
 
@@ -240,7 +240,7 @@ final class EditConfigurationPanel extends Panel
             Application application = getApplication();
             Class homePage = application.getHomePage();
             PageParameters pageParameters = new PageParameters();
-            String pageParamTabName = ApplicationConstant.Overview.PAGE_PARAM_TAB_NAME;
+            String pageParamTabName = ApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
             String tabNameBrowser = ApplicationConstant.Overview.TAB_NAME_BROWSER;
             pageParameters.add( pageParamTabName, tabNameBrowser );
 

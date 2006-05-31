@@ -18,9 +18,11 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.agent.ApplicationConstant;
 import org.ops4j.pax.cm.agent.ConfigurationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPage;
+import org.ops4j.pax.cm.agent.wicket.overview.OverviewTabItem;
 import org.osgi.service.cm.Configuration;
 import wicket.AttributeModifier;
 import wicket.Component;
@@ -49,6 +51,7 @@ import wicket.model.Model;
  * @since 0.1.0
  */
 final class ConfigurationBrowserPanel extends Panel
+    implements OverviewTabItem
 {
 
     private static final String LOCALE_KEY_PID_COLUMN_LABEL = "pidColumnLabel";
@@ -134,6 +137,17 @@ final class ConfigurationBrowserPanel extends Panel
         setModel( tabPanelLabelModel );
 
         add( new PagingNavigator( WICKET_ID_NAVIGATOR, dataView ) );
+    }
+
+    /**
+     * Returns the overview tab item identifier. This is used by {@code OverviewPage} to match the user http request.
+     *
+     * @see ApplicationConstant.Overview.TAB_NAME_BROWSER
+     * @since 0.1.0
+     */
+    public String getOverviewTabItemIdentifier()
+    {
+        return ApplicationConstant.Overview.TAB_NAME_BROWSER;
     }
 
     private static final class PaxOrderByBorder extends OrderByBorder
