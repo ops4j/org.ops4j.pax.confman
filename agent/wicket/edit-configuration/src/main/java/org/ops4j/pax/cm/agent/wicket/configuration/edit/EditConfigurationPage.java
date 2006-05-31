@@ -19,6 +19,7 @@ package org.ops4j.pax.cm.agent.wicket.configuration.edit;
 
 import java.text.MessageFormat;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.osgi.service.cm.Configuration;
 import wicket.Localizer;
 import wicket.markup.html.WebPage;
@@ -37,7 +38,8 @@ public final class EditConfigurationPage extends WebPage
     private static final String WICKET_ID_EDIT_PANEL = "editPanel";
     private static final String DEFAULT_DELETED_CONFIGURATION_MESSAGE = "Configuration \"{0}\" is deleted.";
 
-    EditConfigurationPage( String configurationPID, Configuration configuration )
+    EditConfigurationPage( String configurationPID, Configuration configuration,
+                           EditConfigurationPageContainer pageContainer )
         throws IllegalArgumentException
     {
         NullArgumentException.validateNotEmpty( configurationPID, "configurationPID" );
@@ -55,8 +57,9 @@ public final class EditConfigurationPage extends WebPage
         }
         else
         {
+            PaxConfiguration paxConfiguration = new PaxConfiguration( configuration );
             EditConfigurationPanel editConfigurationPanel =
-                new EditConfigurationPanel( WICKET_ID_EDIT_PANEL, configuration );
+                new EditConfigurationPanel( WICKET_ID_EDIT_PANEL, paxConfiguration, pageContainer );
             add( editConfigurationPanel );
         }
     }

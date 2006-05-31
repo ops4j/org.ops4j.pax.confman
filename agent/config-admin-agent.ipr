@@ -314,9 +314,9 @@
       </JAVADOC>
       <SOURCES />
     </library>
-    <library name="pax-wicket-service-0.1.0">
+    <library name="pax-wicket-service-0.2.1">
       <CLASSES>
-        <root url="jar://$M2_REPO$/org/ops4j/pax/wicket/pax-wicket-service/0.1.0/pax-wicket-service-0.1.0.jar!/" />
+        <root url="jar://$M2_REPO$/org/ops4j/pax/wicket/service/0.2.1/service-0.2.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -357,9 +357,9 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="pax-logging-client-0.6.5">
+    <library name="pax-logging-client-0.7.1">
       <CLASSES>
-        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.6.5/pax-logging-client-0.6.5.jar!/" />
+        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.7.1/pax-logging-client-0.7.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

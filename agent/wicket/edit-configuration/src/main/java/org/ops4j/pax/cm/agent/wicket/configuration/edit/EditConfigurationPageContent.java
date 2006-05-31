@@ -18,8 +18,7 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.edit;
 
 import java.io.IOException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.ConfigurationConstant;
 import org.ops4j.pax.wicket.service.AbstractPageContent;
@@ -37,15 +36,30 @@ import wicket.PageParameters;
 public final class EditConfigurationPageContent extends AbstractPageContent
 {
 
-    private static final Log m_logger = LogFactory.getLog( EditConfigurationPageContent.class );
+    private static final Logger m_logger = Logger.getLogger( EditConfigurationPageContent.class );
     private final BundleContext m_bundleContext;
+    private final EditConfigurationPageContainer m_configurationEditorPageContainer;
 
+    /**
+     * Construct an instance of {@code EditConfigurationPageContent} with the specified arguments.
+     *
+     * @param bundleContext   The bundle context. This argument must not be {@code null}.
+     * @param pageContainer   The page container. This argument must not be {@code null}.
+     * @param applicationName The application name. This argument must not be {@code null} or empty.
+     *
+     * @throws IllegalArgumentException Thrown if one or some or all arguments are {@code null} or empty.
+     * @since 0.1.0
+     */
     public EditConfigurationPageContent(
-        BundleContext bundleContext, String applicationName )
+        BundleContext bundleContext, EditConfigurationPageContainer pageContainer, String applicationName )
+        throws IllegalArgumentException
     {
         super( bundleContext, EditConfigurationPage.PAGE_ID, applicationName, EditConfigurationPage.PAGE_ID );
 
+        NullArgumentException.validateNotNull( pageContainer, "pageContainer" );
+
         m_bundleContext = bundleContext;
+        m_configurationEditorPageContainer = pageContainer;
     }
 
     /**
@@ -62,7 +76,8 @@ public final class EditConfigurationPageContent extends AbstractPageContent
      * Create an instance of {@code EditConfigurationPage} with the specified {@code params}. The specified
      * {@code params} must have values for {@code "PARAM_KEY_PID"} key. The {@code "PARAM_KEY_LOCATION"} key value is
      * optional. Returns {@code null} if the specified params does not follow the stated requirement or retrieval of
-     * configuration from configuration admin service fails.
+     * configuration from configuration admin ser
+     * vice fails.
      *
      * @param params The edit configuration page parameters. This argument must not be {@code null}.
      *
@@ -92,7 +107,7 @@ public final class EditConfigurationPageContent extends AbstractPageContent
         try
         {
             Configuration configuration = configAdminService.getConfiguration( pid, location );
-            editConfigurationPage = new EditConfigurationPage( pid, configuration );
+            editConfigurationPage = new EditConfigurationPage( pid, configuration, m_configurationEditorPageContainer );
         } catch( IOException e )
         {
             m_logger.error( "Configuration [" + pid + "] with location [" + location + "] can not be accessed.", e );

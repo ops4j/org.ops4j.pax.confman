@@ -18,10 +18,11 @@
 package org.ops4j.pax.cm.agent.internal;
 
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.pax.cm.agent.ApplicationConstant;
+import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import org.ops4j.pax.cm.agent.wicket.configuration.browser.ConfigurationBrowserPanelContent;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContent;
+import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContainer;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewPage;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewPageContent;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
@@ -41,10 +42,14 @@ public final class Activator
 {
 
     private OverviewPageContent m_overviewPageContent;
+
     private ServiceRegistration m_overviewPageContainerSerReg;
     private ConfigurationBrowserPanelContent m_configurationBrowserPanelContent;
-    private ConfigAdminTracker m_configAdminTracker;
+
     private EditConfigurationPageContent m_editConfigurationPageContent;
+    private ServiceRegistration m_configurationEditorPageContainerSerReg;
+
+    private ConfigAdminTracker m_configAdminTracker;
 
     public void start( BundleContext bundleContext )
         throws Exception
@@ -53,24 +58,32 @@ public final class Activator
         PaxConfigurationFacade.setContext( bundleContext );
 
         m_configurationBrowserPanelContent =
-            new ConfigurationBrowserPanelContent( bundleContext, ApplicationConstant.Overview.DESTINATION_ID_MENU_TAB );
-
+            new ConfigurationBrowserPanelContent(
+                bundleContext, WicketApplicationConstant.Overview.DESTINATION_ID_MENU_TAB
+            );
         m_configurationBrowserPanelContent.register();
 
+        String applicationName = WicketApplicationConstant.APPLICATION_NAME;
         DefaultPageContainer overviewPageContainer = new DefaultPageContainer(
-            bundleContext, ApplicationConstant.Overview.CONTAINMENT_ID, ApplicationConstant.APPLICATION_NAME
+            bundleContext, WicketApplicationConstant.Overview.CONTAINMENT_ID, applicationName
         );
         m_overviewPageContainerSerReg = overviewPageContainer.register();
         m_overviewPageContent = new OverviewPageContent( bundleContext, overviewPageContainer );
         m_overviewPageContent.register();
 
         PaxWicketApplicationFactory application = new PaxWicketApplicationFactory(
-            bundleContext, OverviewPage.class, ApplicationConstant.MOUNT_POINT, ApplicationConstant.APPLICATION_NAME
+            bundleContext, OverviewPage.class, WicketApplicationConstant.MOUNT_POINT,
+            applicationName
         );
         application.setDeploymentMode( true );
 
-        m_editConfigurationPageContent =
-            new EditConfigurationPageContent( bundleContext, ApplicationConstant.APPLICATION_NAME );
+        EditConfigurationPageContainer configurationEditorPageContainer = new EditConfigurationPageContainer(
+            bundleContext, WicketApplicationConstant.Configuration.Edit.CONTAINMENT_ID, applicationName
+        );
+        m_configurationEditorPageContainerSerReg = configurationEditorPageContainer.register();
+        m_editConfigurationPageContent = new EditConfigurationPageContent(
+            bundleContext, configurationEditorPageContainer, applicationName
+        );
         m_editConfigurationPageContent.register();
 
         m_configAdminTracker = new ConfigAdminTracker( bundleContext, application );
@@ -90,6 +103,7 @@ public final class Activator
         m_overviewPageContainerSerReg.unregister();
         m_overviewPageContent.dispose();
 
+        m_configurationEditorPageContainerSerReg.unregister();
         m_editConfigurationPageContent.dispose();
 
         m_configAdminTracker.close();

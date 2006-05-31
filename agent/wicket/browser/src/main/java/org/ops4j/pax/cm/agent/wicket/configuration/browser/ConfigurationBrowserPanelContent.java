@@ -18,10 +18,9 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import java.io.IOException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.ApplicationConstant;
+import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.wicket.service.DefaultContentContainer;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -37,7 +36,7 @@ import wicket.Component;
 public final class ConfigurationBrowserPanelContent extends DefaultContentContainer
 {
 
-    private static final Log m_logger = LogFactory.getLog( ConfigurationBrowserPanelContent.class );
+    private static final Logger m_logger = Logger.getLogger( ConfigurationBrowserPanelContent.class );
     private static final String CONTAINMENT_ID = "panel:configurationPanel";
 
     private final BundleContext m_bundleContext;
@@ -47,7 +46,7 @@ public final class ConfigurationBrowserPanelContent extends DefaultContentContai
      */
     public ConfigurationBrowserPanelContent( BundleContext bundleContext, String destinationId )
     {
-        super( bundleContext, ApplicationConstant.APPLICATION_NAME, CONTAINMENT_ID, destinationId );
+        super( bundleContext, WicketApplicationConstant.APPLICATION_NAME, CONTAINMENT_ID, destinationId );
 
         NullArgumentException.validateNotNull( bundleContext, "bundleContext" );
         m_bundleContext = bundleContext;

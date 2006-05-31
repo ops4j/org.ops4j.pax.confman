@@ -18,7 +18,7 @@
 package org.ops4j.pax.cm.agent.wicket.overview;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.ApplicationConstant;
+import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.wicket.service.AbstractPageContent;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import org.osgi.framework.BundleContext;
@@ -37,9 +37,9 @@ public final class OverviewPageContent extends AbstractPageContent
     {
         super(
             bundleContext,
-            ApplicationConstant.Overview.CONTAINMENT_ID,
-            ApplicationConstant.APPLICATION_NAME,
-            ApplicationConstant.Overview.CONTAINMENT_ID
+            WicketApplicationConstant.Overview.CONTAINMENT_ID,
+            WicketApplicationConstant.APPLICATION_NAME,
+            WicketApplicationConstant.Overview.CONTAINMENT_ID
         );
 
         NullArgumentException.validateNotNull( container, "container" );

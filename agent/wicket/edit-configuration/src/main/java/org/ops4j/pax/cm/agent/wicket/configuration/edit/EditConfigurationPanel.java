@@ -18,16 +18,16 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.edit;
 
 import java.io.IOException;
-import org.ops4j.pax.cm.agent.ApplicationConstant;
 import org.ops4j.pax.cm.agent.ConfigurationConstant;
+import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.ConfigurationAdminException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
-import org.osgi.service.cm.Configuration;
 import wicket.Application;
 import wicket.Localizer;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.Component;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.link.Link;
@@ -42,6 +42,7 @@ import wicket.model.PropertyModel;
  */
 final class EditConfigurationPanel extends Panel
 {
+
     static final String PAGE_ID = "editConfigurationPage";
 
     private static final String LOCALE_PID_LABEL = "PIDLabel";
@@ -52,9 +53,8 @@ final class EditConfigurationPanel extends Panel
     private static final String WICKET_ID_PID_LABEL_VALUE = "pid";
     private static final String WICKET_ID_FACTORY_PID_LABEL = "factoryPidLabel";
     private static final String WICKET_ID_FACTORY_PID_LABEL_VALUE = "factorypid";
-    private static final String WICKET_ID_BUNDLE_LOCATION_LABEL = "bundleLocation";
-    private static final String WICKET_ID_BUNDLE_LOCATION_VALUE = "bundleLocationValue";
-    private static final String WICKET_ID_CONFIG_PROPERTIES = "configProperties";
+    private static final String WICKET_ID_BUNDLE_LOCATION_LABEL = "bundleLocationLabel";
+    private static final String WICKET_ID_BUNDLE_LOCATION_VALUE = "bundleLocation";
     private static final String WICKET_ID_SAVE = "save";
     private static final String WICKET_ID_RESET = "reset";
     private static final String WICKET_ID_DELETE = "delete";
@@ -64,26 +64,31 @@ final class EditConfigurationPanel extends Panel
      *
      * @since 0.1.0
      */
-    public EditConfigurationPanel( String id, Configuration configuration )
+    EditConfigurationPanel( String id, PaxConfiguration configuration,
+                            EditConfigurationPageContainer pageContainer )
         throws IllegalArgumentException
     {
         super( id );
 
         Localizer localizer = getLocalizer();
-        PaxConfiguration paxConfiguration = new PaxConfiguration( configuration );
-        CompoundPropertyModel formModel = new CompoundPropertyModel( paxConfiguration );
+        CompoundPropertyModel formModel = new CompoundPropertyModel( configuration );
+
+        pageContainer.createConfigurationPropertiesEditor( configuration );
+
         EditConfigurationForm editConfigurationForm =
-            new EditConfigurationForm( "form", formModel, localizer, paxConfiguration );
+            new EditConfigurationForm( "form", formModel, localizer, configuration, pageContainer );
         add( editConfigurationForm );
     }
 
     private final class EditConfigurationForm extends Form
     {
+
         private final PaxConfiguration m_configuration;
         private Class m_responsePageClass;
         private PageParameters m_pageParameters;
 
-        private EditConfigurationForm( String id, IModel model, Localizer localizer, PaxConfiguration configuration )
+        private EditConfigurationForm( String id, IModel model, Localizer localizer, PaxConfiguration configuration,
+                                       EditConfigurationPageContainer pageContainer )
         {
             super( id, model );
 
@@ -125,11 +130,8 @@ final class EditConfigurationPanel extends Panel
             Label bundleLocationValue = new Label( WICKET_ID_BUNDLE_LOCATION_VALUE, bundleLocation );
             add( bundleLocationValue );
 
-//        Dictionary properties = configuration.getProperties();
-//        ConfigurationItemDataProvider dataProvider = new ConfigurationItemDataProvider( properties );
-//        ConfigurationItemDataTable configurationDataTable =
-//            new ConfigurationItemDataTable( WICKET_ID_CONFIG_PROPERTIES, dataProvider, 8 );
-//        add( configurationDataTable );
+            Component configPropsComponent = pageContainer.createConfigurationPropertiesEditor( configuration );
+            add( configPropsComponent );
 
             Link saveLink = new SaveLink( WICKET_ID_SAVE, this );
             add( saveLink );
@@ -163,6 +165,7 @@ final class EditConfigurationPanel extends Panel
 
     private static final class DeleteLink extends Link
     {
+
         private final EditConfigurationForm m_form;
 
         public DeleteLink( String id, EditConfigurationForm form )
@@ -182,8 +185,8 @@ final class EditConfigurationPanel extends Panel
                 Application application = getApplication();
                 Class homePage = application.getHomePage();
                 PageParameters pageParameters = new PageParameters();
-                String pageParamTabName = ApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
-                String tabNameBrowser = ApplicationConstant.Overview.TAB_NAME_BROWSER;
+                String pageParamTabName = WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
+                String tabNameBrowser = WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
                 pageParameters.add( pageParamTabName, tabNameBrowser );
 
                 m_form.setResponsePageLocation( homePage, pageParameters );
@@ -197,6 +200,7 @@ final class EditConfigurationPanel extends Panel
 
     private static final class ResetLink extends Link
     {
+
         private final EditConfigurationForm m_form;
 
         private ResetLink( String id, EditConfigurationForm form )
@@ -217,6 +221,7 @@ final class EditConfigurationPanel extends Panel
 
     private static final class SaveLink extends Link
     {
+
         private final EditConfigurationForm m_form;
 
         private SaveLink( String id, EditConfigurationForm form )
@@ -240,8 +245,8 @@ final class EditConfigurationPanel extends Panel
             Application application = getApplication();
             Class homePage = application.getHomePage();
             PageParameters pageParameters = new PageParameters();
-            String pageParamTabName = ApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
-            String tabNameBrowser = ApplicationConstant.Overview.TAB_NAME_BROWSER;
+            String pageParamTabName = WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
+            String tabNameBrowser = WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
             pageParameters.add( pageParamTabName, tabNameBrowser );
 
             m_form.setResponsePageLocation( homePage, pageParameters );

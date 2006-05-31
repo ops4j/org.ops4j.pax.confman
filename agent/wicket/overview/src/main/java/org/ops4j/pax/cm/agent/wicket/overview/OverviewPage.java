@@ -19,14 +19,13 @@ package org.ops4j.pax.cm.agent.wicket.overview;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.ApplicationConstant;
+import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import wicket.Component;
-import wicket.PageParameters;
 import wicket.Localizer;
+import wicket.PageParameters;
 import wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import wicket.extensions.markup.html.tabs.AbstractTab;
 import wicket.extensions.markup.html.tabs.ITab;
@@ -42,7 +41,7 @@ import wicket.model.Model;
 public final class OverviewPage extends WebPage
 {
 
-    private static final Log m_logger = LogFactory.getLog( OverviewPage.class );
+    private static final Logger m_logger = Logger.getLogger( OverviewPage.class );
     private static final String WICKET_ID_MENU = "menu";
 
     /**
@@ -59,10 +58,10 @@ public final class OverviewPage extends WebPage
         NullArgumentException.validateNotNull( container, "container" );
         NullArgumentException.validateNotNull( parameters, "parameters" );
 
-        final List<Component> menus = container.createComponents( ApplicationConstant.Overview.COMPONENT_MENU_TAB );
+        final List<Component> menus = container.createComponents( WicketApplicationConstant.Overview.COMPONENT_MENU_TAB );
         List<ITab> tabs = new ArrayList<ITab>();
 
-        String tabIDToSelect = parameters.getString( ApplicationConstant.Overview.PAGE_PARAM_TAB_ID, "" );
+        String tabIDToSelect = parameters.getString( WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID, "" );
         int selectedTab = 0;
 
         int i = 0;

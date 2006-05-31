@@ -18,7 +18,7 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.ApplicationConstant;
+import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.ConfigurationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPage;
@@ -142,12 +142,12 @@ final class ConfigurationBrowserPanel extends Panel
     /**
      * Returns the overview tab item identifier. This is used by {@code OverviewPage} to match the user http request.
      *
-     * @see ApplicationConstant.Overview.TAB_NAME_BROWSER
+     * @see WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID
      * @since 0.1.0
      */
     public String getOverviewTabItemIdentifier()
     {
-        return ApplicationConstant.Overview.TAB_NAME_BROWSER;
+        return WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
     }
 
     private static final class PaxOrderByBorder extends OrderByBorder

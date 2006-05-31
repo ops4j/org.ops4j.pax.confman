@@ -10,8 +10,7 @@
   <name>OPS4J - Pax - Config Admin</name>
   <url>http://wiki.ops4j.org/</url>
   <organization>
-    <name>OPS4J - Open Participation Software for Java</name>
-    <url>http://www.ops4j.org/</url>
+    <name>OPS4J - Open Participation Software for Java</name> <url>http://www.ops4j.org/</url>
   </organization>
   <scm>
     <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/config-admin</developerConnection>
@@ -26,6 +25,12 @@
     </extensions>
     <finalName>${artifactId}_${version}</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.ops4j.pax.maven</groupId>
+        <artifactId>maven-osgi-bundle</artifactId>
+        <version>0.9.3</version>
+        <extensions>true</extensions>
+      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -63,19 +68,6 @@
       <url>http://repository.ops4j.org/maven2/</url>
     </pluginRepository>
   </pluginRepositories>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
   <reporting>
     <plugins>
       <plugin>
@@ -98,11 +90,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>javax.activation</groupId>
-        <artifactId>activation</artifactId>
-        <version>1.0.2</version>
-      </dependency>
-      <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
         <version>2.3</version>
@@ -115,7 +102,7 @@
       <dependency>
         <groupId>org.ops4j.pax.logging</groupId>
         <artifactId>pax-logging-client</artifactId>
-        <version>0.6.5</version>
+        <version>0.7.0</version>
       </dependency>
       <dependency>
         <groupId>org.ops4j.base</groupId>
@@ -153,8 +140,8 @@
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.wicket</groupId>
-        <artifactId>pax-wicket-service</artifactId>
-        <version>0.1.0</version>
+        <artifactId>service</artifactId>
+        <version>0.2.0</version>
       </dependency>
       <dependency>
         <groupId>wicket</groupId>
