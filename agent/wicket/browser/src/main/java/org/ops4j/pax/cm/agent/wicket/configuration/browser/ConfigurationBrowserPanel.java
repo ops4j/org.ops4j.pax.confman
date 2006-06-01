@@ -18,12 +18,11 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.ConfigurationConstant;
+import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPage;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewTabItem;
-import org.osgi.service.cm.Configuration;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Localizer;
@@ -58,6 +57,8 @@ final class ConfigurationBrowserPanel extends Panel
     private static final String LOCALE_KEY_BUNDLE_LOCATION_COLUMN_LABEL = "bundleLocationColumnLabel";
     private static final String LOCALE_KEY_TAB_PANEL_LABEL_VALUE = "tabPanelLabel";
 
+    private static final String WICKET_ID_EDITOR = "editor";
+
     private static final String WICKET_ID_NAVIGATOR = "navigator";
 
     private static final String WICKET_ID_SORT_HEADER_PID = "orderByPID";
@@ -73,46 +74,12 @@ final class ConfigurationBrowserPanel extends Panel
 
     private static final int NUMBER_OF_ROWS_DISPLAYED = 20;
 
-    ConfigurationBrowserPanel( String panelId, Configuration[] configurations )
+    ConfigurationBrowserPanel( String panelId, ConfigurationDataProvider confDataProvider )
     {
         super( panelId );
-        NullArgumentException.validateNotNull( configurations, "configurations" );
+        NullArgumentException.validateNotNull( confDataProvider, "confDataProvider" );
 
-        ConfigurationDataProvider confDataProvider = new ConfigurationDataProvider( configurations );
-
-        DataView dataView = new DataView( WICKET_ID_TABLE_DATA, confDataProvider )
-        {
-            protected void populateItem( final Item item )
-            {
-                PaxConfiguration configuration =
-                    (PaxConfiguration) item.getModelObject();
-
-                String pid = configuration.getPid();
-                String bundleLocation = configuration.getBundleLocation();
-
-                PageParameters pageParameters = new PageParameters();
-                pageParameters.add( ConfigurationConstant.PARAM_KEY_PID, pid );
-                pageParameters.add( ConfigurationConstant.PARAM_KEY_LOCATION, bundleLocation );
-                BookmarkablePageLink pidLink =
-                    new BookmarkablePageLink( WICKET_ID_DATA_PID_LINK, EditConfigurationPage.class, pageParameters );
-                item.add( pidLink );
-
-                Label pidLabel = new Label( WICKET_ID_DATA_PID_LABEL, pid );
-                pidLink.add( pidLabel );
-
-                if( bundleLocation == null )
-                {
-                    bundleLocation = "";
-                }
-
-                Label locationLabel = new Label( WICKET_ID_DATA_BUNDLE_LOCATION, bundleLocation );
-                item.add( locationLabel );
-
-                PaxReplaceAttributeModel replaceModel = new PaxReplaceAttributeModel( item );
-                AttributeModifier highlightBehaviour = new AttributeModifier( "class", true, replaceModel );
-                item.add( highlightBehaviour );
-            }
-        };
+        ConfigurationDataView dataView = new ConfigurationDataView( WICKET_ID_TABLE_DATA, confDataProvider );
         dataView.setItemsPerPage( NUMBER_OF_ROWS_DISPLAYED );
         add( dataView );
 
@@ -136,7 +103,12 @@ final class ConfigurationBrowserPanel extends Panel
         Model tabPanelLabelModel = new Model( tabPanelLabel );
         setModel( tabPanelLabelModel );
 
-        add( new PagingNavigator( WICKET_ID_NAVIGATOR, dataView ) );
+        PagingNavigator pagingNavigator = new PagingNavigator( WICKET_ID_NAVIGATOR, dataView );
+        add( pagingNavigator );
+
+        MiniEditConfigurationPanel miniEditConfigurationPanel =
+            new MiniEditConfigurationPanel( WICKET_ID_EDITOR, confDataProvider );
+        add( miniEditConfigurationPanel );
     }
 
     /**
@@ -186,6 +158,46 @@ final class ConfigurationBrowserPanel extends Panel
         public Object getObject( Component component )
         {
             return ( m_item.getIndex() % 2 == 1 ) ? CSS_CLASS_EVEN : CSS_CLASS_ODD;
+        }
+    }
+
+    private static final class ConfigurationDataView extends DataView
+    {
+
+        ConfigurationDataView( String id, ConfigurationDataProvider confDataProvider )
+        {
+            super( id, confDataProvider );
+        }
+
+        protected void populateItem( final Item item )
+        {
+            PaxConfiguration configuration =
+                (PaxConfiguration) item.getModelObject();
+
+            String pid = configuration.getPid();
+            String bundleLocation = configuration.getBundleLocation();
+
+            PageParameters pageParameters = new PageParameters();
+            pageParameters.add( ConfigurationConstant.PARAM_KEY_PID, pid );
+            pageParameters.add( ConfigurationConstant.PARAM_KEY_LOCATION, bundleLocation );
+            BookmarkablePageLink pidLink =
+                new BookmarkablePageLink( WICKET_ID_DATA_PID_LINK, EditConfigurationPage.class, pageParameters );
+            item.add( pidLink );
+
+            Label pidLabel = new Label( WICKET_ID_DATA_PID_LABEL, pid );
+            pidLink.add( pidLabel );
+
+            if( bundleLocation == null )
+            {
+                bundleLocation = "";
+            }
+
+            Label locationLabel = new Label( WICKET_ID_DATA_BUNDLE_LOCATION, bundleLocation );
+            item.add( locationLabel );
+
+            PaxReplaceAttributeModel replaceModel = new PaxReplaceAttributeModel( item );
+            AttributeModifier highlightBehaviour = new AttributeModifier( "class", true, replaceModel );
+            item.add( highlightBehaviour );
         }
     }
 }

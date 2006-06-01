@@ -17,19 +17,23 @@
  */
 package org.ops4j.pax.cm.agent.internal;
 
+import java.util.Properties;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
+import org.ops4j.pax.cm.agent.utils.SimpleClassResolver;
 import org.ops4j.pax.cm.agent.wicket.configuration.browser.ConfigurationBrowserPanelContent;
-import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContent;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContainer;
+import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContent;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewPage;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewPageContent;
+import org.ops4j.pax.wicket.service.Content;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import org.ops4j.pax.wicket.service.PaxWicketApplicationFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import wicket.application.IClassResolver;
 
 /**
  * {@code Activator} responsibles to activate the pax config admin.
@@ -40,7 +44,6 @@ import org.osgi.framework.ServiceRegistration;
 public final class Activator
     implements BundleActivator
 {
-
     private OverviewPageContent m_overviewPageContent;
 
     private ServiceRegistration m_overviewPageContainerSerReg;
@@ -50,6 +53,7 @@ public final class Activator
     private ServiceRegistration m_configurationEditorPageContainerSerReg;
 
     private ConfigAdminTracker m_configAdminTracker;
+    private ServiceRegistration m_classResolverRegistration;
 
     public void start( BundleContext bundleContext )
         throws Exception
@@ -64,6 +68,13 @@ public final class Activator
         m_configurationBrowserPanelContent.register();
 
         String applicationName = WicketApplicationConstant.APPLICATION_NAME;
+
+        SimpleClassResolver service = new SimpleClassResolver( bundleContext );
+        Properties properties = new Properties();
+        properties.setProperty( Content.APPLICATION_NAME, applicationName );
+        String classResolverServiceName = IClassResolver.class.getName();
+        m_classResolverRegistration = bundleContext.registerService( classResolverServiceName, service, properties );
+
         DefaultPageContainer overviewPageContainer = new DefaultPageContainer(
             bundleContext, WicketApplicationConstant.Overview.CONTAINMENT_ID, applicationName
         );
@@ -99,6 +110,8 @@ public final class Activator
         throws Exception
     {
         m_configurationBrowserPanelContent.dispose();
+
+        m_classResolverRegistration.unregister();
 
         m_overviewPageContainerSerReg.unregister();
         m_overviewPageContent.dispose();

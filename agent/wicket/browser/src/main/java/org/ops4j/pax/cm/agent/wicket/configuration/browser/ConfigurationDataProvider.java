@@ -17,6 +17,7 @@
  */
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import org.osgi.service.cm.Configuration;
 import wicket.extensions.markup.html.repeater.util.SortParam;
 import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -38,35 +40,33 @@ final class ConfigurationDataProvider extends SortableDataProvider
 {
 
     private ArrayList<PaxConfiguration> m_configurations;
+    private int m_selected;
 
     ConfigurationDataProvider( Configuration[] configurations )
     {
         NullArgumentException.validateNotNull( configurations, "configurations" );
 
         m_configurations = new ArrayList<PaxConfiguration>( configurations.length );
+        m_selected = 0;
+
         for( Configuration configuration : configurations )
         {
+            PaxConfiguration entry = new PaxConfiguration();
+
             String pid = configuration.getPid();
+            entry.setPid( pid );
+
+            String factoryPid = entry.getFactoryPid();
+            entry.setFactoryPid( factoryPid );
+
             String bundleLocation = configuration.getBundleLocation();
-            PaxConfiguration entry = new PaxConfiguration( pid, bundleLocation );
+            entry.setBundleLocation( bundleLocation );
+
             m_configurations.add( entry );
         }
 
-        setSort( "pid", true );
-    }
-
-    public Iterator iterator( int first, int count )
-    {
-        SortParam sort = getSort();
-
-        if( sort != null )
-        {
-            String sortProperty = sort.getProperty();
-            boolean isAscending = sort.isAscending();
-            sort( sortProperty, isAscending );
-        }
-
-        return m_configurations.listIterator( first );
+        setSort( PaxConfiguration.PROPERTY_PID, true );
+        sort( PaxConfiguration.PROPERTY_PID, true );
     }
 
     private void sort( final String sortProperty, final boolean isAscending )
@@ -87,11 +87,18 @@ final class ConfigurationDataProvider extends SortableDataProvider
 
                 if( o1Value != null )
                 {
-                    return o1Value.compareTo( o2Value );
+                    if( o2Value != null )
+                    {
+                        return o1Value.compareTo( o2Value );
+                    }
+                    else
+                    {
+                        return 1;
+                    }
                 }
                 else if( o2Value != null )
                 {
-                    return o2Value.compareTo( o1Value );
+                    return -1;
                 }
                 else
                 {
@@ -102,14 +109,82 @@ final class ConfigurationDataProvider extends SortableDataProvider
         );
     }
 
+    PaxConfiguration getSelectedPaxconfiguration()
+    {
+        if( m_configurations.isEmpty() )
+        {
+            return null;
+        }
+        else
+        {
+            return m_configurations.get( m_selected );
+        }
+    }
+
+    public Iterator iterator( int first, int count )
+    {
+        SortParam sort = getSort();
+
+        if( sort != null )
+        {
+            String sortProperty = sort.getProperty();
+            boolean isAscending = sort.isAscending();
+            sort( sortProperty, isAscending );
+        }
+
+        if( m_configurations.isEmpty() )
+        {
+            m_selected = 0;
+        }
+        else
+        {
+            m_selected = first;
+        }
+
+        return m_configurations.listIterator( first );
+    }
+
     public IModel model( Object configurationObject )
     {
         return new Model( (Serializable) configurationObject );
+    }
+
+    PaxConfiguration createNewPaxConfiguration()
+    {
+        PaxConfiguration paxConfiguration = new PaxConfiguration();
+        paxConfiguration.setIsNew( true );
+        paxConfiguration.setPid( "NEW RECORD" );
+
+        m_configurations.add( m_selected, paxConfiguration );
+
+        return paxConfiguration;
+    }
+
+    PaxConfiguration savePaxConfiguration( PaxConfiguration configuration )
+    {
+        try
+        {
+            boolean isNew = configuration.isNew();
+            PaxConfigurationFacade.updateConfiguration( configuration );
+            if( isNew )
+            {
+                m_configurations.add( m_selected, configuration );
+            }
+        } catch( IOException e )
+        {
+            e.printStackTrace();
+        }
+
+        return configuration;
+    }
+
+    void setSelectedPaxConfiguration( int i )
+    {
+        m_selected = i;
     }
 
     public int size()
     {
         return m_configurations.size();
     }
-
 }

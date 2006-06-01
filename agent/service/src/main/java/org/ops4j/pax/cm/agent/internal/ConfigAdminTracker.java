@@ -28,13 +28,13 @@ import org.osgi.util.tracker.ServiceTracker;
 /**
  * @since 0.1.0
  */
-public class ConfigAdminTracker extends ServiceTracker
+final class ConfigAdminTracker extends ServiceTracker
 {
     private BundleContext m_bundleContext;
     private PaxWicketApplicationFactory m_application;
     private ServiceRegistration m_serviceRegistration;
 
-    public ConfigAdminTracker( BundleContext bundleContext, PaxWicketApplicationFactory application )
+    ConfigAdminTracker( BundleContext bundleContext, PaxWicketApplicationFactory application )
     {
         super( bundleContext, ConfigurationAdmin.class.getName(), null );
 

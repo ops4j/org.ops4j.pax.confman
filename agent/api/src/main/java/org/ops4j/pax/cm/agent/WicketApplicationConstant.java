@@ -29,7 +29,7 @@ public final class WicketApplicationConstant
      *
      * @since 0.1.0
      */
-    public static final String APPLICATION_NAME = "ops4j:pax:configadmin";
+    public static final String APPLICATION_NAME = "ops4j_pax_configadmin";
 
     /**
      * Represents the mount point of this application.

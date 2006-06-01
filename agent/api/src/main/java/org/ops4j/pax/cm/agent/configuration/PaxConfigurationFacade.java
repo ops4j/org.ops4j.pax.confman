@@ -33,7 +33,6 @@ import org.osgi.service.cm.ConfigurationAdmin;
  */
 public final class PaxConfigurationFacade
 {
-
     private static BundleContext m_bundleContext;
     private static final String CONFIGURATION_ADMIN_CLASSNAME = ConfigurationAdmin.class.getName();
 
@@ -57,8 +56,6 @@ public final class PaxConfigurationFacade
      *
      * @throws ConfigurationAdminServiceIsNotAvailableException
      *                                  Thrown if configuration admin service is not available.
-     * @throws ConfigurationRetrievalFailedException
-     *                                  Thrown if configuration of the specified {@code pid} failed to be retrieved.
      * @throws IllegalArgumentException Thrown if the specified {@code paxConfiguration} argument is {@code null}.
      * @throws PaxConfigurationFacadeIsNotInitializedException
      *                                  Thrown if {@code PaxConfigurationFacade} is not initialized.
@@ -68,14 +65,19 @@ public final class PaxConfigurationFacade
     public static void deleteConfiguration( PaxConfiguration paxConfiguration )
         throws ConfigurationAdminServiceIsNotAvailableException,
                ConfigurationDeletionFailedException,
-               ConfigurationRetrievalFailedException,
                IllegalArgumentException,
+               IOException,
                PaxConfigurationFacadeIsNotInitializedException
     {
         NullArgumentException.validateNotNull( paxConfiguration, "paxConfiguration" );
 
+        if( paxConfiguration.isNew() )
+        {
+            return;
+        }
+
         String pid = paxConfiguration.getPid();
-        Configuration configuration = getConfigurationByPID( pid );
+        Configuration configuration = getConfigurationByPID( pid, false );
         try
         {
             configuration.delete();
@@ -85,8 +87,9 @@ public final class PaxConfigurationFacade
         }
     }
 
-    private static Configuration getConfigurationByPID( String pid )
-        throws ConfigurationAdminServiceIsNotAvailableException, ConfigurationRetrievalFailedException,
+    private static Configuration getConfigurationByPID( String pid, boolean isFactory )
+        throws ConfigurationAdminServiceIsNotAvailableException,
+               IOException,
                PaxConfigurationFacadeIsNotInitializedException
     {
         synchronized( PaxConfigurationFacade.class )
@@ -106,10 +109,14 @@ public final class PaxConfigurationFacade
 
             try
             {
-                return configAdmin.getConfiguration( pid );
-            } catch( IOException e )
-            {
-                throw new ConfigurationRetrievalFailedException( pid, e );
+                if( !isFactory )
+                {
+                    return configAdmin.getConfiguration( pid );
+                }
+                else
+                {
+                    return configAdmin.createFactoryConfiguration( pid );
+                }
             }
             finally
             {
@@ -125,22 +132,20 @@ public final class PaxConfigurationFacade
      *
      * @throws ConfigurationAdminServiceIsNotAvailableException
      *                                  Thrown if configuration admin service is not available.
-     * @throws ConfigurationRetrievalFailedException
-     *                                  Thrown if configuration of the specified {@code pid} failed to be retrieved.
      * @throws IllegalArgumentException Thrown if the specified {@code pid} argument is either empty or {@code null}.
      * @throws PaxConfigurationFacadeIsNotInitializedException
      *                                  Thrown if {@code PaxConfigurationFacade} is not initialized.
      * @see PaxConfigurationFacade#setContext(org.osgi.framework.BundleContext)
      * @since 0.1.0
      */
-    public static PaxConfiguration getConfiguration( String pid )
+    public static PaxConfiguration getConfiguration( String pid, boolean isFactory )
         throws ConfigurationAdminServiceIsNotAvailableException,
-               ConfigurationRetrievalFailedException,
                IllegalArgumentException,
+               IOException,
                PaxConfigurationFacadeIsNotInitializedException
     {
         NullArgumentException.validateNotEmpty( pid, "pid" );
-        Configuration configuration = getConfigurationByPID( pid );
+        Configuration configuration = getConfigurationByPID( pid, isFactory );
         return new PaxConfiguration( configuration );
     }
 
@@ -163,8 +168,19 @@ public final class PaxConfigurationFacade
     {
         NullArgumentException.validateNotNull( paxConfiguration, "paxConfiguration" );
 
-        String pid = paxConfiguration.getPid();
-        Configuration configuration = getConfigurationByPID( pid );
+        Configuration configuration;
+        if( paxConfiguration.isNew() )
+        {
+            String factoryPid = paxConfiguration.getFactoryPid();
+            boolean isFactory = factoryPid != null;
+            configuration = getConfigurationByPID( factoryPid, isFactory );
+            paxConfiguration.setIsNew( false );
+        }
+        else
+        {
+            String pid = paxConfiguration.getPid();
+            configuration = getConfigurationByPID( pid, false );
+        }
 
         // Copy properties across
         String bundleLocation = paxConfiguration.getBundleLocation();

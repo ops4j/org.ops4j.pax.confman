@@ -58,6 +58,7 @@ final class EditConfigurationPanel extends Panel
     private static final String WICKET_ID_SAVE = "save";
     private static final String WICKET_ID_RESET = "reset";
     private static final String WICKET_ID_DELETE = "delete";
+    private static final String WICKET_ID_FORM = "form";
 
     /**
      * @param id Wicket id. This argument must not be {@code null}.
@@ -76,7 +77,7 @@ final class EditConfigurationPanel extends Panel
         pageContainer.createConfigurationPropertiesEditor( configuration );
 
         EditConfigurationForm editConfigurationForm =
-            new EditConfigurationForm( "form", formModel, localizer, configuration, pageContainer );
+            new EditConfigurationForm( WICKET_ID_FORM, formModel, localizer, configuration, pageContainer );
         add( editConfigurationForm );
     }
 
@@ -180,7 +181,13 @@ final class EditConfigurationPanel extends Panel
             {
                 PaxConfiguration configuration = m_form.getConfiguration();
 
-                PaxConfigurationFacade.deleteConfiguration( configuration );
+                try
+                {
+                    PaxConfigurationFacade.deleteConfiguration( configuration );
+                } catch( IOException e )
+                {
+                    e.printStackTrace();  //TODO: Auto-generated, need attention.
+                }
 
                 Application application = getApplication();
                 Class homePage = application.getHomePage();

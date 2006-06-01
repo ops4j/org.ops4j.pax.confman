@@ -85,6 +85,7 @@ public final class ConfigurationBrowserPanelContent extends DefaultContentContai
             configurations = new Configuration[0];
         }
 
-        return new ConfigurationBrowserPanel( id, configurations );
+        ConfigurationDataProvider confDataProvider = new ConfigurationDataProvider( configurations );
+        return new ConfigurationBrowserPanel( id, confDataProvider );
     }
 }

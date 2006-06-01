@@ -138,7 +138,16 @@ final class DefaultConfigurationPropertiesEditor extends Panel
                     String value1 = o1.getPropertyValue( property );
                     String value2 = o2.getPropertyValue( property );
 
-                    return value1.compareTo( value2 );
+                    if( value1 != null )
+                    {
+                        return value1.compareTo( value2 );
+                    } else if( value2 != null )
+                    {
+                        return 1;
+                    } else
+                    {
+                        return 0;
+                    }
                 }
             }
             );

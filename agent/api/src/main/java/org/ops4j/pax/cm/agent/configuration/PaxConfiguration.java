@@ -32,13 +32,22 @@ import org.osgi.service.cm.Configuration;
 public final class PaxConfiguration
     implements Serializable
 {
+    public static final String PROPERTY_PID = "pid";
+    public static final String PROPERTY_BUNDLE_LOCATION = "bundleLocation";
+    public static final String PROPERTY_FACTORY_PID = "factoryPid";
 
     private static final long serialVersionUID = 1L;
 
-    private final String m_pid;
-    private final String m_bundleLocation;
-    private final String m_factoryPID;
+    private String m_pid;
+    private String m_bundleLocation;
+    private String m_factoryPID;
     private Dictionary m_properties;
+    private boolean m_isNew;
+
+    public PaxConfiguration()
+    {
+        m_isNew = false;
+    }
 
     /**
      * Construct an instance of {@code PaxConfiguration} with internal values to be copied from the specified
@@ -58,31 +67,27 @@ public final class PaxConfiguration
         m_pid = configuration.getPid();
         m_bundleLocation = configuration.getBundleLocation();
         m_factoryPID = configuration.getFactoryPid();
+        m_isNew = false;
 
         // Copy the properties
         Dictionary properties = configuration.getProperties();
         m_properties = new Properties();
-        Enumeration enumeration = properties.keys();
-        while( enumeration.hasMoreElements() )
+        if( properties != null )
         {
-            String key = (String) enumeration.nextElement();
-
-            if( Constants.SERVICE_PID.equals( key ) || "service.factoryPid".equals( key ) )
+            Enumeration enumeration = properties.keys();
+            while( enumeration.hasMoreElements() )
             {
-                continue;
+                String key = (String) enumeration.nextElement();
+
+                if( Constants.SERVICE_PID.equals( key ) || "service.factoryPid".equals( key ) )
+                {
+                    continue;
+                }
+
+                Object value = properties.get( key );
+                m_properties.put( key, value );
             }
-
-            Object value = properties.get( key );
-            m_properties.put( key, value );
         }
-    }
-
-    public PaxConfiguration( String pid, String bundleLocation )
-    {
-        NullArgumentException.validateNotEmpty( pid, "pid" );
-        m_pid = pid;
-        m_bundleLocation = bundleLocation;
-        m_factoryPID = null;
     }
 
     public String getBundleLocation()
@@ -90,9 +95,19 @@ public final class PaxConfiguration
         return m_bundleLocation;
     }
 
+    public void setBundleLocation( String bundleLocation )
+    {
+        m_bundleLocation = bundleLocation;
+    }
+
     public String getPid()
     {
         return m_pid;
+    }
+
+    public void setPid( String pid )
+    {
+        m_pid = pid;
     }
 
     public Dictionary getProperties()
@@ -104,6 +119,11 @@ public final class PaxConfiguration
     {
         NullArgumentException.validateNotNull( properties, "properties" );
         m_properties = properties;
+    }
+
+    public void setIsNew( boolean value )
+    {
+        m_isNew = value;
     }
 
     public String getPropertyValue( String propertyName )
@@ -128,5 +148,15 @@ public final class PaxConfiguration
     public String getFactoryPid()
     {
         return m_factoryPID;
+    }
+
+    public boolean isNew()
+    {
+        return m_isNew;
+    }
+
+    public void setFactoryPid( String factoryPid )
+    {
+        m_factoryPID = factoryPid;
     }
 }
