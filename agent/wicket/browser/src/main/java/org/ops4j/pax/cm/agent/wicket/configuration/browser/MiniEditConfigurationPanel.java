@@ -44,14 +44,6 @@ class MiniEditConfigurationPanel extends Panel
     public MiniEditConfigurationPanel( String id, ConfigurationDataProvider confDataProvider )
     {
         super( id );
-        m_logger.debug( "EFY: COnstructed again" );
-        m_logger.debug( "EFY: COnstructed again" );
-        m_logger.debug( "EFY: COnstructed again" );
-        m_logger.debug( "EFY: COnstructed again" );
-        m_logger.debug( "EFY: COnstructed again" );
-        m_logger.debug( "EFY: COnstructed again" );
-        m_logger.debug( "EFY: COnstructed again" );
-        m_logger.debug( "EFY: COnstructed again" );
 
         PaxConfiguration configuration = confDataProvider.getSelectedPaxconfiguration();
 
@@ -127,7 +119,6 @@ class MiniEditConfigurationPanel extends Panel
 
             PropertyModel facPidModel = new PropertyModel( model, PaxConfiguration.PROPERTY_FACTORY_PID );
             m_facPIDTextField = new TextField( "factoryPid", facPidModel );
-            m_facPIDTextField.setVisible( false );
             add( m_facPIDTextField );
 
             Label bundleLocation = new Label( "bundleLocationLabel", "Bundle Location:" );
@@ -142,6 +133,9 @@ class MiniEditConfigurationPanel extends Panel
 
             SaveLink saveLink = new SaveLink( "save", this, confDataProvider );
             add( saveLink );
+
+            DeleteLink deleteLink = new DeleteLink( "delete", this, confDataProvider );
+            add( deleteLink );
         }
 
         public void disableAllComponentsExceptsNew()
@@ -163,15 +157,6 @@ class MiniEditConfigurationPanel extends Panel
             modelChanging();
             copy( m_configuration, paxConfiguration );
 
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
-            m_logger.debug( "EFY: Set Configuration" );
             this.modelChanged();
         }
 
@@ -218,4 +203,26 @@ class MiniEditConfigurationPanel extends Panel
             m_form.setConfiguration( paxConfiguration );
         }
     }
+
+    private static final class DeleteLink extends Link
+    {
+
+        private final MiniConfigurationForm m_form;
+        private final ConfigurationDataProvider m_confDataProvider;
+
+        public DeleteLink( String id, MiniConfigurationForm form, ConfigurationDataProvider confDataProvider )
+        {
+            super( id );
+
+            m_form = form;
+            m_confDataProvider = confDataProvider;
+        }
+
+        public void onClick()
+        {
+            PaxConfiguration paxConfiguration = m_confDataProvider.deletePaxConfiguration( m_form.m_configuration );
+            m_form.setConfiguration( paxConfiguration );
+        }
+    }
+
 }

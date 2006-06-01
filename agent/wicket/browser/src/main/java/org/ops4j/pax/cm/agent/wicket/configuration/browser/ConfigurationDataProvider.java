@@ -109,6 +109,53 @@ final class ConfigurationDataProvider extends SortableDataProvider
         );
     }
 
+    PaxConfiguration createNewPaxConfiguration()
+    {
+        PaxConfiguration paxConfiguration = new PaxConfiguration();
+        paxConfiguration.setIsNew( true );
+        paxConfiguration.setPid( "NEW RECORD" );
+
+        m_configurations.add( m_selected, paxConfiguration );
+
+        return paxConfiguration;
+    }
+
+    public PaxConfiguration deletePaxConfiguration( PaxConfiguration configuration )
+    {
+        try
+        {
+            if( !configuration.isNew() )
+            {
+                PaxConfigurationFacade.deleteConfiguration( configuration );
+            }
+
+            m_configurations.remove( m_selected );
+
+        } catch( IOException e )
+        {
+            e.printStackTrace();
+            return configuration;
+        }
+
+        if( !m_configurations.isEmpty() )
+        {
+            int size = m_configurations.size();
+            if( m_selected >= size )
+            {
+                m_selected = size - 1;
+            }
+            else
+            {
+                m_selected--;
+            }
+
+            return m_configurations.get( m_selected );
+        }
+
+        m_selected = 0;
+        return null;
+    }
+
     PaxConfiguration getSelectedPaxconfiguration()
     {
         if( m_configurations.isEmpty() )
@@ -147,17 +194,6 @@ final class ConfigurationDataProvider extends SortableDataProvider
     public IModel model( Object configurationObject )
     {
         return new Model( (Serializable) configurationObject );
-    }
-
-    PaxConfiguration createNewPaxConfiguration()
-    {
-        PaxConfiguration paxConfiguration = new PaxConfiguration();
-        paxConfiguration.setIsNew( true );
-        paxConfiguration.setPid( "NEW RECORD" );
-
-        m_configurations.add( m_selected, paxConfiguration );
-
-        return paxConfiguration;
     }
 
     PaxConfiguration savePaxConfiguration( PaxConfiguration configuration )

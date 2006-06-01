@@ -86,7 +86,7 @@ public final class Activator
             bundleContext, OverviewPage.class, WicketApplicationConstant.MOUNT_POINT,
             applicationName
         );
-        application.setDeploymentMode( true );
+//        application.setDeploymentMode( true );
 
         EditConfigurationPageContainer configurationEditorPageContainer = new EditConfigurationPageContainer(
             bundleContext, WicketApplicationConstant.Configuration.Edit.CONTAINMENT_ID, applicationName
