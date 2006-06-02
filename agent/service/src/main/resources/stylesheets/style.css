@@ -114,3 +114,8 @@ table.dataview #message {
 table.dataview caption {
     padding-bottom: 2px;
 }
+
+.editorTable {
+    display: block;
+    table-layout: auto;
+}

@@ -18,6 +18,9 @@
 package org.ops4j.pax.cm.agent.configuration;
 
 import java.io.IOException;
+import java.util.Dictionary;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -33,8 +36,12 @@ import org.osgi.service.cm.ConfigurationAdmin;
  */
 public final class PaxConfigurationFacade
 {
-    private static BundleContext m_bundleContext;
+
+    private static final Log m_logger = LogFactory.getLog( PaxConfigurationFacade.class );
+
     private static final String CONFIGURATION_ADMIN_CLASSNAME = ConfigurationAdmin.class.getName();
+
+    private static BundleContext m_bundleContext;
 
     /**
      * This is an internal API
@@ -111,7 +118,14 @@ public final class PaxConfigurationFacade
             {
                 if( !isFactory )
                 {
-                    return configAdmin.getConfiguration( pid );
+                    try
+                    {
+                        return configAdmin.getConfiguration( pid );
+                    } catch( RuntimeException re )
+                    {
+                        m_logger.error( "Configuration [" + pid + "] failed to retreived.", re );
+                        throw re;
+                    }
                 }
                 else
                 {
@@ -169,11 +183,16 @@ public final class PaxConfigurationFacade
         NullArgumentException.validateNotNull( paxConfiguration, "paxConfiguration" );
 
         Configuration configuration;
-        if( paxConfiguration.isNew() )
+        boolean isConfigurationNew = paxConfiguration.isNew();
+        if( isConfigurationNew )
         {
-            String factoryPid = paxConfiguration.getFactoryPid();
-            boolean isFactory = factoryPid != null;
-            configuration = getConfigurationByPID( factoryPid, isFactory );
+            String pid = paxConfiguration.getFactoryPid();
+            boolean isFactory = pid != null;
+            if( !isFactory )
+            {
+                pid = paxConfiguration.getPid();
+            }
+            configuration = getConfigurationByPID( pid, isFactory );
             paxConfiguration.setIsNew( false );
         }
         else
@@ -186,7 +205,8 @@ public final class PaxConfigurationFacade
         String bundleLocation = paxConfiguration.getBundleLocation();
         configuration.setBundleLocation( bundleLocation );
 
-        configuration.update( paxConfiguration.getProperties() );
+        Dictionary properties = paxConfiguration.getProperties();
+        configuration.update( properties );
     }
 
     private PaxConfigurationFacade()

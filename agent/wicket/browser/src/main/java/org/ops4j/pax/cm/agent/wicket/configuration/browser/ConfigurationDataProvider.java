@@ -41,6 +41,7 @@ final class ConfigurationDataProvider extends SortableDataProvider
 
     private ArrayList<PaxConfiguration> m_configurations;
     private int m_selected;
+    private SelectionChangeListener m_listener;
 
     ConfigurationDataProvider( Configuration[] configurations )
     {
@@ -112,8 +113,8 @@ final class ConfigurationDataProvider extends SortableDataProvider
     PaxConfiguration createNewPaxConfiguration()
     {
         PaxConfiguration paxConfiguration = new PaxConfiguration();
+
         paxConfiguration.setIsNew( true );
-        paxConfiguration.setPid( "NEW RECORD" );
 
         m_configurations.add( m_selected, paxConfiguration );
 
@@ -127,33 +128,36 @@ final class ConfigurationDataProvider extends SortableDataProvider
             if( !configuration.isNew() )
             {
                 PaxConfigurationFacade.deleteConfiguration( configuration );
+                m_configurations.remove( m_selected );
+                if( !m_configurations.isEmpty() )
+                {
+                    int size = m_configurations.size();
+                    if( m_selected >= size )
+                    {
+                        m_selected = size - 1;
+                    }
+                    else
+                    {
+                        m_selected = m_selected - 1;
+
+                        if( m_selected < 0 )
+                        {
+                            m_selected = 0;
+                        }
+                    }
+
+                    return m_configurations.get( m_selected );
+                }
+                m_selected = 0;
+                return null;
             }
-
-            m_configurations.remove( m_selected );
-
         } catch( IOException e )
         {
             e.printStackTrace();
             return configuration;
         }
 
-        if( !m_configurations.isEmpty() )
-        {
-            int size = m_configurations.size();
-            if( m_selected >= size )
-            {
-                m_selected = size - 1;
-            }
-            else
-            {
-                m_selected--;
-            }
-
-            return m_configurations.get( m_selected );
-        }
-
-        m_selected = 0;
-        return null;
+        return getSelectedPaxconfiguration();
     }
 
     PaxConfiguration getSelectedPaxconfiguration()
@@ -188,7 +192,26 @@ final class ConfigurationDataProvider extends SortableDataProvider
             m_selected = first;
         }
 
+        notifyListenerOfSelectionChange();
+
         return m_configurations.listIterator( first );
+    }
+
+    private void notifyListenerOfSelectionChange()
+    {
+        if( m_listener != null )
+        {
+            PaxConfiguration configuration;
+            if( m_configurations.isEmpty() )
+            {
+                configuration = null;
+            }
+            else
+            {
+                configuration = m_configurations.get( m_selected );
+            }
+            m_listener.showConfiguration( configuration );
+        }
     }
 
     public IModel model( Object configurationObject )
@@ -200,12 +223,7 @@ final class ConfigurationDataProvider extends SortableDataProvider
     {
         try
         {
-            boolean isNew = configuration.isNew();
             PaxConfigurationFacade.updateConfiguration( configuration );
-            if( isNew )
-            {
-                m_configurations.add( m_selected, configuration );
-            }
         } catch( IOException e )
         {
             e.printStackTrace();
@@ -217,6 +235,11 @@ final class ConfigurationDataProvider extends SortableDataProvider
     void setSelectedPaxConfiguration( int i )
     {
         m_selected = i;
+    }
+
+    public void setSelectionListener( SelectionChangeListener listener )
+    {
+        m_listener = listener;
     }
 
     public int size()

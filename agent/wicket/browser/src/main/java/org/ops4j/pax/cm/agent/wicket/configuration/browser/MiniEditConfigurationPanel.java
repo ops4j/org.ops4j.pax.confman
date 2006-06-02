@@ -17,14 +17,14 @@
  */
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Button;
+import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
+import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 
@@ -32,197 +32,319 @@ import wicket.model.PropertyModel;
  * @author Edward Yakop
  * @since 0.1.0
  */
-class MiniEditConfigurationPanel extends Panel
+final class MiniEditConfigurationPanel extends Panel
+    implements SelectionChangeListener
 {
-
-    private static final Log m_logger = LogFactory.getLog( MiniEditConfigurationPanel.class );
 
     private static final String WICKET_ID_FORM = "form";
 
-    private final PaxConfiguration m_configuration;
+    private PaxConfiguration m_configuration;
+    private final ConfigurationDataProvider m_confDataProvider;
 
-    public MiniEditConfigurationPanel( String id, ConfigurationDataProvider confDataProvider )
+    MiniEditConfigurationPanel( String id, ConfigurationDataProvider confDataProvider )
     {
         super( id );
+        m_confDataProvider = confDataProvider;
 
         PaxConfiguration configuration = confDataProvider.getSelectedPaxconfiguration();
-
-        m_configuration = new PaxConfiguration();
+        confDataProvider.setSelectionListener( this );
 
         if( configuration == null )
         {
-            empty( m_configuration );
+            m_configuration = new PaxConfiguration();
+            m_configuration.setIsNew( true );
         }
         else
         {
-            copy( m_configuration, configuration );
+            m_configuration = configuration;
         }
 
-        MiniConfigurationForm form = new MiniConfigurationForm( WICKET_ID_FORM, configuration, confDataProvider );
+        MiniConfigurationForm form = new MiniConfigurationForm( WICKET_ID_FORM, configuration );
 
         if( configuration == null )
         {
             form.disableAllComponentsExceptsNew();
         }
-        else
-        {
-            form.enableAllComponents();
-        }
 
         add( form );
     }
 
-    private static void empty( PaxConfiguration configuration )
+    public void showConfiguration( PaxConfiguration configuration )
     {
-        configuration.setPid( "" );
-        configuration.setBundleLocation( "" );
-        configuration.setFactoryPid( "" );
-        configuration.setIsNew( true );
+        modelChanging();
+
+        m_configuration = configuration;
+        setModel( new CompoundPropertyModel( configuration ) );
+
+        modelChanged();
     }
 
-    private static void copy( PaxConfiguration configuration, PaxConfiguration configuration1 )
-    {
-        configuration.setPid( configuration1.getPid() );
-        configuration.setBundleLocation( configuration1.getBundleLocation() );
-        configuration.setFactoryPid( configuration1.getFactoryPid() );
-        configuration.setIsNew( configuration1.isNew() );
-    }
-
-    private static final class MiniConfigurationForm extends Form
+    private final class MiniConfigurationForm extends Form
     {
 
-        private final TextField m_PIDTextField;
+        private static final String WICKET_ID_PID_LABEL = "PIDLabel";
+        private static final String WICKET_ID_PID = "pid";
+        private static final String WICKET_ID_FACTORY_PID_LABEL = "factoryPIDLabel";
+        private static final String WICKET_ID_FACTORY_PID = "factoryPid";
+        private static final String WICKET_ID_IS_FACTORY = "isFactory";
+        private static final String WICKET_ID_BUNDLE_LOCATION_LABEL = "bundleLocationLabel";
+        private static final String WICKET_ID_BUNDLE_LOCATION = "bundleLocation";
+        private static final String WICKET_ID_DELETE = "delete";
+        private static final String WICKET_ID_SAVE = "save";
+        private static final String WICKET_ID_NEW = "new";
+
+        private final Label m_pidLabel;
+        private final TextField m_pidTextField;
+        private final Label m_factoryPidLabel;
         private final TextField m_facPIDTextField;
         private final TextField m_bdlLocModelTextField;
-        private final PaxConfiguration m_configuration;
-        private final ConfigurationDataProvider m_confDataProvider;
+        private final CheckBox m_isFactoryCheckBox;
+        private boolean m_isFactory;
 
-        public MiniConfigurationForm( String id, PaxConfiguration configuration,
-                                      ConfigurationDataProvider confDataProvider )
+        private MiniConfigurationForm( String id, PaxConfiguration configuration )
         {
             super( id );
-            Model model = new Model( configuration );
+
+            CompoundPropertyModel model = new CompoundPropertyModel( configuration );
             setModel( model );
 
-            m_configuration = configuration;
-            m_confDataProvider = confDataProvider;
+            boolean isConfigurationNew = m_configuration.isNew();
 
-            Label pidLabel = new Label( "PIDLabel", "Pid:" );
-            add( pidLabel );
+            m_pidLabel = newPidLabel( isConfigurationNew );
+            add( m_pidLabel );
 
-            PropertyModel pidModel = new PropertyModel( model, PaxConfiguration.PROPERTY_PID );
-            m_PIDTextField = new TextField( "pid", pidModel );
-            add( m_PIDTextField );
+            m_pidTextField = newPidTextField();
+            add( m_pidTextField );
 
-            Label factoryLabel = new Label( "factoryPIDLabel", "Factory PID:" );
-            add( factoryLabel );
+            m_factoryPidLabel = newFactoryPidLabel( isConfigurationNew );
+            add( m_factoryPidLabel );
 
-            PropertyModel facPidModel = new PropertyModel( model, PaxConfiguration.PROPERTY_FACTORY_PID );
-            m_facPIDTextField = new TextField( "factoryPid", facPidModel );
+            m_facPIDTextField = newFactoryPidTextField( isConfigurationNew );
             add( m_facPIDTextField );
 
-            Label bundleLocation = new Label( "bundleLocationLabel", "Bundle Location:" );
+            m_isFactoryCheckBox = newIsFactoryCheckBox( isConfigurationNew );
+            add( m_isFactoryCheckBox );
+
+            Label bundleLocation = new Label( WICKET_ID_BUNDLE_LOCATION_LABEL, "Bundle Location:" );
             add( bundleLocation );
 
-            PropertyModel bdlLocModel = new PropertyModel( model, PaxConfiguration.PROPERTY_BUNDLE_LOCATION );
-            m_bdlLocModelTextField = new TextField( "bundleLocation", bdlLocModel );
+            m_bdlLocModelTextField = new TextField( WICKET_ID_BUNDLE_LOCATION );
             add( m_bdlLocModelTextField );
 
-            NewLink newLink = new NewLink( "new", this, confDataProvider );
-            add( newLink );
+            Button newButton = newNewButton();
+            add( newButton );
 
-            SaveLink saveLink = new SaveLink( "save", this, confDataProvider );
-            add( saveLink );
+            Button saveButton = newSaveButton();
+            add( saveButton );
 
-            DeleteLink deleteLink = new DeleteLink( "delete", this, confDataProvider );
-            add( deleteLink );
+            Button deleteButton = newDeleteButton();
+            add( deleteButton );
         }
 
-        public void disableAllComponentsExceptsNew()
+        private CheckBox newIsFactoryCheckBox( boolean isConfigurationNew )
+        {
+            PropertyModel checkBoxModel = new PropertyModel( this, "isFactory", Boolean.class );
+
+            CheckBox checkBox = new CheckBox( WICKET_ID_IS_FACTORY, checkBoxModel );
+            setIsFactoryCheckBoxState( isConfigurationNew, checkBox );
+
+            return checkBox;
+        }
+
+        public void setFactory( Boolean value )
+        {
+            if( value == null )
+            {
+                value = false;
+            }
+            m_isFactory = value;
+        }
+
+        public Boolean isFactory()
+        {
+            return m_isFactory;
+        }
+
+        private void setIsFactoryCheckBoxState( boolean isConfigurationNew, CheckBox checkBox )
+        {
+            if( isConfigurationNew )
+            {
+                checkBox.setVisible( true );
+            }
+            else
+            {
+                checkBox.setVisible( false );
+            }
+        }
+
+        private Button newNewButton()
+        {
+            return new Button( WICKET_ID_NEW )
+            {
+                protected void onSubmit()
+                {
+                    PaxConfiguration configToDisplay = m_confDataProvider.createNewPaxConfiguration();
+                    setConfiguration( configToDisplay );
+
+                    boolean isConfigurationNew = configToDisplay.isNew();
+                    String pidLabelString = getPidLabelString( isConfigurationNew );
+                    Model pidLabelModel = new Model( pidLabelString );
+                    m_pidLabel.setModel( pidLabelModel );
+
+                    m_pidTextField.setEnabled( true );
+
+                    setFactory( false );
+                    setIsFactoryCheckBoxState( isConfigurationNew, m_isFactoryCheckBox );
+
+                    setFactoryLabelState( isConfigurationNew, m_factoryPidLabel );
+
+                    setFactoryPidTextFieldState( isConfigurationNew, m_facPIDTextField );
+                }
+            };
+        }
+
+        private Button newSaveButton()
+        {
+            Button saveButton = new Button( WICKET_ID_SAVE )
+            {
+                public void onSubmit()
+                {
+                    if( m_isFactory )
+                    {
+                        String factoryPid = m_configuration.getPid();
+                        m_configuration.setFactoryPid( factoryPid );
+                        m_configuration.setPid( null );
+                    }
+                    else
+                    {
+                        m_configuration.setFactoryPid( null );
+                    }
+
+                    PaxConfiguration configToDisplay = m_confDataProvider.savePaxConfiguration( m_configuration );
+                    setConfiguration( configToDisplay );
+
+                    boolean configurationIsNotNew = false;
+                    String pidLabelString = getPidLabelString( configurationIsNotNew );
+                    Model pidLabelModel = new Model( pidLabelString );
+                    m_pidLabel.setModel( pidLabelModel );
+
+                    m_pidTextField.setEnabled( false );
+
+                    boolean isFactory = m_configuration.getFactoryPid() != null;
+                    setFactory( isFactory );
+                    setIsFactoryCheckBoxState( configurationIsNotNew, m_isFactoryCheckBox );
+
+                    setFactoryLabelState( configurationIsNotNew, m_factoryPidLabel );
+
+                    setFactoryPidTextFieldState( configurationIsNotNew, m_facPIDTextField );
+                }
+            };
+            return saveButton;
+        }
+
+        private Button newDeleteButton()
+        {
+            Button deleteButton = new Button( WICKET_ID_DELETE )
+            {
+                public void onSubmit()
+                {
+                    PaxConfiguration paxConfiguration = m_confDataProvider.deletePaxConfiguration( m_configuration );
+                    setConfiguration( paxConfiguration );
+                }
+            };
+            deleteButton.setDefaultFormProcessing( false );
+
+            return deleteButton;
+        }
+
+        private TextField newFactoryPidTextField( boolean configurationNew )
+        {
+            TextField factoryPidTextField = new TextField( WICKET_ID_FACTORY_PID );
+            setFactoryPidTextFieldState( configurationNew, factoryPidTextField );
+
+            return factoryPidTextField;
+        }
+
+        private void setFactoryPidTextFieldState( boolean configurationNew, TextField factoryPidTextField )
+        {
+            if( configurationNew )
+            {
+                factoryPidTextField.setVisible( false );
+            }
+            else
+            {
+                factoryPidTextField.setVisible( true );
+                factoryPidTextField.setEnabled( false );
+            }
+        }
+
+        private Label newFactoryPidLabel( boolean configurationnew )
+        {
+            Label factoryLabel = new Label( WICKET_ID_FACTORY_PID_LABEL, "Factory PID:" );
+            setFactoryLabelState( configurationnew, factoryLabel );
+            return factoryLabel;
+        }
+
+        private void setFactoryLabelState( boolean configurationnew, Label factoryLabel )
+        {
+            String factoryLabelString;
+            if( configurationnew )
+            {
+                factoryLabelString = "is factory:";
+            }
+            else
+            {
+                factoryLabelString = "Factory Pid:";
+            }
+            Model factoryLabelModel = new Model( factoryLabelString );
+            factoryLabel.setModel( factoryLabelModel );
+        }
+
+        private TextField newPidTextField()
+        {
+            TextField pidTextField = new TextField( WICKET_ID_PID );
+            if( !m_configuration.isNew() )
+            {
+                pidTextField.setEnabled( false );
+            }
+            return pidTextField;
+        }
+
+        private Label newPidLabel( boolean configurationnew )
+        {
+            String pidLabelString = getPidLabelString( configurationnew );
+            return new Label( WICKET_ID_PID_LABEL, pidLabelString );
+        }
+
+        private String getPidLabelString( boolean configurationnew )
+        {
+            String pidLabelString;
+            if( configurationnew )
+            {
+                pidLabelString = "Pid/Factory Pid: ";
+            }
+            else
+            {
+                pidLabelString = "Pid:";
+            }
+            return pidLabelString;
+        }
+
+        private void disableAllComponentsExceptsNew()
         {
             m_bdlLocModelTextField.setEnabled( false );
             m_facPIDTextField.setEnabled( false );
-            m_PIDTextField.setEnabled( false );
+            m_pidTextField.setEnabled( false );
         }
 
-        public void enableAllComponents()
-        {
-            m_bdlLocModelTextField.setEnabled( true );
-            m_facPIDTextField.setEnabled( true );
-            m_PIDTextField.setEnabled( true );
-        }
-
-        public void setConfiguration( PaxConfiguration paxConfiguration )
+        private void setConfiguration( PaxConfiguration paxConfiguration )
         {
             modelChanging();
-            copy( m_configuration, paxConfiguration );
 
-            this.modelChanged();
-        }
+            m_configuration = paxConfiguration;
+            CompoundPropertyModel newModel = new CompoundPropertyModel( m_configuration );
 
-    }
-
-    private static final class NewLink extends Link
-    {
-
-        private final MiniConfigurationForm m_form;
-        private final ConfigurationDataProvider m_confDataProvider;
-
-        public NewLink( String id, MiniConfigurationForm form, ConfigurationDataProvider confDataProvider )
-        {
-            super( id );
-
-            m_form = form;
-            m_confDataProvider = confDataProvider;
-        }
-
-        public void onClick()
-        {
-            PaxConfiguration paxConfiguration = m_confDataProvider.createNewPaxConfiguration();
-            m_form.setConfiguration( paxConfiguration );
+            setModel( newModel );
         }
     }
-
-    private static final class SaveLink extends Link
-    {
-
-        private final MiniConfigurationForm m_form;
-        private final ConfigurationDataProvider m_confDataProvider;
-
-        public SaveLink( String id, MiniConfigurationForm form, ConfigurationDataProvider confDataProvider )
-        {
-            super( id );
-
-            m_form = form;
-            m_confDataProvider = confDataProvider;
-        }
-
-        public void onClick()
-        {
-            PaxConfiguration paxConfiguration = m_confDataProvider.savePaxConfiguration( m_form.m_configuration );
-            m_form.setConfiguration( paxConfiguration );
-        }
-    }
-
-    private static final class DeleteLink extends Link
-    {
-
-        private final MiniConfigurationForm m_form;
-        private final ConfigurationDataProvider m_confDataProvider;
-
-        public DeleteLink( String id, MiniConfigurationForm form, ConfigurationDataProvider confDataProvider )
-        {
-            super( id );
-
-            m_form = form;
-            m_confDataProvider = confDataProvider;
-        }
-
-        public void onClick()
-        {
-            PaxConfiguration paxConfiguration = m_confDataProvider.deletePaxConfiguration( m_form.m_configuration );
-            m_form.setConfiguration( paxConfiguration );
-        }
-    }
-
 }

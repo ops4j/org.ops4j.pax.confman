@@ -1,25 +1,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/" xml:lang="en" lang="en">
 <body>
     <wicket:panel>
-        <form wicket:id="form">
-            <span wicket:id="PIDLabel">[PidLabel]</span>
-            <input wicket:id="pid"></input>
+        <fieldset>
+            <legend>Configuration</legend>
 
-            <br/>
-            <span wicket:id="factoryPIDLabel">[Factory PID Label]</span>
-            <input wicket:id="factoryPid"></input>
+            <form wicket:id="form">
+                <table class="editorTable">
+                    <tr>
+                        <td wicket:id="PIDLabel" width="400">[PidLabel]</td>
+                        <td><input wicket:id="pid"></input></td>
+                    </tr>
+                    <tr>
+                        <td wicket:id="factoryPIDLabel" width="400">[Factory PID Label]</td>
+                        <td>
+                            <input wicket:id="factoryPid"></input>
+                            <input type="checkbox" wicket:id="isFactory"></input>
+                        </td>
+                    </tr>
 
-            <br/>
-            <span wicket:id="bundleLocationLabel">[Bundle Location Label]</span>
-            <input wicket:id="bundleLocation"></input>
+                    <tr>
+                        <td wicket:id="bundleLocationLabel" width="400">[Bundle Location Label]</td>
+                        <td><input wicket:id="bundleLocation"></input></td>
+                    </tr>
+                </table>
 
-            <br/>
-            <input class="new" type="submit" value="new" wicket:id="new"></input>
-            <!--<input class="details" type="details" value="details" wicket:id="details"></input>-->
-            <input class="save" type="submit" value="save" wicket:id="save"></input>
-            <!--<input class="reset" type="submit" value="reset" wicket:id="reset"></input>-->
-            <input class="delete" type="submit" value="delete" wicket:id="delete"></input>
-        </form>
+                <input class="new" type="submit" value="new" wicket:id="new"></input>
+                <!--<input class="details" type="details" value="details" wicket:id="details"></input>-->
+                <input class="save" type="submit" value="save" wicket:id="save"></input>
+                <!--<input class="reset" type="submit" value="reset" wicket:id="reset"></input>-->
+                <input class="delete" type="submit" value="delete" wicket:id="delete"></input>
+            </form>
+        </fieldset>
     </wicket:panel>
 </body>
 </html>

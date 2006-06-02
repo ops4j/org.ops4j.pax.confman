@@ -31,7 +31,6 @@ import org.ops4j.pax.wicket.service.Content;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import org.ops4j.pax.wicket.service.PaxWicketApplicationFactory;
 import org.ops4j.pax.wicket.service.PaxWicketAuthenticator;
-import org.ops4j.pax.wicket.service.UserAdminAuthenticator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -95,7 +94,7 @@ public final class Activator
             bundleContext, OverviewPage.class, WicketApplicationConstant.MOUNT_POINT,
             applicationName, alwaysAdminAuthenticator
         );
-//        application.setDeploymentMode( true );
+        application.setDeploymentMode( true );
 
         EditConfigurationPageContainer configurationEditorPageContainer = new EditConfigurationPageContainer(
             bundleContext, WicketApplicationConstant.Configuration.Edit.CONTAINMENT_ID, applicationName
