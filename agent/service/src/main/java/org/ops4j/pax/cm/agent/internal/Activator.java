@@ -30,6 +30,8 @@ import org.ops4j.pax.cm.agent.wicket.overview.OverviewPageContent;
 import org.ops4j.pax.wicket.service.Content;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import org.ops4j.pax.wicket.service.PaxWicketApplicationFactory;
+import org.ops4j.pax.wicket.service.PaxWicketAuthenticator;
+import org.ops4j.pax.wicket.service.UserAdminAuthenticator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -82,9 +84,10 @@ public final class Activator
         m_overviewPageContent = new OverviewPageContent( bundleContext, overviewPageContainer );
         m_overviewPageContent.register();
 
+        PaxWicketAuthenticator userAdminAuthenticator = new UserAdminAuthenticator( bundleContext );
         PaxWicketApplicationFactory application = new PaxWicketApplicationFactory(
             bundleContext, OverviewPage.class, WicketApplicationConstant.MOUNT_POINT,
-            applicationName
+            applicationName, userAdminAuthenticator
         );
 //        application.setDeploymentMode( true );
 
