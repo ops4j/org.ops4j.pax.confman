@@ -54,6 +54,7 @@ final class ConfigurationBrowserPanel extends Panel
 {
 
     private static final String LOCALE_KEY_PID_COLUMN_LABEL = "pidColumnLabel";
+    private static final String LOCALE_KEY_FACTORY_PID_COLUMN_LABEL = "factoryPidColumnLabel";
     private static final String LOCALE_KEY_BUNDLE_LOCATION_COLUMN_LABEL = "bundleLocationColumnLabel";
     private static final String LOCALE_KEY_TAB_PANEL_LABEL_VALUE = "tabPanelLabel";
 
@@ -70,6 +71,7 @@ final class ConfigurationBrowserPanel extends Panel
     private static final String WICKET_ID_TABLE_DATA = "sorting";
     private static final String WICKET_ID_DATA_PID_LINK = "pidLink";
     private static final String WICKET_ID_DATA_PID_LABEL = "pidLabel";
+    private static final String WICKET_ID_FACTORY_PID = "factoryPid";
     private static final String WICKET_ID_DATA_BUNDLE_LOCATION = "bundleLocation";
 
     private static final int NUMBER_OF_ROWS_DISPLAYED = 20;
@@ -88,8 +90,15 @@ final class ConfigurationBrowserPanel extends Panel
         PaxOrderByBorder pidColumnHeader =
             new PaxOrderByBorder( WICKET_ID_SORT_HEADER_PID, "pid", confDataProvider, dataView );
         add( pidColumnHeader );
-        String pidColumnHeaderLabel = localizer.getString( LOCALE_KEY_PID_COLUMN_LABEL, this, "pid" );
+        String pidColumnHeaderLabel = localizer.getString( LOCALE_KEY_PID_COLUMN_LABEL, this, "PID" );
         pidColumnHeader.add( new Label( WICKET_ID_HEADER_PID, pidColumnHeaderLabel ) );
+
+        PaxOrderByBorder factoryPidColumnHeader =
+            new PaxOrderByBorder( "orderByFactoryPID", "factoryPid", confDataProvider, dataView );
+        add( factoryPidColumnHeader );
+        String factoryPidColumnHeaderLabel =
+            localizer.getString( LOCALE_KEY_FACTORY_PID_COLUMN_LABEL, this, "Factory PID" );
+        factoryPidColumnHeader.add( new Label( "columnHeaderFactoryPID", factoryPidColumnHeaderLabel ) );
 
         PaxOrderByBorder bundleLocationColumnHeader = new PaxOrderByBorder(
             WICKET_ID_SORT_HEADER_BUNDLE_LOCATION, WICKET_ID_DATA_BUNDLE_LOCATION, confDataProvider, dataView
@@ -164,6 +173,8 @@ final class ConfigurationBrowserPanel extends Panel
     private static final class ConfigurationDataView extends DataView
     {
 
+
+
         ConfigurationDataView( String id, ConfigurationDataProvider confDataProvider )
         {
             super( id, confDataProvider );
@@ -187,10 +198,9 @@ final class ConfigurationBrowserPanel extends Panel
             Label pidLabel = new Label( WICKET_ID_DATA_PID_LABEL, pid );
             pidLink.add( pidLabel );
 
-            if( bundleLocation == null )
-            {
-                bundleLocation = "";
-            }
+            String factoryPidString = configuration.getFactoryPid();
+            Label factoryPid = new Label( WICKET_ID_FACTORY_PID, factoryPidString );
+            item.add( factoryPid );
 
             Label locationLabel = new Label( WICKET_ID_DATA_BUNDLE_LOCATION, bundleLocation );
             item.add( locationLabel );
