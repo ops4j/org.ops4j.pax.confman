@@ -36,6 +36,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import wicket.application.IClassResolver;
+import wicket.authorization.strategies.role.Roles;
 
 /**
  * {@code Activator} responsibles to activate the pax config admin.
@@ -84,10 +85,15 @@ public final class Activator
         m_overviewPageContent = new OverviewPageContent( bundleContext, overviewPageContainer );
         m_overviewPageContent.register();
 
-        PaxWicketAuthenticator userAdminAuthenticator = new UserAdminAuthenticator( bundleContext );
+        PaxWicketAuthenticator alwaysAdminAuthenticator = new PaxWicketAuthenticator(){
+
+			public Roles authenticate(String username, String password) {
+				// TODO Auto-generated method stub
+				return new Roles(Roles.ADMIN);
+			}};
         PaxWicketApplicationFactory application = new PaxWicketApplicationFactory(
             bundleContext, OverviewPage.class, WicketApplicationConstant.MOUNT_POINT,
-            applicationName, userAdminAuthenticator
+            applicationName, alwaysAdminAuthenticator
         );
 //        application.setDeploymentMode( true );
 
