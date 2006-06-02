@@ -84,7 +84,17 @@ public final class PaxConfigurationFacade
         }
 
         String pid = paxConfiguration.getPid();
-        Configuration configuration = getConfigurationByPID( pid, false );
+        Configuration configuration;
+        if( pid != null )
+        {
+            configuration = getConfigurationByPID( pid, false );
+        }
+        else
+        {
+            String factoryPid = paxConfiguration.getFactoryPid();
+            configuration = getConfigurationByPID( factoryPid, true );
+        }
+
         try
         {
             configuration.delete();
