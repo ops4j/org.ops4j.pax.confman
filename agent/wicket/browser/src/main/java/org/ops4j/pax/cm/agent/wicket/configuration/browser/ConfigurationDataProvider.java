@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
@@ -38,6 +40,8 @@ import wicket.model.Model;
  */
 final class ConfigurationDataProvider extends SortableDataProvider
 {
+
+    private static final Log m_logger = LogFactory.getLog( ConfigurationDataProvider.class );
 
     private ArrayList<PaxConfiguration> m_configurations;
     private int m_selected;
@@ -110,60 +114,66 @@ final class ConfigurationDataProvider extends SortableDataProvider
         );
     }
 
-    PaxConfiguration createNewPaxConfiguration()
+    void createNewPaxConfiguration()
     {
         PaxConfiguration paxConfiguration = new PaxConfiguration();
 
         paxConfiguration.setIsNew( true );
-
         m_configurations.add( m_selected, paxConfiguration );
-
-        return paxConfiguration;
+        notifyListenerOnSelectEvent( paxConfiguration );
     }
 
-    public PaxConfiguration deletePaxConfiguration( PaxConfiguration configuration )
+    private void notifyListenerOnSelectEvent( PaxConfiguration selected )
+    {
+        m_listener.setPaxConfiguration( selected );
+    }
+
+    public void deletePaxConfiguration( PaxConfiguration configuration )
     {
         try
         {
             if( !configuration.isNew() )
             {
                 PaxConfigurationFacade.deleteConfiguration( configuration );
-                m_configurations.remove( m_selected );
-                if( !m_configurations.isEmpty() )
+            }
+
+            m_configurations.remove( m_selected );
+
+            if( !m_configurations.isEmpty() )
+            {
+                int size = m_configurations.size();
+                if( m_selected >= size )
                 {
-                    int size = m_configurations.size();
-                    if( m_selected >= size )
-                    {
-                        m_selected = size - 1;
-                    }
-                    else
-                    {
-                        m_selected = m_selected - 1;
-
-                        if( m_selected < 0 )
-                        {
-                            m_selected = 0;
-                        }
-                    }
-
-                    return m_configurations.get( m_selected );
+                    m_selected = size - 1;
                 }
+                else
+                {
+                    m_selected = m_selected - 1;
+
+                    if( m_selected < 0 )
+                    {
+                        m_selected = 0;
+                    }
+                }
+            }
+            else
+            {
                 m_selected = 0;
-                return null;
             }
         } catch( IOException e )
         {
-            e.printStackTrace();
-            return configuration;
+            m_logger.warn( "Unable to delete configuration [" + configuration.getPid() + "].", e );
         }
 
-        return getSelectedPaxconfiguration();
+        PaxConfiguration selectedPaxConfiguration = getSelectedPaxconfiguration();
+        notifyListenerOnSelectEvent( selectedPaxConfiguration );
     }
 
     PaxConfiguration getSelectedPaxconfiguration()
     {
         if( m_configurations.isEmpty() )
         {
+            m_selected = 0;
             return null;
         }
         else
@@ -181,37 +191,15 @@ final class ConfigurationDataProvider extends SortableDataProvider
             String sortProperty = sort.getProperty();
             boolean isAscending = sort.isAscending();
             sort( sortProperty, isAscending );
+            m_selected = 0;
         }
 
         if( m_configurations.isEmpty() )
         {
             m_selected = 0;
         }
-        else
-        {
-            m_selected = first;
-        }
-
-        notifyListenerOfSelectionChange();
 
         return m_configurations.listIterator( first );
-    }
-
-    private void notifyListenerOfSelectionChange()
-    {
-        if( m_listener != null )
-        {
-            PaxConfiguration configuration;
-            if( m_configurations.isEmpty() )
-            {
-                configuration = null;
-            }
-            else
-            {
-                configuration = m_configurations.get( m_selected );
-            }
-            m_listener.showConfiguration( configuration );
-        }
     }
 
     public IModel model( Object configurationObject )
@@ -219,7 +207,7 @@ final class ConfigurationDataProvider extends SortableDataProvider
         return new Model( (Serializable) configurationObject );
     }
 
-    PaxConfiguration savePaxConfiguration( PaxConfiguration configuration )
+    void savePaxConfiguration( PaxConfiguration configuration )
     {
         try
         {
@@ -229,20 +217,46 @@ final class ConfigurationDataProvider extends SortableDataProvider
             e.printStackTrace();
         }
 
-        return configuration;
+        notifyListenerOnSelectEvent( configuration );
     }
 
-    void setSelectedPaxConfiguration( int i )
+    public void selectPaxConfiguration( PaxConfiguration configuration )
     {
-        m_selected = i;
+        NullArgumentException.validateNotNull( configuration, "configuration" );
+
+        int i = 0;
+        for( PaxConfiguration config : m_configurations )
+        {
+            if( config == configuration )
+            {
+                m_selected = i;
+
+                if( m_listener != null )
+                {
+                    PaxConfiguration configuration1;
+                    if( m_configurations.isEmpty() )
+                    {
+                        configuration1 = null;
+                    }
+                    else
+                    {
+                        configuration1 = m_configurations.get( m_selected );
+                    }
+                    notifyListenerOnSelectEvent( configuration1 );
+                }
+
+                return;
+            }
+            i++;
+        }
     }
 
-    public void setSelectionListener( SelectionChangeListener listener )
+    public final void setSelectionListener( SelectionChangeListener listener )
     {
         m_listener = listener;
     }
 
-    public int size()
+    public final int size()
     {
         return m_configurations.size();
     }

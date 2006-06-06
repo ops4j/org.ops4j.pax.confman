@@ -31,6 +31,8 @@ import wicket.markup.html.basic.Label;
  */
 public final class EditConfigurationPage extends WebPage
 {
+    public static final String PAGE_PARAMETER_PID = "pid";
+
     static final String PAGE_ID = "editConfigurationPage";
 
     private static final String LOCALE_DELETED_CONFIGURATION_MESSAGE = "deletedConfigurationMessage";

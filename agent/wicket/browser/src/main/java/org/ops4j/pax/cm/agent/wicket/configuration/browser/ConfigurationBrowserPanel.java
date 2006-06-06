@@ -18,21 +18,18 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.ConfigurationConstant;
 import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
-import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPage;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewTabItem;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Localizer;
-import wicket.PageParameters;
 import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
@@ -53,10 +50,11 @@ final class ConfigurationBrowserPanel extends Panel
     implements OverviewTabItem
 {
 
-    private static final String LOCALE_KEY_PID_COLUMN_LABEL = "pidColumnLabel";
-    private static final String LOCALE_KEY_FACTORY_PID_COLUMN_LABEL = "factoryPidColumnLabel";
-    private static final String LOCALE_KEY_BUNDLE_LOCATION_COLUMN_LABEL = "bundleLocationColumnLabel";
-    private static final String LOCALE_KEY_TAB_PANEL_LABEL_VALUE = "tabPanelLabel";
+    private static final String LOCALE_SELECT_LINK_LABEL = "selectLinkLabel";
+    private static final String LOCALE_PID_COLUMN_LABEL = "pidColumnLabel";
+    private static final String LOCALE_FACTORY_PID_COLUMN_LABEL = "factoryPidColumnLabel";
+    private static final String LOCALE_BUNDLE_LOCATION_COLUMN_LABEL = "bundleLocationColumnLabel";
+    private static final String LOCALE_TAB_PANEL_LABEL_VALUE = "tabPanelLabel";
 
     private static final String WICKET_ID_EDITOR = "editor";
 
@@ -68,56 +66,64 @@ final class ConfigurationBrowserPanel extends Panel
     private static final String WICKET_ID_SORT_HEADER_BUNDLE_LOCATION = "orderByBundleLocation";
     private static final String WICKET_ID_HEADER_BUNDLE_LOCATION = "columnHeaderBundleLocation";
 
+    private static final String WICKET_ID_SORT_HEADER_FACTORY_PID = "orderByFactoryPID";
+    private static final String WICKET_ID_HEADER_FACTORY_PID = "columnHeaderFactoryPID";
+
     private static final String WICKET_ID_TABLE_DATA = "sorting";
-    private static final String WICKET_ID_DATA_PID_LINK = "pidLink";
+    private static final String WICKET_SELECT_LINK = "selectLink";
+    private static final String WICKET_ID_LINK_LABEL = "selectLinkLabel";
     private static final String WICKET_ID_DATA_PID_LABEL = "pidLabel";
     private static final String WICKET_ID_FACTORY_PID = "factoryPid";
     private static final String WICKET_ID_DATA_BUNDLE_LOCATION = "bundleLocation";
 
     private static final int NUMBER_OF_ROWS_DISPLAYED = 20;
+    private final MiniEditConfigurationPanel m_miniEditConfigurationPanel;
+    private final ConfigurationDataProvider m_confDataProvider;
 
     ConfigurationBrowserPanel( String panelId, ConfigurationDataProvider confDataProvider )
     {
         super( panelId );
         NullArgumentException.validateNotNull( confDataProvider, "confDataProvider" );
+        m_confDataProvider = confDataProvider;
 
         ConfigurationDataView dataView = new ConfigurationDataView( WICKET_ID_TABLE_DATA, confDataProvider );
         dataView.setItemsPerPage( NUMBER_OF_ROWS_DISPLAYED );
         add( dataView );
 
         Localizer localizer = getLocalizer();
+        Label actionColumnHeader = new Label( "action", "actions" );
+        add( actionColumnHeader );
 
         PaxOrderByBorder pidColumnHeader =
             new PaxOrderByBorder( WICKET_ID_SORT_HEADER_PID, "pid", confDataProvider, dataView );
         add( pidColumnHeader );
-        String pidColumnHeaderLabel = localizer.getString( LOCALE_KEY_PID_COLUMN_LABEL, this, "PID" );
+        String pidColumnHeaderLabel = localizer.getString( LOCALE_PID_COLUMN_LABEL, this, "PID" );
         pidColumnHeader.add( new Label( WICKET_ID_HEADER_PID, pidColumnHeaderLabel ) );
 
         PaxOrderByBorder factoryPidColumnHeader =
-            new PaxOrderByBorder( "orderByFactoryPID", "factoryPid", confDataProvider, dataView );
+            new PaxOrderByBorder( WICKET_ID_SORT_HEADER_FACTORY_PID, "factoryPid", confDataProvider, dataView );
         add( factoryPidColumnHeader );
         String factoryPidColumnHeaderLabel =
-            localizer.getString( LOCALE_KEY_FACTORY_PID_COLUMN_LABEL, this, "Factory PID" );
-        factoryPidColumnHeader.add( new Label( "columnHeaderFactoryPID", factoryPidColumnHeaderLabel ) );
+            localizer.getString( LOCALE_FACTORY_PID_COLUMN_LABEL, this, "Factory PID" );
+        factoryPidColumnHeader.add( new Label( WICKET_ID_HEADER_FACTORY_PID, factoryPidColumnHeaderLabel ) );
 
         PaxOrderByBorder bundleLocationColumnHeader = new PaxOrderByBorder(
             WICKET_ID_SORT_HEADER_BUNDLE_LOCATION, WICKET_ID_DATA_BUNDLE_LOCATION, confDataProvider, dataView
         );
         add( bundleLocationColumnHeader );
         String bundleLocationClmnHeaderLabel =
-            localizer.getString( LOCALE_KEY_BUNDLE_LOCATION_COLUMN_LABEL, this, "bundle location" );
+            localizer.getString( LOCALE_BUNDLE_LOCATION_COLUMN_LABEL, this, "bundle location" );
         bundleLocationColumnHeader.add( new Label( WICKET_ID_HEADER_BUNDLE_LOCATION, bundleLocationClmnHeaderLabel ) );
 
-        String tabPanelLabel = localizer.getString( LOCALE_KEY_TAB_PANEL_LABEL_VALUE, this, "browse" );
+        String tabPanelLabel = localizer.getString( LOCALE_TAB_PANEL_LABEL_VALUE, this, "browse" );
         Model tabPanelLabelModel = new Model( tabPanelLabel );
         setModel( tabPanelLabelModel );
 
         PagingNavigator pagingNavigator = new PagingNavigator( WICKET_ID_NAVIGATOR, dataView );
         add( pagingNavigator );
 
-        MiniEditConfigurationPanel miniEditConfigurationPanel =
-            new MiniEditConfigurationPanel( WICKET_ID_EDITOR, confDataProvider );
-        add( miniEditConfigurationPanel );
+        m_miniEditConfigurationPanel = new MiniEditConfigurationPanel( WICKET_ID_EDITOR, confDataProvider );
+        add( m_miniEditConfigurationPanel );
     }
 
     /**
@@ -170,10 +176,8 @@ final class ConfigurationBrowserPanel extends Panel
         }
     }
 
-    private static final class ConfigurationDataView extends DataView
+    private final class ConfigurationDataView extends DataView
     {
-
-
 
         ConfigurationDataView( String id, ConfigurationDataProvider confDataProvider )
         {
@@ -182,21 +186,29 @@ final class ConfigurationBrowserPanel extends Panel
 
         protected void populateItem( final Item item )
         {
-            PaxConfiguration configuration =
+            final PaxConfiguration configuration =
                 (PaxConfiguration) item.getModelObject();
 
             String pid = configuration.getPid();
             String bundleLocation = configuration.getBundleLocation();
 
-            PageParameters pageParameters = new PageParameters();
-            pageParameters.add( ConfigurationConstant.PARAM_KEY_PID, pid );
-            pageParameters.add( ConfigurationConstant.PARAM_KEY_LOCATION, bundleLocation );
-            BookmarkablePageLink pidLink =
-                new BookmarkablePageLink( WICKET_ID_DATA_PID_LINK, EditConfigurationPage.class, pageParameters );
-            item.add( pidLink );
+            Link selectLink = new Link( WICKET_SELECT_LINK )
+            {
+                public void onClick()
+                {
+                    m_confDataProvider.selectPaxConfiguration( configuration );
+                }
+            };
+            item.add( selectLink );
+
+            Localizer localizer = getLocalizer();
+            String linkLabelString =
+                localizer.getString( LOCALE_SELECT_LINK_LABEL, ConfigurationBrowserPanel.this, "select" );
+            Label linkLabel = new Label( WICKET_ID_LINK_LABEL, linkLabelString );
+            selectLink.add( linkLabel );
 
             Label pidLabel = new Label( WICKET_ID_DATA_PID_LABEL, pid );
-            pidLink.add( pidLabel );
+            item.add( pidLabel );
 
             String factoryPidString = configuration.getFactoryPid();
             Label factoryPid = new Label( WICKET_ID_FACTORY_PID, factoryPidString );

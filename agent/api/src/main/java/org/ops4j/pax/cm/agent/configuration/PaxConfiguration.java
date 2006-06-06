@@ -49,7 +49,9 @@ public final class PaxConfiguration
     public PaxConfiguration()
     {
         m_isNew = false;
-        m_properties = new Hashtable();
+        setPid( "" );
+        setFactoryPid( "" );
+        setProperties( new Hashtable() );
     }
 
     /**

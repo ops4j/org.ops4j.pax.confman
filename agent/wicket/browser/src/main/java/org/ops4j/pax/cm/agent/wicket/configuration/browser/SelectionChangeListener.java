@@ -21,5 +21,5 @@ import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 
 public interface SelectionChangeListener
 {
-    void showConfiguration( PaxConfiguration configuration );
+    void setPaxConfiguration( PaxConfiguration configuration );
 }

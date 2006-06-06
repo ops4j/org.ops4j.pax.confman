@@ -22,6 +22,7 @@
         <span class="configuration-browser-navigator" wicket:id="navigator">[dataview navigator]</span>
         <table cellspacing="0" class="dataview">
             <tr>
+                <th wicket:id="action"></th>
                 <th wicket:id="orderByPID">
                     <span wicket:id="columnHeaderPID"></span>
                 </th>
@@ -34,7 +35,8 @@
             </tr>
 
             <tr wicket:id="sorting">
-                <td><a wicket:id="pidLink"><span wicket:id="pidLabel"></span></a></td>
+                <td><a wicket:id="selectLink"><span wicket:id="selectLinkLabel"></span></a></td>
+                <td><span wicket:id="pidLabel"></span></td>
                 <td><span wicket:id="factoryPid">[factoryPid]</span></td>
                 <td><span wicket:id="bundleLocation">[bundleLocation]</span></td>
             </tr>
