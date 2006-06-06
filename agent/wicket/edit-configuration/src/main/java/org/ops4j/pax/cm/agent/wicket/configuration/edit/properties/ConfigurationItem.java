@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.ops4j.pax.cm.agent.wicket.configuration.edit;
+package org.ops4j.pax.cm.agent.wicket.configuration.edit.properties;
 
 import java.io.Serializable;
 
@@ -26,14 +26,15 @@ import java.io.Serializable;
 final class ConfigurationItem
     implements Serializable
 {
+
     public static final String PROPERTY_KEY = "key";
 
     private static final long serialVersionUID = 1L;
 
-    private final String m_key;
-    private final String m_value;
+    private String m_key;
+    private Object m_value;
 
-    ConfigurationItem( String key, String value )
+    ConfigurationItem( String key, Object value )
     {
         m_key = key;
         m_value = value;
@@ -44,12 +45,17 @@ final class ConfigurationItem
         return m_key;
     }
 
-    public String getValue()
+    public Object getValue()
     {
         return m_value;
     }
 
-    public String getPropertyValue( String property )
+    public void setValue( Object value )
+    {
+        m_value = value;
+    }
+
+    public Object getPropertyValue( String property )
     {
         if( PROPERTY_KEY.equals( property ) )
         {

@@ -18,23 +18,23 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.edit;
 
 import java.io.IOException;
-import org.ops4j.pax.cm.agent.ConfigurationConstant;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.ConfigurationAdminException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import wicket.Application;
-import wicket.Localizer;
-import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.Component;
+import wicket.Localizer;
+import wicket.Page;
+import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.link.Link;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
-import wicket.model.IModel;
-import wicket.model.PropertyModel;
 
 /**
  * @author Edward Yakop
@@ -42,6 +42,8 @@ import wicket.model.PropertyModel;
  */
 final class EditConfigurationPanel extends Panel
 {
+
+    private static final Log m_logger = LogFactory.getLog( EditConfigurationPanel.class );
 
     static final String PAGE_ID = "editConfigurationPage";
 
@@ -71,192 +73,179 @@ final class EditConfigurationPanel extends Panel
     {
         super( id );
 
-        Localizer localizer = getLocalizer();
-        CompoundPropertyModel formModel = new CompoundPropertyModel( configuration );
-
         pageContainer.createConfigurationPropertiesEditor( configuration );
 
         EditConfigurationForm editConfigurationForm =
-            new EditConfigurationForm( WICKET_ID_FORM, formModel, localizer, configuration, pageContainer );
+            new EditConfigurationForm( WICKET_ID_FORM, configuration, pageContainer );
         add( editConfigurationForm );
     }
 
     private final class EditConfigurationForm extends Form
     {
 
-        private final PaxConfiguration m_configuration;
-        private Class m_responsePageClass;
-        private PageParameters m_pageParameters;
+        private PaxConfiguration m_configuration;
 
-        private EditConfigurationForm( String id, IModel model, Localizer localizer, PaxConfiguration configuration,
-                                       EditConfigurationPageContainer pageContainer )
+        private EditConfigurationForm(
+            String id, PaxConfiguration configuration, EditConfigurationPageContainer pageContainer )
         {
-            super( id, model );
+            super( id );
 
             m_configuration = configuration;
-            m_responsePageClass = EditConfigurationPage.class;
-            m_pageParameters = new PageParameters();
+
+            CompoundPropertyModel compoundPropertyModel = new CompoundPropertyModel( m_configuration );
+            setModel( compoundPropertyModel );
+
+            Localizer localizer = EditConfigurationPanel.this.getLocalizer();
 
             // PID label and text field.
-            String PIDLabelString = localizer.getString( LOCALE_PID_LABEL, this, "PID:" );
-            Label PIDLabel = new Label( WICKET_ID_PID_LABEL, PIDLabelString );
+            Label PIDLabel = newPidLabel( localizer );
             add( PIDLabel );
-            PropertyModel PIDConfigModel = new PropertyModel( configuration, "pid" );
-            Label pidLabelValue = new Label( WICKET_ID_PID_LABEL_VALUE, PIDConfigModel );
-            add( pidLabelValue );
+
+            TextField pidTextField = new TextField( WICKET_ID_PID_LABEL_VALUE );
+            pidTextField.setEnabled( false );
+            add( pidTextField );
 
             // Factory PID label and text field.
-            String factoryPIDLabelString = localizer.getString( LOCALE_FACTORY_PID_LABEL, this, "Factory PID:" );
-            Label factoryPIDLabel = new Label( WICKET_ID_FACTORY_PID_LABEL, factoryPIDLabelString );
+            Label factoryPIDLabel = newFactoryPidLabel( localizer );
             add( factoryPIDLabel );
+
             String factoryPid = configuration.getFactoryPid();
-            Label factoryPIDLabelValue = new Label( WICKET_ID_FACTORY_PID_LABEL_VALUE, configuration.getFactoryPid() );
-            add( factoryPIDLabelValue );
+            TextField factoryPIDTextField = new TextField( WICKET_ID_FACTORY_PID_LABEL_VALUE );
+            factoryPIDTextField.setEnabled( false );
+            add( factoryPIDTextField );
             if( factoryPid == null )
             {
                 factoryPIDLabel.setVisible( false );
-                factoryPIDLabelValue.setVisible( false );
+                factoryPIDTextField.setVisible( false );
             }
 
             // Bundle location label and label.
-            String bundleLocationLabelString = localizer.getString( LOCALE_BUNDLE_LOCATION, this, "Bundle location:" );
-            Label bundleLocationLabel = new Label( WICKET_ID_BUNDLE_LOCATION_LABEL, bundleLocationLabelString );
+            Label bundleLocationLabel = newBundleLocationLabel( localizer );
             add( bundleLocationLabel );
 
-            String bundleLocation = configuration.getBundleLocation();
-            if( bundleLocation == null )
-            {
-                bundleLocation = "";
-            }
-            Label bundleLocationValue = new Label( WICKET_ID_BUNDLE_LOCATION_VALUE, bundleLocation );
+            TextField bundleLocationValue = new TextField( WICKET_ID_BUNDLE_LOCATION_VALUE );
+            bundleLocationValue.setEnabled( false );
             add( bundleLocationValue );
 
             Component configPropsComponent = pageContainer.createConfigurationPropertiesEditor( configuration );
             add( configPropsComponent );
 
-            Link saveLink = new SaveLink( WICKET_ID_SAVE, this );
-            add( saveLink );
+            Button saveButton = newSaveButton();
+            add( saveButton );
 
-            ResetLink resetLink = new ResetLink( WICKET_ID_RESET, this );
-            add( resetLink );
+            Button resetButton = newResetButton();
+            add( resetButton );
 
-            DeleteLink deleteLink = new DeleteLink( WICKET_ID_DELETE, this );
-            add( deleteLink );
+            Button deleteButton = newDeleteButton();
+            add( deleteButton );
         }
 
-        protected void onSubmit()
+        private Label newBundleLocationLabel( Localizer localizer )
         {
-            RequestCycle requestCycle = getRequestCycle();
-
-            requestCycle.setResponsePage( m_responsePageClass, m_pageParameters );
-            requestCycle.setRedirect( true );
+            String bundleLocationLabelString = localizer.getString( LOCALE_BUNDLE_LOCATION, this, "Bundle location:" );
+            return new Label( WICKET_ID_BUNDLE_LOCATION_LABEL, bundleLocationLabelString );
         }
 
-        private void setResponsePageLocation( Class responseClass, PageParameters pageParameters )
+        private Label newFactoryPidLabel( Localizer localizer )
         {
-            m_responsePageClass = responseClass;
-            m_pageParameters = pageParameters;
+            String factoryPIDLabelString = localizer.getString( LOCALE_FACTORY_PID_LABEL, this, "Factory PID:" );
+            return new Label( WICKET_ID_FACTORY_PID_LABEL, factoryPIDLabelString );
+        }
+
+        private Label newPidLabel( Localizer localizer )
+        {
+            String PIDLabelString = localizer.getString( LOCALE_PID_LABEL, this, "PID:" );
+            return new Label( WICKET_ID_PID_LABEL, PIDLabelString );
+        }
+
+        private Button newDeleteButton()
+        {
+            Button deleteButton = new Button( WICKET_ID_DELETE )
+            {
+                protected void onSubmit()
+                {
+                    try
+                    {
+                        PaxConfiguration configuration = m_configuration;
+
+                        try
+                        {
+                            PaxConfigurationFacade.deleteConfiguration( configuration );
+                        } catch( IOException e )
+                        {
+                            m_logger.warn( "Unable to delete [" + m_configuration.getPid() + "].", e );
+                        }
+
+                        Application application = getApplication();
+                        Class homePage = application.getHomePage();
+                        PageParameters pageParameters = new PageParameters();
+                        String pageParamTabName = WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
+                        String tabNameBrowser = WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
+                        pageParameters.add( pageParamTabName, tabNameBrowser );
+
+                        Page page = findPage();
+                        page.setResponsePage( homePage, pageParameters );
+                    } catch( ConfigurationAdminException cae )
+                    {
+                        m_logger.debug( "Unable to delete configuration [" + m_configuration.getPid() + "].", cae );
+                    }
+                }
+            };
+            deleteButton.setDefaultFormProcessing( false );
+            return deleteButton;
+        }
+
+        private Button newSaveButton()
+        {
+            return new Button( WICKET_ID_SAVE )
+            {
+                protected void onSubmit()
+                {
+                    PaxConfiguration paxConfiguration = getConfiguration();
+                    try
+                    {
+                        PaxConfigurationFacade.updateConfiguration( paxConfiguration );
+                    } catch( IOException e )
+                    {
+                        m_logger.warn( "Unable to save configuration [" + paxConfiguration.getPid() + "]", e );
+                    }
+                }
+            };
         }
 
         private PaxConfiguration getConfiguration()
         {
             return m_configuration;
         }
-    }
 
-    private static final class DeleteLink extends Link
-    {
-
-        private final EditConfigurationForm m_form;
-
-        public DeleteLink( String id, EditConfigurationForm form )
+        private Button newResetButton()
         {
-            super( id );
-            m_form = form;
-        }
-
-        public void onClick()
-        {
-            try
+            Button resetButton = new Button( WICKET_ID_RESET )
             {
-                PaxConfiguration configuration = m_form.getConfiguration();
+                public void onSubmit()
+                {
+                    String pid = m_configuration.getPid();
+                    try
+                    {
+                        String factoryPid = m_configuration.getFactoryPid();
+                        if( factoryPid != null && factoryPid.length() > 0 )
+                        {
+                            m_configuration = PaxConfigurationFacade.getConfiguration( factoryPid, true );
+                        }
+                        else
+                        {
+                            m_configuration = PaxConfigurationFacade.getConfiguration( pid, false );
+                        }
 
-                try
-                {
-                    PaxConfigurationFacade.deleteConfiguration( configuration );
-                } catch( IOException e )
-                {
-                    e.printStackTrace();  //TODO: Auto-generated, need attention.
+                        EditConfigurationForm.this.setModelObject( m_configuration );
+                    } catch( IOException e )
+                    {
+                        m_logger.warn( "Unable to load configuration [" + pid + "]", e );
+                    }
                 }
-
-                Application application = getApplication();
-                Class homePage = application.getHomePage();
-                PageParameters pageParameters = new PageParameters();
-                String pageParamTabName = WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
-                String tabNameBrowser = WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
-                pageParameters.add( pageParamTabName, tabNameBrowser );
-
-                m_form.setResponsePageLocation( homePage, pageParameters );
-            } catch( ConfigurationAdminException cae )
-            {
-                // TODO add the exception message to explaination panel
-                cae.printStackTrace();
-            }
-        }
-    }
-
-    private static final class ResetLink extends Link
-    {
-
-        private final EditConfigurationForm m_form;
-
-        private ResetLink( String id, EditConfigurationForm form )
-        {
-            super( id );
-            m_form = form;
-        }
-
-        public void onClick()
-        {
-            PaxConfiguration paxConfiguration = m_form.getConfiguration();
-            String configurationPid = paxConfiguration.getPid();
-            PageParameters pageParameters = new PageParameters();
-            pageParameters.add( ConfigurationConstant.PARAM_KEY_PID, configurationPid );
-            m_form.setResponsePageLocation( EditConfigurationPage.class, pageParameters );
-        }
-    }
-
-    private static final class SaveLink extends Link
-    {
-
-        private final EditConfigurationForm m_form;
-
-        private SaveLink( String id, EditConfigurationForm form )
-        {
-            super( id );
-            m_form = form;
-        }
-
-        public void onClick()
-        {
-            PaxConfiguration paxConfiguration = m_form.getConfiguration();
-            try
-            {
-                PaxConfigurationFacade.updateConfiguration( paxConfiguration );
-            } catch( IOException e )
-            {
-                // TODO: need to add this error to explaination panel
-                e.printStackTrace();
-            }
-
-            Application application = getApplication();
-            Class homePage = application.getHomePage();
-            PageParameters pageParameters = new PageParameters();
-            String pageParamTabName = WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID;
-            String tabNameBrowser = WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
-            pageParameters.add( pageParamTabName, tabNameBrowser );
-
-            m_form.setResponsePageLocation( homePage, pageParameters );
+            };
+            resetButton.setDefaultFormProcessing( false );
+            return resetButton;
         }
     }
 }

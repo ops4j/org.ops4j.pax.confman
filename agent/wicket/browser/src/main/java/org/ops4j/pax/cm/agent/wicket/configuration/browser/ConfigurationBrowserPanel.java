@@ -20,19 +20,17 @@ package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.wicket.PaxCssAttributeModel;
+import org.ops4j.pax.cm.agent.wicket.PaxOrderByBorder;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewTabItem;
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.Localizer;
 import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
-import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.Model;
 
 /**
@@ -59,6 +57,8 @@ final class ConfigurationBrowserPanel extends Panel
     private static final String WICKET_ID_EDITOR = "editor";
 
     private static final String WICKET_ID_NAVIGATOR = "navigator";
+
+    private static final String WICKET_ID_HEADER_ACTION = "action";
 
     private static final String WICKET_ID_SORT_HEADER_PID = "orderByPID";
     private static final String WICKET_ID_HEADER_PID = "columnHeaderPID";
@@ -91,7 +91,7 @@ final class ConfigurationBrowserPanel extends Panel
         add( dataView );
 
         Localizer localizer = getLocalizer();
-        Label actionColumnHeader = new Label( "action", "actions" );
+        Label actionColumnHeader = new Label( WICKET_ID_HEADER_ACTION, "actions" );
         add( actionColumnHeader );
 
         PaxOrderByBorder pidColumnHeader =
@@ -137,45 +137,6 @@ final class ConfigurationBrowserPanel extends Panel
         return WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
     }
 
-    private static final class PaxOrderByBorder extends OrderByBorder
-    {
-
-        private final DataView m_dataView;
-
-        private PaxOrderByBorder( String id, String property, ISortStateLocator stateLocator, DataView dataView )
-        {
-            super( id, property, stateLocator );
-
-            NullArgumentException.validateNotNull( dataView, "dataView" );
-            m_dataView = dataView;
-        }
-
-        protected void onSortChanged()
-        {
-            m_dataView.setCurrentPage( 0 );
-        }
-    }
-
-    private static final class PaxReplaceAttributeModel extends AbstractReadOnlyModel
-    {
-
-        private static final String CSS_CLASS_EVEN = "even";
-        private static final String CSS_CLASS_ODD = "odd";
-
-        private final Item m_item;
-
-        private PaxReplaceAttributeModel( Item item )
-        {
-            NullArgumentException.validateNotNull( item, "item" );
-            m_item = item;
-        }
-
-        public Object getObject( Component component )
-        {
-            return ( m_item.getIndex() % 2 == 1 ) ? CSS_CLASS_EVEN : CSS_CLASS_ODD;
-        }
-    }
-
     private final class ConfigurationDataView extends DataView
     {
 
@@ -217,8 +178,8 @@ final class ConfigurationBrowserPanel extends Panel
             Label locationLabel = new Label( WICKET_ID_DATA_BUNDLE_LOCATION, bundleLocation );
             item.add( locationLabel );
 
-            PaxReplaceAttributeModel replaceModel = new PaxReplaceAttributeModel( item );
-            AttributeModifier highlightBehaviour = new AttributeModifier( "class", true, replaceModel );
+            PaxCssAttributeModel cssAttributeModel = new PaxCssAttributeModel( item );
+            AttributeModifier highlightBehaviour = new AttributeModifier( "class", true, cssAttributeModel );
             item.add( highlightBehaviour );
         }
     }

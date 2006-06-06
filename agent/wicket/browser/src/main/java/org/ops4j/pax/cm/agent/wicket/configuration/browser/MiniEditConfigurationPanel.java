@@ -38,7 +38,6 @@ import wicket.model.PropertyModel;
 final class MiniEditConfigurationPanel extends Panel
     implements SelectionChangeListener
 {
-
     private static final String WICKET_ID_FORM = "form";
 
     private PaxConfiguration m_configuration;
@@ -74,21 +73,12 @@ final class MiniEditConfigurationPanel extends Panel
 
         m_form.modelChanging();
         m_form.setModelObject( m_configuration );
-        String pid = m_configuration.getPid();
-        m_form.m_pidTextField.setModelObject( pid );
-        for( int i = 0; i < 100; i++ )
-        {
-            System.err.println( "EFY: Pid has been modified to [" + pid + "]" );
-        }
-
         m_form.setFormMode( configuration );
         m_form.modelChanged();
-
     }
 
     private final class MiniConfigurationForm extends Form
     {
-
         private static final String WICKET_ID_PID_LABEL = "PIDLabel";
         private static final String WICKET_ID_PID = "pid";
         private static final String WICKET_ID_FACTORY_PID_LABEL = "factoryPIDLabel";

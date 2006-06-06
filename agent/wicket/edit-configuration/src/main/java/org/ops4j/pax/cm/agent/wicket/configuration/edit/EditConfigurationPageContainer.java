@@ -24,6 +24,7 @@ import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.configuration.ConfigurationPropertiesEditorContent;
+import org.ops4j.pax.cm.agent.wicket.configuration.edit.properties.DefaultConfigurationPropertiesEditor;
 import org.ops4j.pax.wicket.service.Content;
 import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import org.osgi.framework.BundleContext;

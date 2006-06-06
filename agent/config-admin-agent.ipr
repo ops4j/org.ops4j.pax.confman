@@ -285,6 +285,7 @@
       <module fileurl="file://$PROJECT_DIR$/wicket/overview/page.overview.iml" filepath="$PROJECT_DIR$/wicket/overview/page.overview.iml" group="wicket/pages" />
       <module fileurl="file://$PROJECT_DIR$/wicket/browser/panel.browser.iml" filepath="$PROJECT_DIR$/wicket/browser/panel.browser.iml" group="wicket/panels" />
       <module fileurl="file://$PROJECT_DIR$/test-data/test-data.iml" filepath="$PROJECT_DIR$/test-data/test-data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wicket/api/wicket-api.iml" filepath="$PROJECT_DIR$/wicket/api/wicket-api.iml" group="wicket" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" />

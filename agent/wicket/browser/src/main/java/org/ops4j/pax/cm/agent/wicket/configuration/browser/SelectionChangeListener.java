@@ -19,7 +19,12 @@ package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 
+/**
+ * @author Edward Yakop
+ * @since 0.1.0
+ */
 public interface SelectionChangeListener
 {
+
     void setPaxConfiguration( PaxConfiguration configuration );
 }
