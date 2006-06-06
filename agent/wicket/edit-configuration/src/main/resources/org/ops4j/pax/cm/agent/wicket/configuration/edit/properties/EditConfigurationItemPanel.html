@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/" xml:lang="en" lang="en">
+<body>
+    <wicket:panel>
+        <form wicket:id="form">
+            <table class="editorTable">
+                <tr>
+                    <td wicket:id="keyLabel" width="200">[keyLabel]</td>
+                    <td><input wicket:id="key"></input></td>
+                </tr>
+                <tr>
+                    <td wicket:id="valueLabel" width="200">[valueLabel]</td>
+                    <td>
+                        <input wicket:id="value"></input>
+                    </td>
+                </tr>
+
+            </table>
+
+            <input class="new" type="submit" value="new" wicket:id="new"></input>
+            <input class="save" type="submit" value="save" wicket:id="save"></input>
+            <!--<input class="reset" type="submit" value="reset" wicket:id="reset"></input>-->
+            <input class="delete" type="submit" value="delete" wicket:id="delete"></input>
+        </form>
+    </wicket:panel>
+</body>
+</html>

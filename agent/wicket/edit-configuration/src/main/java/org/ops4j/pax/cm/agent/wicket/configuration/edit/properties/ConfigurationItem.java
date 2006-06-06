@@ -26,13 +26,19 @@ import java.io.Serializable;
 final class ConfigurationItem
     implements Serializable
 {
-
     public static final String PROPERTY_KEY = "key";
 
     private static final long serialVersionUID = 1L;
 
     private String m_key;
+
     private Object m_value;
+
+    ConfigurationItem()
+    {
+        m_key = "";
+        m_value = "";
+    }
 
     ConfigurationItem( String key, Object value )
     {
@@ -43,6 +49,11 @@ final class ConfigurationItem
     public String getKey()
     {
         return m_key;
+    }
+
+    public void setKey( String key )
+    {
+        m_key = key;
     }
 
     public Object getValue()

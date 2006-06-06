@@ -50,6 +50,8 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
     private static final String WICKET_ID_HEADER_VALUE = "columnHeaderValue";
     private static final String WICKET_ID_NAVIGATOR = "navigator";
 
+    private static final String WICKET_ID_EDITOR = "editor";
+
     private final PaxConfiguration m_configuration;
 
     public DefaultConfigurationPropertiesEditor( String id, PaxConfiguration configuration )
@@ -95,6 +97,8 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
         PagingNavigator pagingNavigator = new PagingNavigator( WICKET_ID_NAVIGATOR, dataView );
         add( pagingNavigator );
 
+        EditConfigurationItemPanel editor = new EditConfigurationItemPanel( WICKET_ID_EDITOR, dataProvider );
+        add( editor );
     }
 
     private class ConfigurationDataView extends DataView
