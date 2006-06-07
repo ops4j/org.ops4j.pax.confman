@@ -7,6 +7,7 @@ Bundle-Vendor: OPS4J
 Bundle-Localization: plugin
 Import-Package: org.ops4j.pax.cm.agent,
  org.ops4j.pax.cm.agent.configuration,
+ org.ops4j.pax.cm.agent.wicket,
  org.ops4j.pax.cm.agent.wicket.configuration,
  org.ops4j.pax.cm.agent.wicket.overview,
  org.ops4j.pax.wicket.service,
