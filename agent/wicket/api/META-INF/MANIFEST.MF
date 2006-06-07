@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Api Plug-in
+Bundle-SymbolicName: org.ops4j.pax.config_admin.agent.wicket.api
+Bundle-Version: 1.0.0
+Bundle-Vendor: OPS4J
+Bundle-Localization: plugin
+Bundle-ClassPath: ops4j-base-0.2.0-SNAPSHOT.jar,
+ .
+Import-Package: wicket,
+ wicket.extensions.markup.html.repeater,
+ wicket.extensions.markup.html.repeater.data,
+ wicket.extensions.markup.html.repeater.data.grid,
+ wicket.extensions.markup.html.repeater.data.sort,
+ wicket.extensions.markup.html.repeater.data.table,
+ wicket.extensions.markup.html.repeater.data.table.filter,
+ wicket.extensions.markup.html.repeater.pageable,
+ wicket.extensions.markup.html.repeater.refreshing,
+ wicket.extensions.markup.html.repeater.util,
+ wicket.model
+Export-Package: org.ops4j.pax.cm.agent.wicket
