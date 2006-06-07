@@ -58,6 +58,7 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
         if( properties == null )
         {
             properties = new Properties();
+            m_configuration.setProperties( properties );
         }
 
         int numberOfProperties = properties.size();
@@ -168,6 +169,7 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
     public void newConfigurationItem()
     {
         ConfigurationItem newConfigurationItem = new ConfigurationItem();
+        newConfigurationItem.setIsNew( true );
         m_configurationProperties.add( m_selected, newConfigurationItem );
 
         notifyListener( newConfigurationItem );
@@ -203,5 +205,13 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
     public void saveConfigurationItem( ConfigurationItem configurationItem )
     {
         NullArgumentException.validateNotNull( configurationItem, "configurationItem" );
+
+        configurationItem.setIsNew( false );
+        Dictionary properties = m_configuration.getProperties();
+        Object value = configurationItem.getValue();
+        String key = configurationItem.getKey();
+        properties.put( key, value );
+
+        notifyListener( configurationItem );
     }
 }

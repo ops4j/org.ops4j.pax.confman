@@ -52,22 +52,21 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
 
     private static final String WICKET_ID_EDITOR = "editor";
 
-    private final PaxConfiguration m_configuration;
-
     public DefaultConfigurationPropertiesEditor( String id, PaxConfiguration configuration )
     {
         super( id );
 
+        PaxConfiguration configuration1;
         if( configuration != null )
         {
-            m_configuration = configuration;
+            configuration1 = configuration;
         }
         else
         {
-            m_configuration = new PaxConfiguration();
+            configuration1 = new PaxConfiguration();
         }
 
-        ConfigurationItemDataProvider dataProvider = new ConfigurationItemDataProvider( m_configuration );
+        ConfigurationItemDataProvider dataProvider = new ConfigurationItemDataProvider( configuration1 );
         ConfigurationDataView dataView = new ConfigurationDataView( WICKET_ID_TABLE, dataProvider );
         dataView.setItemsPerPage( 20 );
         add( dataView );

@@ -32,11 +32,10 @@ import wicket.model.CompoundPropertyModel;
  */
 class EditConfigurationItemPanel extends Panel
 {
-
     private static final String WICKET_ID_FORM = "form";
 
     private final ConfigurationItemDataProvider m_dataProvider;
-    private final EditConfigurationForm m_form;
+    private final EditConfigurationItemForm m_form;
 
     private ConfigurationItem m_configurationItem;
 
@@ -51,7 +50,7 @@ class EditConfigurationItemPanel extends Panel
         m_dataProvider = dataProvider;
         m_dataProvider.setSelectionListener( this );
 
-        m_form = new EditConfigurationForm( WICKET_ID_FORM );
+        m_form = new EditConfigurationItemForm( WICKET_ID_FORM );
         add( m_form );
     }
 
@@ -74,9 +73,8 @@ class EditConfigurationItemPanel extends Panel
         m_form.modelChanged();
     }
 
-    private final class EditConfigurationForm extends Form
+    private final class EditConfigurationItemForm extends Form
     {
-
         private static final String LOCALE_KEY_LABEL = "keyLabel";
         private static final String LOCALE_VALUE_LABEL = "valueLabel";
 
@@ -94,7 +92,7 @@ class EditConfigurationItemPanel extends Panel
         private final Button m_deleteButton;
         private final Button m_saveButton;
 
-        public EditConfigurationForm( String id )
+        public EditConfigurationItemForm( String id )
         {
             super( id );
 
@@ -109,6 +107,7 @@ class EditConfigurationItemPanel extends Panel
             add( keyLabel );
 
             m_keyTextField = new TextField( WICKET_ID_KEY );
+            m_keyTextField.setEnabled( false );
             add( m_keyTextField );
 
             String valueLabelString = localizer.getString( LOCALE_VALUE_LABEL, editConfigurationItemPanel, "Value: " );
@@ -116,28 +115,30 @@ class EditConfigurationItemPanel extends Panel
             add( valueLabel );
 
             m_valueTextField = new TextField( WICKET_ID_VALUE );
+            m_valueTextField.setEnabled( false );
             add( m_valueTextField );
 
             Button newButton = newNewButton( WICKET_ID_NEW_BUTTON );
             add( newButton );
 
             m_saveButton = newSaveButton( WICKET_ID_SAVE_BUTTON );
+            m_saveButton.setEnabled( false );
             add( m_saveButton );
 
             m_deleteButton = newDeleteButton( WICKET_ID_DELETE_BUTTON );
+            m_deleteButton.setEnabled( false );
             add( m_deleteButton );
         }
 
-        private Button newSaveButton( String id )
+        private Button newSaveButton( String wicketIdSaveButton )
         {
-            Button saveButton = new Button( id )
+            return new Button( wicketIdSaveButton )
             {
                 protected void onSubmit()
                 {
                     m_dataProvider.saveConfigurationItem( m_configurationItem );
                 }
             };
-            return saveButton;
         }
 
         private Button newDeleteButton( String id )
@@ -167,11 +168,15 @@ class EditConfigurationItemPanel extends Panel
             return newButton;
         }
 
-        public void setFormMode( ConfigurationItem item )
+        private void setFormMode( ConfigurationItem item )
         {
             if( item == null )
             {
                 setFormToDisableMode();
+            }
+            else if( item.isNew() )
+            {
+                setFormToNewMode();
             }
             else
             {
@@ -179,9 +184,17 @@ class EditConfigurationItemPanel extends Panel
             }
         }
 
-        private void setFormToEditMode()
+        private void setFormToNewMode()
         {
             m_keyTextField.setEnabled( true );
+            m_valueTextField.setEnabled( true );
+            m_saveButton.setEnabled( true );
+            m_deleteButton.setEnabled( true );
+        }
+
+        private void setFormToEditMode()
+        {
+            m_keyTextField.setEnabled( false );
             m_valueTextField.setEnabled( true );
             m_saveButton.setEnabled( true );
             m_deleteButton.setEnabled( true );

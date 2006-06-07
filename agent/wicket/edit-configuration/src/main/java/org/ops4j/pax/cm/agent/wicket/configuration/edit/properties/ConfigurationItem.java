@@ -26,6 +26,7 @@ import java.io.Serializable;
 final class ConfigurationItem
     implements Serializable
 {
+
     public static final String PROPERTY_KEY = "key";
 
     private static final long serialVersionUID = 1L;
@@ -33,17 +34,13 @@ final class ConfigurationItem
     private String m_key;
 
     private Object m_value;
+    private boolean m_isNew;
 
     ConfigurationItem()
     {
+        m_isNew = false;
         m_key = "";
         m_value = "";
-    }
-
-    ConfigurationItem( String key, Object value )
-    {
-        m_key = key;
-        m_value = value;
     }
 
     public String getKey()
@@ -73,5 +70,15 @@ final class ConfigurationItem
             return getKey();
         }
         return getValue();
+    }
+
+    public boolean isNew()
+    {
+        return m_isNew;
+    }
+
+    public void setIsNew( boolean value )
+    {
+        m_isNew = value;
     }
 }

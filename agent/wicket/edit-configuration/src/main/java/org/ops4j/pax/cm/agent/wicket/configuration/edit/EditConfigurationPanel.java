@@ -73,11 +73,12 @@ final class EditConfigurationPanel extends Panel
     {
         super( id );
 
-        pageContainer.createConfigurationPropertiesEditor( configuration );
-
         EditConfigurationForm editConfigurationForm =
-            new EditConfigurationForm( WICKET_ID_FORM, configuration, pageContainer );
+            new EditConfigurationForm( WICKET_ID_FORM, configuration );
         add( editConfigurationForm );
+
+        Component configPropsComponent = pageContainer.createConfigurationPropertiesEditor( configuration );
+        add( configPropsComponent );
     }
 
     private final class EditConfigurationForm extends Form
@@ -86,7 +87,7 @@ final class EditConfigurationPanel extends Panel
         private PaxConfiguration m_configuration;
 
         private EditConfigurationForm(
-            String id, PaxConfiguration configuration, EditConfigurationPageContainer pageContainer )
+            String id, PaxConfiguration configuration )
         {
             super( id );
 
@@ -126,9 +127,6 @@ final class EditConfigurationPanel extends Panel
             TextField bundleLocationValue = new TextField( WICKET_ID_BUNDLE_LOCATION_VALUE );
             bundleLocationValue.setEnabled( false );
             add( bundleLocationValue );
-
-            Component configPropsComponent = pageContainer.createConfigurationPropertiesEditor( configuration );
-            add( configPropsComponent );
 
             Button saveButton = newSaveButton();
             add( saveButton );
@@ -201,21 +199,15 @@ final class EditConfigurationPanel extends Panel
             {
                 protected void onSubmit()
                 {
-                    PaxConfiguration paxConfiguration = getConfiguration();
                     try
                     {
-                        PaxConfigurationFacade.updateConfiguration( paxConfiguration );
+                        PaxConfigurationFacade.updateConfiguration( m_configuration );
                     } catch( IOException e )
                     {
-                        m_logger.warn( "Unable to save configuration [" + paxConfiguration.getPid() + "]", e );
+                        m_logger.warn( "Unable to save configuration [" + m_configuration.getPid() + "]", e );
                     }
                 }
             };
-        }
-
-        private PaxConfiguration getConfiguration()
-        {
-            return m_configuration;
         }
 
         private Button newResetButton()
