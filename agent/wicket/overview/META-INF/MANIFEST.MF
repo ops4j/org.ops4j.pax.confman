@@ -12,9 +12,7 @@ Import-Package:
  org.ops4j.pax.cm.agent.configuration,
  org.ops4j.pax.cm.agent.utils,
  org.ops4j.pax.cm.agent.wicket.configuration,
- org.ops4j.pax.cm.agent.wicket.configuration.browser,
  org.ops4j.pax.cm.agent.wicket.configuration.edit,
- org.ops4j.pax.cm.agent.wicket.overview,
  org.ops4j.pax.wicket.service,
  wicket,
  wicket.extensions.ajax.markup.html.tabs,
@@ -28,4 +26,3 @@ Export-Package: org.ops4j.pax.cm.agent.wicket.overview
 Bundle-ClassPath: ops4j-base-0.2.0-SNAPSHOT.jar,
  .,
  pax-logging-client-0.7.2-SNAPSHOT.jar
-Bundle-Activator: org.ops4j.pax.cm.agent.wicket.overview.Activator
