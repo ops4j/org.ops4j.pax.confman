@@ -10,15 +10,17 @@ Import-Package: org.ops4j.pax.cm.agent,
  org.ops4j.pax.cm.agent.utils,
  org.ops4j.pax.cm.agent.wicket.configuration.browser,
  org.ops4j.pax.cm.agent.wicket.configuration.edit,
- org.ops4j.pax.cm.agent.wicket.overview,
+ org.ops4j.pax.cm.agent.wicket.configuration.edit.properties,
  org.ops4j.pax.logging,
  org.ops4j.pax.wicket.service,
  org.osgi.framework;version="1.3.0",
  org.osgi.service.cm;version="1.2.0",
  org.osgi.util.tracker;version="1.3.1",
  wicket.application,
- wicket.authorization.strategies.role
+ wicket.authorization.strategies.role,
+ wicket.model
 Bundle-ClassPath: .,
  ops4j-base-0.2.0-SNAPSHOT.jar,
  pax-logging-client-0.7.2-SNAPSHOT.jar
 Bundle-Activator: org.ops4j.pax.cm.agent.internal.Activator
+Require-Bundle: org.ops4j.pax.cm.agent.wicket.overview
