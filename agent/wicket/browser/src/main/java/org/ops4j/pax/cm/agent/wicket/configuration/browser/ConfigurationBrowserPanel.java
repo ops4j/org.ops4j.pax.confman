@@ -23,6 +23,7 @@ import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.PaxCssAttributeModel;
 import org.ops4j.pax.cm.agent.wicket.PaxOrderByBorder;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewTabItem;
+
 import wicket.AttributeModifier;
 import wicket.Localizer;
 import wicket.extensions.markup.html.repeater.data.DataView;
