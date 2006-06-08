@@ -35,10 +35,11 @@ import wicket.model.Model;
  * @since 0.1.0
  */
 public final class DefaultConfigurationPropertiesEditor extends Panel
+    implements ConfigurationPropertiesEditor
 {
 
-    private final static String LOCALE_COLUMN_HEADER_KEY = "keyColumnHeader";
-    private final static String LOCALE_COLUMN_HEADER_VALUE = "valueColumnHeader";
+    private static final String LOCALE_COLUMN_HEADER_KEY = "keyColumnHeader";
+    private static final String LOCALE_COLUMN_HEADER_VALUE = "valueColumnHeader";
     private static final String LOCALE_TAB_PANEL_LABEL_VALUE = "browse";
 
     private static final String WICKET_ID_TABLE = "table";
@@ -51,6 +52,7 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
     private static final String WICKET_ID_NAVIGATOR = "navigator";
 
     private static final String WICKET_ID_EDITOR = "editor";
+    private ConfigurationItemDataProvider m_dataProvider;
 
     public DefaultConfigurationPropertiesEditor( String id, PaxConfiguration configuration )
     {
@@ -66,8 +68,8 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
             configuration1 = new PaxConfiguration();
         }
 
-        ConfigurationItemDataProvider dataProvider = new ConfigurationItemDataProvider( configuration1 );
-        ConfigurationDataView dataView = new ConfigurationDataView( WICKET_ID_TABLE, dataProvider );
+        m_dataProvider = new ConfigurationItemDataProvider( configuration1 );
+        ConfigurationDataView dataView = new ConfigurationDataView( WICKET_ID_TABLE, m_dataProvider );
         dataView.setItemsPerPage( 20 );
         add( dataView );
 
@@ -77,13 +79,13 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
         add( actionColumnHeader );
 
         PaxOrderByBorder keyColumnHeader =
-            new PaxOrderByBorder( WICKET_ID_SORT_HEADER_KEY, "key", dataProvider, dataView );
+            new PaxOrderByBorder( WICKET_ID_SORT_HEADER_KEY, "key", m_dataProvider, dataView );
         add( keyColumnHeader );
         String keyColumnHeaderLabel = localizer.getString( LOCALE_COLUMN_HEADER_KEY, this, "Key" );
         keyColumnHeader.add( new Label( WICKET_ID_HEADER_KEY, keyColumnHeaderLabel ) );
 
         PaxOrderByBorder valueColumnHeader =
-            new PaxOrderByBorder( WICKET_ID_SORT_HEADER_VALUE, "value", dataProvider, dataView );
+            new PaxOrderByBorder( WICKET_ID_SORT_HEADER_VALUE, "value", m_dataProvider, dataView );
         add( valueColumnHeader );
         String valueColumnHeaderLabel =
             localizer.getString( LOCALE_COLUMN_HEADER_VALUE, this, "Value" );
@@ -96,8 +98,18 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
         PagingNavigator pagingNavigator = new PagingNavigator( WICKET_ID_NAVIGATOR, dataView );
         add( pagingNavigator );
 
-        EditConfigurationItemPanel editor = new EditConfigurationItemPanel( WICKET_ID_EDITOR, dataProvider );
+        EditConfigurationItemPanel editor = new EditConfigurationItemPanel( WICKET_ID_EDITOR, m_dataProvider );
         add( editor );
+    }
+
+    public void setPaxConfiguration( PaxConfiguration configuration )
+    {
+        if( configuration == null )
+        {
+            configuration = new PaxConfiguration();
+        }
+
+        m_dataProvider.setPaxConfiguration( configuration );
     }
 
     private class ConfigurationDataView extends DataView

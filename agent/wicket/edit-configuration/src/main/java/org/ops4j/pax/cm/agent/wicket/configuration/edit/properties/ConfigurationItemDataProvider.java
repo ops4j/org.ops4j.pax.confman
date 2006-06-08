@@ -41,18 +41,24 @@ import wicket.model.Model;
 final class ConfigurationItemDataProvider extends SortableDataProvider
     implements Serializable
 {
-
     private static final long serialVersionUID = 1L;
 
     private List<ConfigurationItem> m_configurationProperties;
-    private final PaxConfiguration m_configuration;
+    private PaxConfiguration m_configuration;
     private EditConfigurationItemPanel m_listener;
     private int m_selected;
 
     ConfigurationItemDataProvider( PaxConfiguration configuration )
     {
+        setPaxConfiguration( configuration );
+    }
+
+    void setPaxConfiguration( PaxConfiguration configuration )
+    {
         m_configuration = configuration;
         m_selected = 0;
+        m_selected = 0;
+        m_configuration = configuration;
 
         Dictionary properties = m_configuration.getProperties();
         if( properties == null )
@@ -78,6 +84,34 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
         // By default sort key in ascending manner
         ISortState sortState = getSortState();
         sortState.setPropertySortOrder( ConfigurationItem.PROPERTY_KEY, ISortState.ASCENDING );
+        notifyListener( null );
+    }
+
+    void deleteSelectedConfigurationItem()
+    {
+        boolean isEmpty = m_configurationProperties.isEmpty();
+        if( !isEmpty )
+        {
+            m_configurationProperties.remove( m_selected );
+            m_selected--;
+
+            if( m_selected < 0 )
+            {
+                m_selected = 0;
+            }
+
+            ConfigurationItem selectedProperty;
+            if( m_configurationProperties.isEmpty() )
+            {
+                selectedProperty = null;
+            }
+            else
+            {
+                selectedProperty = m_configurationProperties.get( m_selected );
+            }
+
+            notifyListener( selectedProperty );
+        }
     }
 
     public Iterator iterator( int i, int i1 )
@@ -132,6 +166,28 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
         return new Model( (Serializable) object );
     }
 
+    void newConfigurationItem()
+    {
+        ConfigurationItem newConfigurationItem = new ConfigurationItem();
+        newConfigurationItem.setIsNew( true );
+        m_configurationProperties.add( m_selected, newConfigurationItem );
+
+        notifyListener( newConfigurationItem );
+    }
+
+    void saveConfigurationItem( ConfigurationItem configurationItem )
+    {
+        NullArgumentException.validateNotNull( configurationItem, "configurationItem" );
+
+        configurationItem.setIsNew( false );
+        Dictionary properties = m_configuration.getProperties();
+        Object value = configurationItem.getValue();
+        String key = configurationItem.getKey();
+        properties.put( key, value );
+
+        notifyListener( configurationItem );
+    }
+
     public void selectProperty( ConfigurationItem item )
     {
         int i = 0;
@@ -164,54 +220,5 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
     public int size()
     {
         return m_configurationProperties.size();
-    }
-
-    public void newConfigurationItem()
-    {
-        ConfigurationItem newConfigurationItem = new ConfigurationItem();
-        newConfigurationItem.setIsNew( true );
-        m_configurationProperties.add( m_selected, newConfigurationItem );
-
-        notifyListener( newConfigurationItem );
-    }
-
-    public void deleteSelectedConfigurationItem()
-    {
-        boolean isEmpty = m_configurationProperties.isEmpty();
-        if( !isEmpty )
-        {
-            m_configurationProperties.remove( m_selected );
-            m_selected--;
-
-            if( m_selected < 0 )
-            {
-                m_selected = 0;
-            }
-
-            ConfigurationItem selectedProperty;
-            if( m_configurationProperties.isEmpty() )
-            {
-                selectedProperty = null;
-            }
-            else
-            {
-                selectedProperty = m_configurationProperties.get( m_selected );
-            }
-
-            notifyListener( selectedProperty );
-        }
-    }
-
-    public void saveConfigurationItem( ConfigurationItem configurationItem )
-    {
-        NullArgumentException.validateNotNull( configurationItem, "configurationItem" );
-
-        configurationItem.setIsNew( false );
-        Dictionary properties = m_configuration.getProperties();
-        Object value = configurationItem.getValue();
-        String key = configurationItem.getKey();
-        properties.put( key, value );
-
-        notifyListener( configurationItem );
     }
 }

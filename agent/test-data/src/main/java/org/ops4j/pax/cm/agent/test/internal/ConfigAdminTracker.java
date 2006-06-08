@@ -42,7 +42,10 @@ final class ConfigAdminTracker extends ServiceTracker
         m_configProperties = new Hashtable<String, String>();
         for( int i = 0; i < 100; i++ )
         {
-            m_configProperties.put( "property" + i, "value" + i );
+            String number = prependZero( i, 3 );
+            String propertyKey = "property" + number;
+            String propertyValue = "value" + number;
+            m_configProperties.put( propertyKey, propertyValue );
         }
     }
 
@@ -79,7 +82,7 @@ final class ConfigAdminTracker extends ServiceTracker
         return serviceReference;
     }
 
-    private String prependZero( int toConvert, int numberOfDigit )
+    private static String prependZero( int toConvert, int numberOfDigit )
     {
         String numberString = Integer.toString( toConvert );
         while( numberString.length() < numberOfDigit )

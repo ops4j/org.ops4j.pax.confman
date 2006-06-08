@@ -20,6 +20,7 @@
     <orderEntry type="library" name="osgi_R4_compendium-1.0" level="project" />
     <orderEntry type="module" module-name="page.configuration.edit" />
     <orderEntry type="module" module-name="wicket-api" />
+    <orderEntry type="module" module-name="page.overview" />
     <orderEntryProperties />
   </component>
 </module>

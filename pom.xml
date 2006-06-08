@@ -15,6 +15,18 @@
   <scm>
     <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/config-admin</developerConnection>
   </scm>
+  <developers>
+    <developer>
+      <id>efy</id>
+      <name>Edward Yakop</name>
+      <organization>CodeDragons Ltd</organization>
+      <email>efy@codedragons.com</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>UTC+8</timezone>
+    </developer>
+  </developers>
   <build>
     <extensions>
       <extension>
@@ -102,7 +114,7 @@
       <dependency>
         <groupId>org.ops4j.pax.logging</groupId>
         <artifactId>pax-logging-client</artifactId>
-        <version>0.7.1</version>
+        <version>0.8.1</version>
       </dependency>
       <dependency>
         <groupId>org.ops4j.base</groupId>
@@ -175,5 +187,29 @@
       <url>scpexe://repository.ops4j.org/var/http/repository.ops4j.org/maven2</url>
     </repository>
   </distributionManagement>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://issues.ops4j.org/jira/browse/PAXWICKET</url>
+  </issueManagement>
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://ci.ops4j.org/</url>
+    <notifiers>
+      <notifier>
+        <type>email</type>
+        <address>notify@ops4j.org</address>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnWarning>true</sendOnWarning>
+        <sendOnSuccess>false</sendOnSuccess>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  <licenses>
+    <license>
+      <name>ALv2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 </project>
-

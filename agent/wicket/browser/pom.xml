@@ -23,5 +23,10 @@
       <artifactId>edit-configuration</artifactId>
       <version>0.1.0.SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.config-admin.agent.wicket.pages</groupId>
+      <artifactId>overview</artifactId>
+      <version>0.1.0.SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

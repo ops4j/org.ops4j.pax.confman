@@ -24,6 +24,7 @@ import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.ConfigurationAdminException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
+import org.ops4j.pax.cm.agent.wicket.configuration.edit.properties.ConfigurationPropertiesEditor;
 import wicket.Application;
 import wicket.Component;
 import wicket.Localizer;
@@ -61,6 +62,7 @@ final class EditConfigurationPanel extends Panel
     private static final String WICKET_ID_RESET = "reset";
     private static final String WICKET_ID_DELETE = "delete";
     private static final String WICKET_ID_FORM = "form";
+    private final ConfigurationPropertiesEditor m_propertiesEditor;
 
     /**
      * @param id Wicket id. This argument must not be {@code null}.
@@ -79,6 +81,7 @@ final class EditConfigurationPanel extends Panel
 
         Component configPropsComponent = pageContainer.createConfigurationPropertiesEditor( configuration );
         add( configPropsComponent );
+        m_propertiesEditor = (ConfigurationPropertiesEditor) configPropsComponent;
     }
 
     private final class EditConfigurationForm extends Form
@@ -230,6 +233,8 @@ final class EditConfigurationPanel extends Panel
                         }
 
                         EditConfigurationForm.this.setModelObject( m_configuration );
+
+                        m_propertiesEditor.setPaxConfiguration( m_configuration );
                     } catch( IOException e )
                     {
                         m_logger.warn( "Unable to load configuration [" + pid + "]", e );

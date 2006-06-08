@@ -40,7 +40,7 @@ public final class EditConfigurationPageContainer extends DefaultPageContainer
         super( bundleContext, containmentId, applicationName );
     }
 
-    final Component createConfigurationPropertiesEditor( PaxConfiguration configuration )
+    Component createConfigurationPropertiesEditor( PaxConfiguration configuration )
         throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( configuration, "configuration" );
