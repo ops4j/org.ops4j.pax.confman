@@ -3,102 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.ops4j</groupId>
+    <artifactId>pax</artifactId>
+    <version>1.1.0</version>
+  </parent>
   <groupId>org.ops4j.pax.config-admin</groupId>
   <artifactId>config-admin</artifactId>
   <version>0.1.0.SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OPS4J - Pax - Config Admin</name>
   <url>http://wiki.ops4j.org/</url>
-  <organization>
-    <name>OPS4J - Open Participation Software for Java</name> <url>http://www.ops4j.org/</url>
-  </organization>
   <scm>
     <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/config-admin</developerConnection>
   </scm>
-  <developers>
-    <developer>
-      <id>efy</id>
-      <name>Edward Yakop</name>
-      <organization>CodeDragons Ltd</organization>
-      <email>efy@codedragons.com</email>
-      <roles>
-        <role>Developer</role>
-      </roles>
-      <timezone>UTC+8</timezone>
-    </developer>
-  </developers>
-  <build>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh-external</artifactId>
-        <version>1.0-alpha-6</version>
-      </extension>
-    </extensions>
-    <finalName>${artifactId}_${version}</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.ops4j.pax.maven</groupId>
-        <artifactId>maven-osgi-bundle</artifactId>
-        <version>0.9.3</version>
-        <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
   <modules>
     <module>agent</module>
   </modules>
-  <repositories>
-    <repository>
-      <id>ops4j-repository</id>
-      <name>The OPS4J Repository</name>
-      <url>http://repository.ops4j.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>wicket-repository</id>
-      <name>Wicket repository</name>
-      <url>http://wicket.sourceforge.net/maven2/</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <releases>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>ops4j-repository</id>
-      <name>The OPS4J Repository</name>
-      <url>http://repository.ops4j.org/maven2/</url>
-    </pluginRepository>
-  </pluginRepositories>
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <tagBase>https://scm.ops4j.org/repos/ops4j/qa/pax/config-admin</tagBase>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -181,35 +102,8 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  <distributionManagement>
-    <repository>
-      <id>upload-repository</id>
-      <url>scpexe://repository.ops4j.org/var/http/repository.ops4j.org/maven2</url>
-    </repository>
-  </distributionManagement>
   <issueManagement>
     <system>jira</system>
-    <url>http://issues.ops4j.org/jira/browse/PAXWICKET</url>
+    <url>http://issues.ops4j.org/jira/browse/PAXCMAGENT</url>
   </issueManagement>
-  <ciManagement>
-    <system>continuum</system>
-    <url>http://ci.ops4j.org/</url>
-    <notifiers>
-      <notifier>
-        <type>email</type>
-        <address>notify@ops4j.org</address>
-        <sendOnError>true</sendOnError>
-        <sendOnFailure>true</sendOnFailure>
-        <sendOnWarning>true</sendOnWarning>
-        <sendOnSuccess>false</sendOnSuccess>
-      </notifier>
-    </notifiers>
-  </ciManagement>
-  <licenses>
-    <license>
-      <name>ALv2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
 </project>
