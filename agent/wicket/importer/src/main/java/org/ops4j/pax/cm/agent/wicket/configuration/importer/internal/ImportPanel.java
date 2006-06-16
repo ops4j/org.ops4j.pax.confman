@@ -18,10 +18,12 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.importer.internal;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import org.ops4j.pax.cm.agent.importer.ImporterManager;
 import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.markup.html.basic.Label;
@@ -127,6 +129,17 @@ final class ImportPanel extends Panel
                     String selectedImportId = (String) m_selectedImporterId.getObject( null );
                     List<PaxConfiguration> paxConfigurations = instance.performImport( selectedImportId, inputStream );
 
+                    for( PaxConfiguration paxConfiguration : paxConfigurations )
+                    {
+                        try
+                        {
+                            PaxConfigurationFacade.updateConfiguration( paxConfiguration );
+                        } catch( IOException e )
+                        {
+                            e.printStackTrace();  //TODO: Auto-generated, need attention.
+                        }
+                    }
+                    
                     System.err.println( "Number of configuration [" + paxConfigurations.size() + "]" );
                 }
             };
