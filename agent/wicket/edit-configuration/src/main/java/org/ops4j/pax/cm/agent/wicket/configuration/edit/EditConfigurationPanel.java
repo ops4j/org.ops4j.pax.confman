@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.agent.wicket.configuration.edit;
 import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.pax.cm.agent.WicketApplicationConstant;
+import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.ConfigurationAdminException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;

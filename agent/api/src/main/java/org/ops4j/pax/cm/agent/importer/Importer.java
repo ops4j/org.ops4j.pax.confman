@@ -15,14 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.ops4j.pax.cm.agent.wicket.overview;
+package org.ops4j.pax.cm.agent.importer;
 
-import wicket.markup.html.panel.Panel;
+import java.io.InputStream;
+import java.util.List;
+import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 
-public class OverviewTabPanel extends Panel
+public interface Importer
 {
-    public OverviewTabPanel( String panelId )
-    {
-        super( panelId );
-    }
+    List<PaxConfiguration> performImport( InputStream inputStreamz );
 }

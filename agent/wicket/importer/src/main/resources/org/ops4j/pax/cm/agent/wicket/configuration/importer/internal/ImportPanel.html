@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/" xml:lang="en" lang="en">
+
+<wicket:panel>
+    <form wicket:id="importForm">
+        <p>
+            <label for="ids" wicket:id="labelImporterIds">Importer id:</label>
+            <select id="ids" wicket:id="importerIds">[ImporterIds]</select>
+        </p>
+
+        <br/>
+        <fieldset>
+            <legend>Upload Configuration</legend>
+
+            <p>
+                <label for="upload">File</label>
+                <input wicket:id="fileInput" id="upload" type="file"/>
+            </p>
+            <input type="submit" value="Upload" wicket:id="upload"></input>
+            <span wicket:id="progress">[[ajax upload progressbar]]</span>
+        </fieldset>
+
+        <input class="import" type="submit" value="import" wicket:id="import"></input>
+    </form>
+</wicket:panel>
+</html>

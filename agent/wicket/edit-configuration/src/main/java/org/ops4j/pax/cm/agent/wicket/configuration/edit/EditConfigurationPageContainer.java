@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.WicketApplicationConstant;
+import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.configuration.ConfigurationPropertiesEditorContent;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.properties.DefaultConfigurationPropertiesEditor;

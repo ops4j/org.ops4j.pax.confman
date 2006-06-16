@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.ops4j.pax.cm.agent.wicket.overview;
+package org.ops4j.pax.cm.agent.wicket.overview.internal;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.WicketApplicationConstant;
+import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
+import org.ops4j.pax.cm.agent.wicket.overview.internal.OverviewPage;
+import org.ops4j.pax.cm.agent.wicket.overview.internal.OverviewPageContainer;
 import org.ops4j.pax.wicket.service.AbstractPageContent;
-import org.ops4j.pax.wicket.service.DefaultPageContainer;
 import org.osgi.framework.BundleContext;
 import wicket.Page;
 import wicket.PageParameters;
@@ -31,9 +32,9 @@ import wicket.PageParameters;
  */
 public final class OverviewPageContent extends AbstractPageContent
 {
-    private final DefaultPageContainer m_container;
+    private final OverviewPageContainer m_container;
 
-    public OverviewPageContent( BundleContext bundleContext, DefaultPageContainer container )
+    public OverviewPageContent( BundleContext bundleContext, OverviewPageContainer container )
     {
         super(
             bundleContext,
@@ -51,7 +52,7 @@ public final class OverviewPageContent extends AbstractPageContent
      *
      * @since 0.1.0
      */
-    public Class getPageClass()
+    public Class<? extends Page> getPageClass()
     {
         return OverviewPage.class;
     }
@@ -62,7 +63,7 @@ public final class OverviewPageContent extends AbstractPageContent
         {
             params = new PageParameters();
         }
-        
+
         return new OverviewPage( m_container, params );
     }
 }

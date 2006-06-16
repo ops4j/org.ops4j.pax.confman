@@ -19,23 +19,25 @@ package org.ops4j.pax.cm.agent.internal;
 
 import java.util.Properties;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
-import org.ops4j.pax.cm.agent.utils.SimpleClassResolver;
+import org.ops4j.pax.cm.agent.importer.BeanShellImporter;
+import org.ops4j.pax.cm.agent.importer.ImporterManager;
+import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.wicket.configuration.browser.ConfigurationBrowserPanelContent;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContainer;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContent;
-import org.ops4j.pax.cm.agent.wicket.overview.OverviewPage;
-import org.ops4j.pax.cm.agent.wicket.overview.OverviewPageContent;
+import org.ops4j.pax.cm.agent.wicket.overview.internal.OverviewPage;
+import org.ops4j.pax.cm.agent.wicket.overview.internal.OverviewPageContainer;
+import org.ops4j.pax.cm.agent.wicket.overview.internal.OverviewPageContent;
+import org.ops4j.pax.cm.agent.wicket.utils.SimpleClassResolver;
 import org.ops4j.pax.wicket.service.Content;
-import org.ops4j.pax.wicket.service.DefaultPageContainer;
+import org.ops4j.pax.wicket.service.DefaultContent;
 import org.ops4j.pax.wicket.service.PaxWicketApplicationFactory;
 import org.ops4j.pax.wicket.service.PaxWicketAuthenticator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import wicket.application.IClassResolver;
-import wicket.authorization.strategies.role.Roles;
 
 /**
  * {@code Activator} responsibles to activate the pax config admin.
@@ -46,16 +48,18 @@ import wicket.authorization.strategies.role.Roles;
 public final class Activator
     implements BundleActivator
 {
+
     private OverviewPageContent m_overviewPageContent;
 
     private ServiceRegistration m_overviewPageContainerSerReg;
-    private ConfigurationBrowserPanelContent m_configurationBrowserPanelContent;
 
     private EditConfigurationPageContent m_editConfigurationPageContent;
     private ServiceRegistration m_configurationEditorPageContainerSerReg;
 
     private ConfigAdminTracker m_configAdminTracker;
     private ServiceRegistration m_classResolverRegistration;
+    private ServiceRegistration m_importerManagerServiceRegistration;
+    private ServiceRegistration m_browserPanelRegistration;
 
     public void start( BundleContext bundleContext )
         throws Exception
@@ -63,13 +67,12 @@ public final class Activator
         LogFactory.setBundleContext( bundleContext );
         PaxConfigurationFacade.setContext( bundleContext );
 
-        m_configurationBrowserPanelContent =
-            new ConfigurationBrowserPanelContent(
-                bundleContext, WicketApplicationConstant.Overview.DESTINATION_ID_MENU_TAB
-            );
-        m_configurationBrowserPanelContent.register();
-
         String applicationName = WicketApplicationConstant.APPLICATION_NAME;
+        String overviewMenuDestinationId = WicketApplicationConstant.Overview.DESTINATION_ID_MENU_TAB;
+        DefaultContent configurationBrowserPanelContent =
+            new ConfigurationBrowserPanelContent( bundleContext, applicationName );
+        configurationBrowserPanelContent.setDestinationId( overviewMenuDestinationId );
+        m_browserPanelRegistration = configurationBrowserPanelContent.register();
 
         SimpleClassResolver service = new SimpleClassResolver( bundleContext );
         Properties properties = new Properties();
@@ -77,19 +80,15 @@ public final class Activator
         String classResolverServiceName = IClassResolver.class.getName();
         m_classResolverRegistration = bundleContext.registerService( classResolverServiceName, service, properties );
 
-        DefaultPageContainer overviewPageContainer = new DefaultPageContainer(
-            bundleContext, WicketApplicationConstant.Overview.CONTAINMENT_ID, applicationName
-        );
+        String overviewContainmentId = WicketApplicationConstant.Overview.CONTAINMENT_ID;
+        OverviewPageContainer overviewPageContainer =
+            new OverviewPageContainer( bundleContext, overviewContainmentId, applicationName );
         m_overviewPageContainerSerReg = overviewPageContainer.register();
+
         m_overviewPageContent = new OverviewPageContent( bundleContext, overviewPageContainer );
         m_overviewPageContent.register();
 
-        PaxWicketAuthenticator alwaysAdminAuthenticator = new PaxWicketAuthenticator(){
-
-			public Roles authenticate(String username, String password) {
-				// TODO Auto-generated method stub
-				return new Roles(Roles.ADMIN);
-			}};
+        PaxWicketAuthenticator alwaysAdminAuthenticator = new ConfigAdminAuthenticator();
         PaxWicketApplicationFactory application = new PaxWicketApplicationFactory(
             bundleContext, OverviewPage.class, WicketApplicationConstant.MOUNT_POINT,
             applicationName, alwaysAdminAuthenticator
@@ -105,6 +104,15 @@ public final class Activator
         );
         m_editConfigurationPageContent.register();
 
+        ImporterManager importerManager = ImporterManager.getInstance();
+
+        String importerManagerServiceName = ImporterManager.class.getName();
+        m_importerManagerServiceRegistration =
+            bundleContext.registerService( importerManagerServiceName, importerManager, null );
+
+        BeanShellImporter importer = new BeanShellImporter();
+        importerManager.addImporter( BeanShellImporter.IMPORTER_ID, importer );
+
         m_configAdminTracker = new ConfigAdminTracker( bundleContext, application );
         m_configAdminTracker.open();
     }
@@ -117,7 +125,7 @@ public final class Activator
     public void stop( BundleContext bundleContext )
         throws Exception
     {
-        m_configurationBrowserPanelContent.dispose();
+        m_browserPanelRegistration.unregister();
 
         m_classResolverRegistration.unregister();
 
@@ -126,6 +134,13 @@ public final class Activator
 
         m_configurationEditorPageContainerSerReg.unregister();
         m_editConfigurationPageContent.dispose();
+
+        ImporterManager instance = ImporterManager.getInstance();
+        for( String ids : instance.getImporterIds() )
+        {
+            instance.removeImporter( ids );
+        }
+        m_importerManagerServiceRegistration.unregister();
 
         m_configAdminTracker.close();
         PaxConfigurationFacade.setContext( null );

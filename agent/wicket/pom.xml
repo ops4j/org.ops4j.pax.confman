@@ -17,6 +17,7 @@
     <module>api</module>
     <module>browser</module>
     <module>edit-configuration</module>
+    <module>importer</module>
     <module>overview</module>
   </modules>
   <dependencies>

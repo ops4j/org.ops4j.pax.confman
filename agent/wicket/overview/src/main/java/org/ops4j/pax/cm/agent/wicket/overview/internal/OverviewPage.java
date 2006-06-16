@@ -15,32 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.ops4j.pax.cm.agent.wicket.overview;
+package org.ops4j.pax.cm.agent.wicket.overview.internal;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.WicketApplicationConstant;
-import org.ops4j.pax.wicket.service.DefaultPageContainer;
+import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
+import org.ops4j.pax.cm.agent.wicket.overview.OverviewTab;
 import wicket.Component;
-import wicket.Localizer;
 import wicket.PageParameters;
 import wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
-import wicket.extensions.markup.html.tabs.AbstractTab;
-import wicket.extensions.markup.html.tabs.ITab;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
 /**
+ * TODO The current way to install TabItem requires for the tab panel to be instantiated, this could be prevented.
+ *
  * @author Edward Yakop
  * @since 0.1.0
  */
 public final class OverviewPage extends WebPage
 {
-
     private static final Logger m_logger = Logger.getLogger( OverviewPage.class );
     private static final String WICKET_ID_MENU = "menu";
 
@@ -53,53 +49,25 @@ public final class OverviewPage extends WebPage
      * @throws IllegalArgumentException Thrown if the specified {@code container} is {@code null}.
      * @since 0.1.0
      */
-    public OverviewPage( DefaultPageContainer container, PageParameters parameters )
+    public OverviewPage( OverviewPageContainer container, PageParameters parameters )
     {
         NullArgumentException.validateNotNull( container, "container" );
         NullArgumentException.validateNotNull( parameters, "parameters" );
 
-        final List<Component> menus = container.createComponents( WicketApplicationConstant.Overview.COMPONENT_MENU_TAB );
-        List<ITab> tabs = new ArrayList<ITab>();
+        Locale locale = getLocale();
+        List<OverviewTab> tabs = container.createTab( locale );
 
         String tabIDToSelect = parameters.getString( WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID, "" );
-        int selectedTab = 0;
+        int selectedTab = getSelectedTabIndex( tabs, tabIDToSelect );
 
-        int i = 0;
-        for( final Component menu : menus )
-        {
-            OverviewTabItem tabPanel = (OverviewTabItem) menu;
-            String tabID = tabPanel.getOverviewTabItemIdentifier();
-            if( tabIDToSelect.equals( tabID ) )
-            {
-                selectedTab = i;
-            }
-            else
-            {
-                i++;
-            }
-
-            Localizer menuLocalizer = menu.getLocalizer();
-            String tabLabel = menuLocalizer.getString( OverviewTabItem.LOCALE_TAB_ITEM_LABEL, menu, tabID );
-            tabs.add( new AbstractTab( new Model( tabLabel ) )
-            {
-                public Panel getPanel( String panelId )
-                {
-                    Panel panel = new OverviewTabPanel( panelId );
-                    panel.add( menu );
-                    return panel;
-                }
-            }
-            );
-
-        }
-
+        Component child;
         if( tabs.isEmpty() )
         {
             if( m_logger.isDebugEnabled() )
             {
                 m_logger.debug( "No menu is installed" );
             }
-            add( new Label( WICKET_ID_MENU, "No Configuration Admin menu installed yet." ) );
+            child = new Label( WICKET_ID_MENU, "No Configuration Admin menu installed yet." );
         }
         else
         {
@@ -110,7 +78,30 @@ public final class OverviewPage extends WebPage
 
             AjaxTabbedPanel tabPanel = new AjaxTabbedPanel( WICKET_ID_MENU, tabs );
             tabPanel.setSelectedTab( selectedTab );
-            add( tabPanel );
+            child = tabPanel;
         }
+
+        add( child );
+    }
+
+    private static int getSelectedTabIndex( List<OverviewTab> tabs, String tabIDToSelect )
+    {
+        int selectedTab = 0;
+
+        int i = 0;
+        for( OverviewTab tab : tabs )
+        {
+            String tabID = tab.getOverviewTabItemIdentifier();
+
+            if( tabIDToSelect.equals( tabID ) )
+            {
+                selectedTab = i;
+            }
+            else
+            {
+                i++;
+            }
+        }
+        return selectedTab;
     }
 }

@@ -17,6 +17,9 @@
   <scm>
     <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/config-admin</developerConnection>
   </scm>
+  <build>
+      <finalName>${artifactId}_${version}</finalName>
+  </build>
   <modules>
     <module>agent</module>
   </modules>
@@ -36,6 +39,12 @@
         <groupId>org.ops4j.pax.logging</groupId>
         <artifactId>pax-logging-client</artifactId>
         <version>0.8.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>avalon-framework</groupId>
+            <artifactId>avalon-framework-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.ops4j.base</groupId>
@@ -70,6 +79,11 @@
             <artifactId>log4j</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.beanshell</groupId>
+        <artifactId>bsh-core</artifactId>
+        <version>2.0b4</version>
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.wicket</groupId>

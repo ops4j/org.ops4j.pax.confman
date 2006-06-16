@@ -18,12 +18,9 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.browser;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.agent.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.wicket.PaxCssAttributeModel;
 import org.ops4j.pax.cm.agent.wicket.PaxOrderByBorder;
-import org.ops4j.pax.cm.agent.wicket.overview.OverviewTabItem;
-
 import wicket.AttributeModifier;
 import wicket.Localizer;
 import wicket.extensions.markup.html.repeater.data.DataView;
@@ -46,7 +43,6 @@ import wicket.model.Model;
  * @since 0.1.0
  */
 final class ConfigurationBrowserPanel extends Panel
-    implements OverviewTabItem
 {
 
     private static final String LOCALE_SELECT_LINK_LABEL = "selectLinkLabel";
@@ -127,20 +123,8 @@ final class ConfigurationBrowserPanel extends Panel
         add( m_miniEditConfigurationPanel );
     }
 
-    /**
-     * Returns the overview tab item identifier. This is used by {@code OverviewPage} to match the user http request.
-     *
-     * @see WicketApplicationConstant.Overview.PAGE_PARAM_TAB_ID
-     * @since 0.1.0
-     */
-    public String getOverviewTabItemIdentifier()
-    {
-        return WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
-    }
-
     private final class ConfigurationDataView extends DataView
     {
-
         ConfigurationDataView( String id, ConfigurationDataProvider confDataProvider )
         {
             super( id, confDataProvider );

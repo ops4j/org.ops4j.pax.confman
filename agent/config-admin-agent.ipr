@@ -324,6 +324,7 @@
       <module fileurl="file://$PROJECT_DIR$/wicket/edit-configuration/page.configuration.edit.iml" filepath="$PROJECT_DIR$/wicket/edit-configuration/page.configuration.edit.iml" group="wicket/pages" />
       <module fileurl="file://$PROJECT_DIR$/wicket/overview/page.overview.iml" filepath="$PROJECT_DIR$/wicket/overview/page.overview.iml" group="wicket/pages" />
       <module fileurl="file://$PROJECT_DIR$/wicket/browser/panel.browser.iml" filepath="$PROJECT_DIR$/wicket/browser/panel.browser.iml" group="wicket/panels" />
+      <module fileurl="file://$PROJECT_DIR$/wicket/importer/panel.importer.iml" filepath="$PROJECT_DIR$/wicket/importer/panel.importer.iml" group="wicket/panels" />
       <module fileurl="file://$PROJECT_DIR$/test-data/test-data.iml" filepath="$PROJECT_DIR$/test-data/test-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/wicket/api/wicket-api.iml" filepath="$PROJECT_DIR$/wicket/api/wicket-api.iml" group="wicket" />
     </modules>
@@ -342,7 +343,7 @@
         <root url="jar://$M2_REPO$/org/osgi/osgi_R4_core/1.0/osgi_R4_core-1.0.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="file:///home/efy/archive/specs/osgi/r4/javadoc" />
+        <root url="file:///home/efy/archive/documents/java/osgi/r4/javadoc" />
       </JAVADOC>
       <SOURCES />
     </library>
@@ -351,13 +352,13 @@
         <root url="jar://$M2_REPO$/org/osgi/osgi_R4_compendium/1.0/osgi_R4_compendium-1.0.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="file:///home/efy/archive/specs/osgi/r4/javadoc" />
+        <root url="file:///home/efy/archive/documents/java/osgi/r4/javadoc" />
       </JAVADOC>
       <SOURCES />
     </library>
-    <library name="pax-wicket-service-0.2.1-SNAPSHOT">
+    <library name="pax-wicket-service-0.2.1">
       <CLASSES>
-        <root url="jar://$M2_REPO$/org/ops4j/pax/wicket/service/0.2.1-SNAPSHOT/service-0.2.1-SNAPSHOT.jar!/" />
+        <root url="jar://$M2_REPO$/org/ops4j/pax/wicket/service/0.2.1/service-0.2.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
@@ -370,7 +371,7 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file:///home/efy/dev/wicket/tags/WICKET_1_2/wicket/src/java" />
+        <root url="file:///home/efy/dev/wicket/branches/WICKET_1_2/wicket/src/java" />
       </SOURCES>
     </library>
     <library name="wicket-auth-roles-1.2">
@@ -379,7 +380,7 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file:///home/efy/dev/wicket/tags/WICKET_1_2/wicket-auth-roles/src/main/java" />
+        <root url="file:///home/efy/dev/wicket/branches/WICKET_1_2/wicket-auth-roles/src/main/java" />
       </SOURCES>
     </library>
     <library name="wicket-extensions-1.2">
@@ -388,7 +389,7 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file:///home/efy/dev/wicket/tags/WICKET_1_2/wicket-extensions/src/java" />
+        <root url="file:///home/efy/dev/wicket/branches/WICKET_1_2/wicket-extensions/src/java" />
       </SOURCES>
     </library>
     <library name="ops4j-base-0.1.0">
@@ -398,12 +399,21 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="pax-logging-client-0.7.1">
+    <library name="pax-logging-client-0.8.1">
       <CLASSES>
-        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.7.1/pax-logging-client-0.7.1.jar!/" />
+        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.8.1/pax-logging-client-0.8.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="bsh-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="file:///home/efy/dev/BeanShell/src" />
+      </SOURCES>
     </library>
   </component>
   <component name="uidesigner-configuration">

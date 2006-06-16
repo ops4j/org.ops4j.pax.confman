@@ -14,6 +14,10 @@
   <name>OPS4J - Pax:Wicket - config admin - agent - API.</name>
   <dependencies>
     <dependency>
+      <groupId>org.beanshell</groupId>
+      <artifactId>bsh-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>osgi_R4_compendium</artifactId>
       <scope>provided</scope>

@@ -58,4 +58,20 @@
       <artifactId>ops4j-base</artifactId>
     </dependency>
   </dependencies>
+  <properties>
+    <osgi-ExportPackage>
+      org.ops4j.pax.cm.agent; version=${pom.version},
+      org.ops4j.pax.cm.agent.configuration; version=${pom.version},
+      org.ops4j.pax.cm.agent.exporter; version=${pom.version},
+      org.ops4j.pax.cm.agent.importer; version=${pom.version},
+      org.ops4j.pax.cm.agent.wicket; version=${pom.version},
+      org.ops4j.pax.cm.agent.wicket.configuration; version=${pom.version},
+      org.ops4j.pax.cm.agent.wicket.utils; version=${pom.version},
+      org.ops4j.pax.cm.agent.wicket.overview; version=${pom.version}
+    </osgi-ExportPackage>
+    <osgi-IgnorePackage>
+      org.apache.avalon.framework.logger,
+      org.apache.bsh
+    </osgi-IgnorePackage>
+  </properties>
 </project>
