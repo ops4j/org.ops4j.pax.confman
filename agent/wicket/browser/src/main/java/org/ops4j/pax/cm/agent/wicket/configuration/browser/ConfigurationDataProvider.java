@@ -51,6 +51,11 @@ final class ConfigurationDataProvider extends SortableDataProvider
     {
         NullArgumentException.validateNotNull( configurations, "configurations" );
 
+        resetData( configurations );
+    }
+
+    void resetData( Configuration[] configurations )
+    {
         m_configurations = new ArrayList<PaxConfiguration>( configurations.length );
         m_selected = 0;
 

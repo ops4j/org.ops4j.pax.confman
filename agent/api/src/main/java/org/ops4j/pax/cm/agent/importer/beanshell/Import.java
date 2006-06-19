@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Edward Yakop.
+ * Copyright 2006 Niclas Hedhman.
  *
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.ops4j.pax.cm.agent.importer;
+package org.ops4j.pax.cm.agent.importer.beanshell;
 
-import java.io.InputStream;
 import java.util.List;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 
@@ -25,20 +24,15 @@ import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
  * @author Edward Yakop
  * @since 0.1.0
  */
-public interface Importer
+public interface Import
 {
 
     /**
-     * Perform import on data specified by {@code inputStream}.
+     * Returns list of {@code PaxConfiguration} to be imported to configuration admin service. Returns an instance of
+     * empty collection if there's no configuration.
      *
-     * @param inputStream The input stream. This argument must not be {@code null}.
-     *
-     * @return List of {@code PaxConfiguration}, returns empty collection if there is no configuration.
-     *
-     * @throws ImportException Thrown if there is import exception.
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */
-    List<PaxConfiguration> performImport( InputStream inputStream )
-        throws ImportException;
+    List performImport();
 }

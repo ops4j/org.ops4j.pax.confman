@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import org.ops4j.pax.cm.agent.importer.ImporterManager;
@@ -45,6 +47,7 @@ import wicket.util.lang.Bytes;
 final class ImportPanel extends Panel
 {
 
+    private static final Log m_logger = LogFactory.getLog( ImportPanel.class );
     public static final Bytes MAX_CONFIGURATION_UPLOAD_FILE_SIZE = Bytes.kilobytes( 100 );
     public static final String WICKET_ID_IMPORT_FORM = "importForm";
 
@@ -69,14 +72,13 @@ final class ImportPanel extends Panel
         private static final String WICKET_ID_LABEL_IMPORTER_IDS = "labelImporterIds";
         private static final String WICKET_ID_IMPORTER_IDS = "importerIds";
         private static final String WICKET_ID_IMPORT = "import";
-        private static final String WICKET_ID_UPLOAD_FORM = "uploadForm";
+        private static final String WICKET_ID_FILE_INPUT_FIELD = "fileInput";
+        private static final String WICKET_ID_PROGRESS_BAR = "progress";
+        private static final String WICKET_ID_UPLOAD_BUTTON = "upload";
 
         private Button m_importButton;
         private byte[] m_importerFileContent;
         private Model m_selectedImporterId;
-
-        private static final String WICKET_ID_FILE_INPUT_FIELD = "fileInput";
-        private static final String WICKET_ID_PROGRESS_BAR = "progress";
 
         private FileUploadField m_fileUploadField;
 
@@ -127,10 +129,21 @@ final class ImportPanel extends Panel
                     ImporterManager instance = ImporterManager.getInstance();
                     ByteArrayInputStream inputStream = new ByteArrayInputStream( m_importerFileContent );
                     String selectedImportId = (String) m_selectedImporterId.getObject( null );
+
                     List<PaxConfiguration> paxConfigurations = instance.performImport( selectedImportId, inputStream );
+
+                    if( m_logger.isDebugEnabled() )
+                    {
+                        m_logger.debug( "Number of configuration [" + paxConfigurations.size() + "]" );
+                    }
 
                     for( PaxConfiguration paxConfiguration : paxConfigurations )
                     {
+                        if( m_logger.isDebugEnabled() )
+                        {
+                            m_logger.debug( "Update configuration [" + paxConfiguration.getPid() + "]." );
+                        }
+
                         try
                         {
                             PaxConfigurationFacade.updateConfiguration( paxConfiguration );
@@ -139,8 +152,7 @@ final class ImportPanel extends Panel
                             e.printStackTrace();  //TODO: Auto-generated, need attention.
                         }
                     }
-                    
-                    System.err.println( "Number of configuration [" + paxConfigurations.size() + "]" );
+
                 }
             };
             importButton.setEnabled( false );
@@ -149,7 +161,7 @@ final class ImportPanel extends Panel
 
         private Button newUploadButton()
         {
-            return new Button( "upload" )
+            return new Button( WICKET_ID_UPLOAD_BUTTON )
             {
                 protected void onSubmit()
                 {

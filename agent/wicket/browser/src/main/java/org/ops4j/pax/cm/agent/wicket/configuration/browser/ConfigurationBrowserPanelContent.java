@@ -32,7 +32,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import wicket.Component;
-import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
 
 /**
@@ -42,10 +41,11 @@ import wicket.model.Model;
 public final class ConfigurationBrowserPanelContent extends DefaultContent
     implements OverviewTabContent
 {
+
     private static final Logger m_logger = Logger.getLogger( ConfigurationBrowserPanelContent.class );
     private static final String CONTENT_ID = "panel:configurationPanel";
 
-    private final BundleContext m_bundleContext;
+    private static BundleContext m_bundleContext;
 
     /**
      * @since 0.1.0
@@ -71,11 +71,24 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
     {
         Model title = new Model( "Browser" );
         String tabId = WicketApplicationConstant.Overview.MENU_TAB_ID_BROWSER;
-        Panel panel = (Panel) createComponent( DefaultOverviewTab.WICKET_ID_PANEL );
-        return new DefaultOverviewTab( title, tabId, panel );
+        ConfigurationBrowserPanel panel =
+            (ConfigurationBrowserPanel) createComponent( DefaultOverviewTab.WICKET_ID_PANEL );
+
+        DefaultOverviewTab tab = new DefaultOverviewTab( title, tabId, panel );
+        OverviewTabListener listener = new OverviewTabListener( panel );
+        tab.setListener( listener );
+
+        return tab;
     }
 
     protected Component createComponent( String id )
+    {
+        Configuration[] configurations = new Configuration[0];
+        ConfigurationDataProvider confDataProvider = new ConfigurationDataProvider( configurations );
+        return new ConfigurationBrowserPanel( id, confDataProvider );
+    }
+
+    private static Configuration[] getAvailableConfigurations()
     {
         String configurationAdminClassName = ConfigurationAdmin.class.getName();
         ServiceReference configAdminSerRef = m_bundleContext.getServiceReference( configurationAdminClassName );
@@ -107,8 +120,38 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
         {
             configurations = new Configuration[0];
         }
+        return configurations;
+    }
 
-        ConfigurationDataProvider confDataProvider = new ConfigurationDataProvider( configurations );
-        return new ConfigurationBrowserPanel( id, confDataProvider );
+    /**
+     * @author Edward Yakop
+     * @since 0.1.0
+     */
+    private static final class OverviewTabListener extends DefaultOverviewTab.OverviewTabListener
+    {
+
+        private ConfigurationBrowserPanel m_panel;
+
+        private OverviewTabListener( ConfigurationBrowserPanel panel )
+        {
+            NullArgumentException.validateNotNull( panel, "panel" );
+            m_panel = panel;
+        }
+
+        /**
+         * This method is called prior {@code DefaultOverviewTab#getPanel()} is called. This method can be used to
+         * prepares the {@code panel} that is about to be displayed.
+         *
+         * @param tab The overview tab that received this event. This argument must not be {@code null}.
+         *
+         * @since 0.1.0
+         */
+        public void preGetPanel( DefaultOverviewTab tab )
+        {
+            Configuration[] availableConfigurations = getAvailableConfigurations();
+
+            ConfigurationDataProvider confDataProvider = m_panel.getConfDataProvider();
+            confDataProvider.resetData( availableConfigurations );
+        }
     }
 }

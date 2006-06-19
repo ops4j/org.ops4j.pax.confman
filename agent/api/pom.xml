@@ -14,8 +14,20 @@
   <name>OPS4J - Pax:Wicket - config admin - agent - API.</name>
   <dependencies>
     <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.beanshell</groupId>
-      <artifactId>bsh-core</artifactId>
+      <artifactId>bsh-classgen</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.beanshell</groupId>
+      <artifactId>bsh-classpath</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.beanshell</groupId>
+      <artifactId>bsh-reflect</artifactId>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>

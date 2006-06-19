@@ -401,14 +401,32 @@
     </library>
     <library name="pax-logging-client-0.8.1">
       <CLASSES>
-        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.8.1/pax-logging-client-0.8.1.jar!/" />
+        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.9.0-SNAPSHOT/pax-logging-client-0.9.0-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.9.0-SNAPSHOT/pax-logging-client-0.9.0-SNAPSHOT.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="bsh-core-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-core/2.0b4/bsh-core-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="file:///home/efy/dev/BeanShell/src" />
+      </SOURCES>
+    </library>
+    <library name="commons-lang-2.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="bsh-2.0b4">
+    <library name="bsh-reflect-2.0b4">
       <CLASSES>
-        <root url="jar://$M2_REPO$/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar!/" />
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-reflect/2.0b4/bsh-reflect-2.0b4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>

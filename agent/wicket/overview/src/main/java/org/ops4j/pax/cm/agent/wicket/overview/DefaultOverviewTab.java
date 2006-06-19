@@ -17,6 +17,7 @@
  */
 package org.ops4j.pax.cm.agent.wicket.overview;
 
+import java.io.Serializable;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.wicket.overview.internal.OverviewTabPanel;
 import wicket.extensions.markup.html.tabs.AbstractTab;
@@ -35,6 +36,7 @@ public final class DefaultOverviewTab extends AbstractTab
 
     private Panel m_panel;
     private String m_tabItemIdentifier;
+    private OverviewTabListener m_listener;
 
     /**
      * @since 0.1.0
@@ -54,6 +56,18 @@ public final class DefaultOverviewTab extends AbstractTab
         }
 
         m_panel = panel;
+    }
+
+    /**
+     * Set the listener of {@code DefaultOverviewTab}. Sets to {@code null} to remove listener.
+     *
+     * @param listener The listener.
+     *
+     * @since 0.1.0
+     */
+    public void setListener( OverviewTabListener listener )
+    {
+        m_listener = listener;
     }
 
     /**
@@ -77,6 +91,32 @@ public final class DefaultOverviewTab extends AbstractTab
      */
     public Panel getPanel( final String panelId )
     {
+        if( m_listener != null )
+        {
+            m_listener.preGetPanel( this );
+        }
+
         return new OverviewTabPanel( panelId, m_panel );
+    }
+
+    /**
+     * @author Edward Yakop
+     * @since 0.1.0
+     */
+    public static abstract class OverviewTabListener
+        implements Serializable
+    {
+
+        /**
+         * This method is called prior {@code DefaultOverviewTab#getPanel()} is called. This method can be used to
+         * prepares the {@code panel} that is about to be displayed.
+         *
+         * @param tab The overview tab that received this event. This argument must not be {@code null}.
+         *
+         * @since 0.1.0
+         */
+        public void preGetPanel( DefaultOverviewTab tab )
+        {
+        }
     }
 }

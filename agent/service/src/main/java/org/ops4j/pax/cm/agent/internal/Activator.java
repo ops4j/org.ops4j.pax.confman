@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.agent.internal;
 import java.util.Properties;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
-import org.ops4j.pax.cm.agent.importer.BeanShellImporter;
+import org.ops4j.pax.cm.agent.importer.beanshell.BeanShellImporter;
 import org.ops4j.pax.cm.agent.importer.ImporterManager;
 import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.wicket.configuration.browser.ConfigurationBrowserPanelContent;

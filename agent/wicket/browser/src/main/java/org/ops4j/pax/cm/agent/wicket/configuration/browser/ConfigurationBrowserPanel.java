@@ -123,6 +123,11 @@ final class ConfigurationBrowserPanel extends Panel
         add( m_miniEditConfigurationPanel );
     }
 
+    ConfigurationDataProvider getConfDataProvider()
+    {
+        return m_confDataProvider;
+    }
+
     private final class ConfigurationDataView extends DataView
     {
         ConfigurationDataView( String id, ConfigurationDataProvider confDataProvider )
