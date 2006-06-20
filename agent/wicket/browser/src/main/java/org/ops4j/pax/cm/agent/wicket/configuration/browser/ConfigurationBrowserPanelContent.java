@@ -88,6 +88,13 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
         return new ConfigurationBrowserPanel( id, confDataProvider );
     }
 
+    /**
+     * Returns the available configurations. Returns an empty array if there is no available configurations.
+     *
+     * @return Returns the available configurations.
+     *
+     * @since 0.1.0
+     */
     private static Configuration[] getAvailableConfigurations()
     {
         String configurationAdminClassName = ConfigurationAdmin.class.getName();
@@ -107,13 +114,15 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
             {
                 m_logger.error( "Configurations failed to be retrieved.", e );
             }
+            finally
+            {
+                m_bundleContext.ungetService( configAdminSerRef );
+            }
 
             if( configurations == null )
             {
                 configurations = new Configuration[0];
             }
-
-            m_bundleContext.ungetService( configAdminSerRef );
         }
 
         if( configurations == null )
@@ -124,6 +133,8 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
     }
 
     /**
+     * {@code OverviewTabListener} handles of reseting {@code Configuration}.
+     *
      * @author Edward Yakop
      * @since 0.1.0
      */
@@ -135,6 +146,7 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
         private OverviewTabListener( ConfigurationBrowserPanel panel )
         {
             NullArgumentException.validateNotNull( panel, "panel" );
+
             m_panel = panel;
         }
 
