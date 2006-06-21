@@ -17,45 +17,42 @@
  */
 package org.ops4j.pax.cm.agent.wicket.configuration.importer.internal;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 
-public final class Activator implements BundleActivator
+/**
+ * {@code Activator} start tracking {@code Importer} service and only register import tracker if there is at least one
+ * {@code Importer} service registered.
+ *
+ * @author Edward Yakop
+ * @since 0.1.0
+ */
+public final class Activator
+    implements BundleActivator
 {
+    private ImporterTracker m_importerTracker;
 
-    private static final Log m_logger = LogFactory.getLog( Activator.class );
-
-    private ServiceRegistration m_serviceRegistration;
-
+    /**
+     * @see BundleActivator#start(org.osgi.framework.BundleContext)
+     * @since 0.1.0
+     */
     public void start( BundleContext context )
         throws Exception
     {
         LogFactory.setBundleContext( context );
 
-        if( m_logger.isDebugEnabled() )
-        {
-            m_logger.debug( "[" + Activator.class.getName() + "] is starting." );
-        }
-
-        String destinationId = WicketApplicationConstant.Overview.DESTINATION_ID_MENU_TAB;
-        String applicationName = WicketApplicationConstant.APPLICATION_NAME;
-
-        ConfigurationImporterContent cnt = new ConfigurationImporterContent( context, applicationName );
-        cnt.setDestinationId( destinationId );
-        m_serviceRegistration = cnt.register();
+        m_importerTracker = new ImporterTracker( context );
+        m_importerTracker.open();
     }
 
+    /**
+     * @see BundleActivator#stop(org.osgi.framework.BundleContext)
+     * @since 0.1.0
+     */
     public void stop( BundleContext context )
         throws Exception
     {
-        if( m_logger.isDebugEnabled() )
-        {
-            m_logger.debug( "[" + Activator.class.getName() + "] is stopping." );
-        }
-        m_serviceRegistration.unregister();
+        m_importerTracker.close();
     }
 }

@@ -20,8 +20,8 @@ package org.ops4j.pax.cm.agent.internal;
 import java.util.Properties;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
+import org.ops4j.pax.cm.agent.exporter.beanshell.BeanShellExporter;
 import org.ops4j.pax.cm.agent.importer.beanshell.BeanShellImporter;
-import org.ops4j.pax.cm.agent.importer.ImporterManager;
 import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.wicket.configuration.browser.ConfigurationBrowserPanelContent;
 import org.ops4j.pax.cm.agent.wicket.configuration.edit.EditConfigurationPageContainer;
@@ -48,6 +48,8 @@ import wicket.application.IClassResolver;
 public final class Activator
     implements BundleActivator
 {
+    private static final String SERVICE_PID_BEANSHELL_EXPORTER = "ops4j:pax:cm:agent:exporter:beanshell";
+    private static final String SERVICE_PID_BEANSHELL_IMPORTER = "ops4j:pax:cm:agent:importer:beanshell";
 
     private OverviewPageContent m_overviewPageContent;
 
@@ -58,8 +60,8 @@ public final class Activator
 
     private ConfigAdminTracker m_configAdminTracker;
     private ServiceRegistration m_classResolverRegistration;
-    private ServiceRegistration m_importerManagerServiceRegistration;
     private ServiceRegistration m_browserPanelRegistration;
+    private BeanShellExporter m_exporter;
 
     public void start( BundleContext bundleContext )
         throws Exception
@@ -104,14 +106,11 @@ public final class Activator
         );
         m_editConfigurationPageContent.register();
 
-        ImporterManager importerManager = ImporterManager.getInstance();
+        BeanShellImporter importer = new BeanShellImporter( bundleContext, SERVICE_PID_BEANSHELL_IMPORTER );
+        importer.register();
 
-        String importerManagerServiceName = ImporterManager.class.getName();
-        m_importerManagerServiceRegistration =
-            bundleContext.registerService( importerManagerServiceName, importerManager, null );
-
-        BeanShellImporter importer = new BeanShellImporter();
-        importerManager.addImporter( BeanShellImporter.IMPORTER_ID, importer );
+        m_exporter = new BeanShellExporter( bundleContext, SERVICE_PID_BEANSHELL_EXPORTER );
+        m_exporter.register();
 
         m_configAdminTracker = new ConfigAdminTracker( bundleContext, application );
         m_configAdminTracker.open();
@@ -135,12 +134,7 @@ public final class Activator
         m_configurationEditorPageContainerSerReg.unregister();
         m_editConfigurationPageContent.dispose();
 
-        ImporterManager instance = ImporterManager.getInstance();
-        for( String ids : instance.getImporterIds() )
-        {
-            instance.removeImporter( ids );
-        }
-        m_importerManagerServiceRegistration.unregister();
+        m_exporter.unregister();
 
         m_configAdminTracker.close();
         PaxConfigurationFacade.setContext( null );

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package org.ops4j.pax.cm.agent.exporter;
+package org.ops4j.pax.cm.agent.exporter.beanshell;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,10 +29,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.exporter.AbstractExporter;
+import org.ops4j.pax.cm.agent.exporter.ExportException;
+import org.ops4j.pax.cm.agent.exporter.Exporter;
+import org.osgi.framework.BundleContext;
 
-public final class BeanShellExporter
+public final class BeanShellExporter extends AbstractExporter
     implements Exporter
 {
+
+    /**
+     * The exporter id of {@code BeanShellExporter}.
+     *
+     * @since 0.1.0
+     */
+    public static final String ID = "BeanShell";
 
     private static final Log m_logger = LogFactory.getLog( BeanShellExporter.class );
 
@@ -66,7 +77,23 @@ public final class BeanShellExporter
 
     private static final byte[] DICTIONARY_DECLARATIONS = "dictionary = new HashTable();\n".getBytes();
 
-    public void exportConfiguration( List<PaxConfiguration> configurations, OutputStream stream )
+    public BeanShellExporter( BundleContext bundleContext, String serviceId )
+        throws IllegalArgumentException
+    {
+        super( bundleContext, serviceId, ID );
+    }
+
+    /**
+     * Perform export of the specified {@code configurations} to the specified {@code stream}.
+     *
+     * @param configurations The configurations to be exported. This argument must not be {@code null}.
+     * @param stream         The output stream. This argument must not be {@code null}.
+     *
+     * @throws org.ops4j.pax.cm.agent.exporter.ExportException
+     *          Thrown if there is error ocurred during export.
+     * @since 0.1.0
+     */
+    public void performExport( List<PaxConfiguration> configurations, OutputStream stream )
         throws ExportException
     {
         NullArgumentException.validateNotNull( configurations, "configurations" );
@@ -194,13 +221,8 @@ public final class BeanShellExporter
 
     private boolean isSimple( Object value )
     {
-        if( value instanceof String || value instanceof Number || value instanceof Boolean
-            || value instanceof Character )
-        {
-            return true;
-        }
-
-        return false;
+        return value instanceof String || value instanceof Number || value instanceof Boolean
+               || value instanceof Character;
     }
 
     private String handleSimple( Object value )
@@ -218,8 +240,7 @@ public final class BeanShellExporter
         }
         else if( value instanceof Character )
         {
-            Character character = (Character) value;
-            int charAsInt = (int) character;
+            int charAsInt = (Character) value;
             return "new Character( (char) " + charAsInt + " )";
         }
 

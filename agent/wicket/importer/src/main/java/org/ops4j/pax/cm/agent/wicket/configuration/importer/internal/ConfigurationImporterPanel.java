@@ -18,7 +18,6 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.importer.internal;
 
 import java.util.Set;
-import org.ops4j.pax.cm.agent.importer.ImporterManager;
 import wicket.Component;
 import wicket.Localizer;
 import wicket.markup.html.basic.Label;
@@ -44,8 +43,7 @@ final class ConfigurationImporterPanel extends Panel
     {
         Component child;
 
-        ImporterManager instance = ImporterManager.getInstance();
-        Set<String> importerIds = instance.getImporterIds();
+        Set<String> importerIds = ImporterTracker.getImporterIds();
         if( importerIds.isEmpty() )
         {
             Localizer localizer = getLocalizer();

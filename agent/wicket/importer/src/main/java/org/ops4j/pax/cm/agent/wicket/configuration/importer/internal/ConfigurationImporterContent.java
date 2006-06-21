@@ -38,7 +38,6 @@ import wicket.model.Model;
 final class ConfigurationImporterContent extends DefaultContent
     implements OverviewTabContent
 {
-
     private static final String CONTENT_ID = "panel:configurationImporter";
     private static final Log m_logger = LogFactory.getLog( ConfigurationImporterContent.class );
 

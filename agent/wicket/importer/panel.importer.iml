@@ -20,6 +20,7 @@
     <orderEntry type="module" module-name="wicket-api" />
     <orderEntry type="module" module-name="config.admin.agent.api" />
     <orderEntry type="module" module-name="page.overview" />
+    <orderEntry type="library" name="ops4j-base-0.1.0" level="project" />
     <orderEntryProperties />
   </component>
 </module>

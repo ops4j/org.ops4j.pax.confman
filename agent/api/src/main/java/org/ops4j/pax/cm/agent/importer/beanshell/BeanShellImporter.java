@@ -25,26 +25,47 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Collections;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.importer.AbstractImporter;
 import org.ops4j.pax.cm.agent.importer.ImportException;
 import org.ops4j.pax.cm.agent.importer.Importer;
+import org.osgi.framework.BundleContext;
 
 /**
  * @author Edward Yakop
  * @since 0.1.0
  */
-public final class BeanShellImporter
+public final class BeanShellImporter extends AbstractImporter
     implements Importer
 {
+    /**
+     * The importer id of {@code BeanShellImporter}.
+     *
+     * @since 0.1.0
+     */
+    public static final String ID = "BeanShell";
+    private static final String IMPORTER_CLASS_NAME = "org.ops4j.pax.cm.agent.importer.beanshell.Importer";
 
-    public static final String IMPORTER_ID = "BeanShell";
-    public static final String IMPORTER_CLASS_NAME = "org.ops4j.pax.cm.agent.importer.beanshell.Importer";
+    /**
+     * Construct instance of {@code BeanShellImporter} with the specified arguments.
+     *
+     * @param bundleContext The bundle context. This argument must not be {@code null}.
+     * @param servicePID    The service pid. This argument must not be {@code null} or empty.
+     *
+     * @throws IllegalArgumentException Thrown if one or both arguments are {@code null}.
+     * @since 0.1.0
+     */
+    public BeanShellImporter( BundleContext bundleContext, String servicePID )
+        throws IllegalArgumentException
+    {
+        super( bundleContext, servicePID, ID );
+    }
 
     public List<PaxConfiguration> performImport( InputStream inputStream )
         throws ImportException

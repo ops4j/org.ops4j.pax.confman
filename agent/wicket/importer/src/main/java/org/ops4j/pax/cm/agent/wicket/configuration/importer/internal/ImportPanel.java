@@ -26,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
-import org.ops4j.pax.cm.agent.importer.ImporterManager;
 import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
@@ -96,8 +95,7 @@ final class ImportPanel extends Panel
             Label label = new Label( WICKET_ID_LABEL_IMPORTER_IDS, "Import Id:" );
             add( label );
 
-            ImporterManager instance = ImporterManager.getInstance();
-            Set<String> importerIds = instance.getImporterIds();
+            Set<String> importerIds = ImporterTracker.getImporterIds();
             ArrayList<String> choices = new ArrayList<String>( importerIds );
             DropDownChoice dropDownChoice = new DropDownChoice( WICKET_ID_IMPORTER_IDS, choices );
             m_selectedImporterId = new Model();
@@ -126,11 +124,11 @@ final class ImportPanel extends Panel
             {
                 protected void onSubmit()
                 {
-                    ImporterManager instance = ImporterManager.getInstance();
                     ByteArrayInputStream inputStream = new ByteArrayInputStream( m_importerFileContent );
                     String selectedImportId = (String) m_selectedImporterId.getObject( null );
 
-                    List<PaxConfiguration> paxConfigurations = instance.performImport( selectedImportId, inputStream );
+                    List<PaxConfiguration> paxConfigurations =
+                        ImporterTracker.performImport( selectedImportId, inputStream );
 
                     if( m_logger.isDebugEnabled() )
                     {

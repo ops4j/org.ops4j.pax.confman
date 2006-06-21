@@ -29,6 +29,22 @@ public interface Importer
 {
 
     /**
+     * {@code IMPORTER_ID} is configuration property name that uniquely identified this importer.
+     *
+     * @since 0.1.0
+     */
+    String IMPORTER_ID = "importerId";
+
+    /**
+     * Returns the importer id. This method must not return {@code null} or empty String.
+     *
+     * @return The importer id.
+     *
+     * @since 0.1.0
+     */
+    String getImporterId();
+
+    /**
      * Perform import on data specified by {@code inputStream}.
      *
      * @param inputStream The input stream. This argument must not be {@code null}.

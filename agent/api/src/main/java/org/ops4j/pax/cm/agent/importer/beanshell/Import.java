@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Niclas Hedhman.
+ * Copyright 2006 Edward Yakop.
  *
  * Licensed  under the  Apache License,  Version 2.0  (the "License");
  * you may not use  this file  except in  compliance with the License.
@@ -18,7 +18,6 @@
 package org.ops4j.pax.cm.agent.importer.beanshell;
 
 import java.util.List;
-import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 
 /**
  * @author Edward Yakop
