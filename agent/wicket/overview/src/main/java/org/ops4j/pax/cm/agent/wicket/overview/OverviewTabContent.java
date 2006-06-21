@@ -18,13 +18,25 @@
 package org.ops4j.pax.cm.agent.wicket.overview;
 
 import java.util.Locale;
+import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
+import org.ops4j.pax.wicket.service.Content;
 
 /**
+ * {@code OverviewTabContent} interface represents {@code OverviewPage} content for menu tab.
+ *
  * @author Edward Yakop
+ * @see OverviewTab
  * @since 0.1.0
  */
-public interface OverviewTabContent
+public interface OverviewTabContent extends Content
 {
+    /**
+     * {@code OverviewTabContent} must have this as destionation id.
+     *
+     * @since 0.1.0
+     */
+    String OVERVIEW_TAB_DESTINATION_ID = WicketApplicationConstant.Overview.DESTINATION_ID_MENU_TAB;
+
     /**
      * Create tab with {@code locale} as specified.
      *

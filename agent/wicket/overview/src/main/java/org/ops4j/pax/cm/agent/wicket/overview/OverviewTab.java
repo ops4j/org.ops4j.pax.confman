@@ -19,10 +19,20 @@ package org.ops4j.pax.cm.agent.wicket.overview;
 
 import wicket.extensions.markup.html.tabs.ITab;
 
+/**
+ * {@code OverviewTab} represent tab in {@code OverviewPage}.
+ * In most cases, use {@code DefaultOverviewTab} as default implementation of {@code OverviewTab} interface.
+ *
+ * @author Edward Yakop
+ * @see DefaultOverviewTab
+ * @see OverviewTabContent
+ * @since 0.1.0
+ */
 public interface OverviewTab extends ITab
 {
     /**
-     * Returns the overview tab item identifier. This is used by {@code OverviewPage} to match the user http request.
+     * Returns a non-null String of the overview tab item identifier. This is used by {@code OverviewPage} to identify
+     * the requested selected tab.
      *
      * @since 0.1.0
      */

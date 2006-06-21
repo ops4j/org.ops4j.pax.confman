@@ -19,14 +19,13 @@ package org.ops4j.pax.cm.agent.importer;
 
 public final class ImportException extends RuntimeException
 {
+    public ImportException( String message )
+    {
+        super( message );
+    }
 
     public ImportException( String message, Throwable throwable )
     {
         super( message, throwable );
-    }
-
-    public ImportException( String message )
-    {
-        super( message );
     }
 }

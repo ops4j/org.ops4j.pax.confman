@@ -43,7 +43,6 @@ import wicket.model.CompoundPropertyModel;
  */
 final class EditConfigurationPanel extends Panel
 {
-
     private static final Log m_logger = LogFactory.getLog( EditConfigurationPanel.class );
 
     static final String PAGE_ID = "editConfigurationPage";
@@ -86,7 +85,6 @@ final class EditConfigurationPanel extends Panel
 
     private final class EditConfigurationForm extends Form
     {
-
         private PaxConfiguration m_configuration;
 
         private EditConfigurationForm(

@@ -33,7 +33,6 @@ import org.osgi.framework.BundleContext;
 
 public final class OverviewPageContainer extends DefaultPageContainer
 {
-
     private static final Log m_logger = LogFactory.getLog( OverviewPageContainer.class );
 
     public OverviewPageContainer( BundleContext bundleContext, String containmentId, String applicationName )

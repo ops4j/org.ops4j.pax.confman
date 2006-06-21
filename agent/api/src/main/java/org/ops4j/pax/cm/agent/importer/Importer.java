@@ -27,7 +27,6 @@ import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
  */
 public interface Importer
 {
-
     /**
      * {@code IMPORTER_ID} is configuration property name that uniquely identified this importer.
      *

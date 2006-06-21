@@ -40,7 +40,6 @@ import wicket.model.Model;
  */
 final class ConfigurationDataProvider extends SortableDataProvider
 {
-
     private static final Log m_logger = LogFactory.getLog( ConfigurationDataProvider.class );
 
     private ArrayList<PaxConfiguration> m_configurations;

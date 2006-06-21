@@ -37,7 +37,6 @@ import wicket.model.Model;
 public final class DefaultConfigurationPropertiesEditor extends Panel
     implements ConfigurationPropertiesEditor
 {
-
     private static final String LOCALE_COLUMN_HEADER_KEY = "keyColumnHeader";
     private static final String LOCALE_COLUMN_HEADER_VALUE = "valueColumnHeader";
     private static final String LOCALE_TAB_PANEL_LABEL_VALUE = "browse";
@@ -114,7 +113,6 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
 
     private class ConfigurationDataView extends DataView
     {
-
         private static final String LOCALE_SELECT_LINK_LABEL = "selectLabel";
 
         private static final String WICKET_ID_SELECT_LINK = "selectLink";

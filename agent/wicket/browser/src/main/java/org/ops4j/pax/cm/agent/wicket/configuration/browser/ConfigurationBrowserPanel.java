@@ -44,7 +44,6 @@ import wicket.model.Model;
  */
 final class ConfigurationBrowserPanel extends Panel
 {
-
     private static final String LOCALE_SELECT_LINK_LABEL = "selectLinkLabel";
     private static final String LOCALE_PID_COLUMN_LABEL = "pidColumnLabel";
     private static final String LOCALE_FACTORY_PID_COLUMN_LABEL = "factoryPidColumnLabel";

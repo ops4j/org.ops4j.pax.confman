@@ -41,9 +41,11 @@ import wicket.model.Model;
 public final class ConfigurationBrowserPanelContent extends DefaultContent
     implements OverviewTabContent
 {
-
     private static final Logger m_logger = Logger.getLogger( ConfigurationBrowserPanelContent.class );
+
     private static final String CONTENT_ID = "panel:configurationPanel";
+
+    private static final Configuration[] NO_CONFIGURATIONS = new Configuration[0];
 
     private static BundleContext m_bundleContext;
 
@@ -76,14 +78,14 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
 
         DefaultOverviewTab tab = new DefaultOverviewTab( title, tabId, panel );
         OverviewTabListener listener = new OverviewTabListener( panel );
-        tab.setListener( listener );
+        tab.addListener( listener );
 
         return tab;
     }
 
     protected Component createComponent( String id )
     {
-        Configuration[] configurations = new Configuration[0];
+        Configuration[] configurations = getAvailableConfigurations();
         ConfigurationDataProvider confDataProvider = new ConfigurationDataProvider( configurations );
         return new ConfigurationBrowserPanel( id, confDataProvider );
     }
@@ -118,17 +120,13 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
             {
                 m_bundleContext.ungetService( configAdminSerRef );
             }
-
-            if( configurations == null )
-            {
-                configurations = new Configuration[0];
-            }
         }
 
         if( configurations == null )
         {
-            configurations = new Configuration[0];
+            configurations = NO_CONFIGURATIONS;
         }
+
         return configurations;
     }
 
@@ -138,9 +136,8 @@ public final class ConfigurationBrowserPanelContent extends DefaultContent
      * @author Edward Yakop
      * @since 0.1.0
      */
-    private static final class OverviewTabListener extends DefaultOverviewTab.OverviewTabListener
+    private static final class OverviewTabListener extends DefaultOverviewTab.AbstractOverviewTabListener
     {
-
         private ConfigurationBrowserPanel m_panel;
 
         private OverviewTabListener( ConfigurationBrowserPanel panel )

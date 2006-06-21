@@ -29,7 +29,6 @@ import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
  */
 public interface Exporter
 {
-
     /**
      * {@code EXPORTER_ID} is configuration property name that uniquely identified this exporter.
      *

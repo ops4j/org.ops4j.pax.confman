@@ -24,7 +24,6 @@ import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 
 public final class PaxOrderByBorder extends OrderByBorder
 {
-
     private final DataView m_dataView;
 
     public PaxOrderByBorder( String id, String property, ISortStateLocator stateLocator, DataView dataView )

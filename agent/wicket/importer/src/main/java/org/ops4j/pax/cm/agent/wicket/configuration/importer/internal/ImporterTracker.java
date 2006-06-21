@@ -48,7 +48,6 @@ final class ImporterTracker extends ServiceTracker
     private final BundleContext m_bundleContext;
     private ServiceRegistration m_serviceRegistration;
 
-
     /**
      * Returns registered importer ids service.
      *
@@ -140,11 +139,12 @@ final class ImporterTracker extends ServiceTracker
     {
         if( !m_services.isEmpty() && m_serviceRegistration == null )
         {
-            String destinationId = WicketApplicationConstant.Overview.DESTINATION_ID_MENU_TAB;
+            String destinationId = ConfigurationImporterContent.OVERVIEW_TAB_DESTINATION_ID;
             String applicationName = WicketApplicationConstant.APPLICATION_NAME;
 
             ConfigurationImporterContent cnt = new ConfigurationImporterContent( context, applicationName );
             cnt.setDestinationId( destinationId );
+
             m_serviceRegistration = cnt.register();
         }
     }

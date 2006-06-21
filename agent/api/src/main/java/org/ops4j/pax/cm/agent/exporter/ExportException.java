@@ -25,7 +25,6 @@ package org.ops4j.pax.cm.agent.exporter;
  */
 public class ExportException extends RuntimeException
 {
-
     /**
      * Construct {@code ExportException} with the specified argument.
      *

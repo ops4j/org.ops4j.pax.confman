@@ -23,7 +23,6 @@ package org.ops4j.pax.cm.agent.wicket;
  */
 public final class WicketApplicationConstant
 {
-
     /**
      * Represents wicket application name.
      *
@@ -49,7 +48,6 @@ public final class WicketApplicationConstant
      */
     public static final class Overview
     {
-
         /**
          * Represents the containment id of overview page.
          *
@@ -94,7 +92,6 @@ public final class WicketApplicationConstant
      */
     public static final class Configuration
     {
-
         /**
          * All constants in regards to {@code EditConfigurationPage} are defined here.
          *
@@ -102,7 +99,6 @@ public final class WicketApplicationConstant
          */
         public static final class Edit
         {
-
             /**
              * The containment id of {@code EditConfigurationPage}.
              *

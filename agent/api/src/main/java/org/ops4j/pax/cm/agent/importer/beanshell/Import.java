@@ -25,7 +25,6 @@ import java.util.List;
  */
 public interface Import
 {
-
     /**
      * Returns list of {@code PaxConfiguration} to be imported to configuration admin service. Returns an instance of
      * empty collection if there's no configuration.

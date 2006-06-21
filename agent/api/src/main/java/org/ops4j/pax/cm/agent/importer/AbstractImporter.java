@@ -40,7 +40,6 @@ import org.osgi.service.cm.ManagedService;
 public abstract class AbstractImporter
     implements Importer, ManagedService
 {
-
     private static final Log m_logger = LogFactory.getLog( AbstractImporter.class );
 
     private BundleContext m_bundleContext;

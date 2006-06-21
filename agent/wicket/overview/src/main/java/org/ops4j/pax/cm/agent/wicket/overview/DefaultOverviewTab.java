@@ -18,6 +18,8 @@
 package org.ops4j.pax.cm.agent.wicket.overview;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.wicket.overview.internal.OverviewTabPanel;
 import wicket.extensions.markup.html.tabs.AbstractTab;
@@ -25,6 +27,9 @@ import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 
 /**
+ * {@code DefaultOverviewTab} provides default implementation of {@code OverviewTab}. Do not use
+ * {@code DefaultOverviewTab} if the panel use a lot of memory. It is best if the panel is instantiated in lazy manner.
+ *
  * @author Edward Yakop
  * @since 0.1.0
  */
@@ -36,9 +41,17 @@ public final class DefaultOverviewTab extends AbstractTab
 
     private Panel m_panel;
     private String m_tabItemIdentifier;
-    private OverviewTabListener m_listener;
+    private List<AbstractOverviewTabListener> m_listeners;
 
     /**
+     * Construct an instance of {@code DefaultOverviewTab} with the specified arguments.
+     *
+     * @param title             The title of this tab. This argument must not be {@code null}.
+     * @param tabItemIdentifier The unique tab item identifier. This will be used by {@code OverviewPage} to identify
+     *                          selected tab. This argument must not be {@code null} or empty.
+     * @param panel             The panel to be displayed. This argument must not be {@code null}.
+     *
+     * @throws IllegalArgumentException Thrown if one or some or all arguments are {@code null}.
      * @since 0.1.0
      */
     public DefaultOverviewTab( IModel title, String tabItemIdentifier, Panel panel )
@@ -47,7 +60,6 @@ public final class DefaultOverviewTab extends AbstractTab
         super( title );
 
         NullArgumentException.validateNotEmpty( tabItemIdentifier, "tabItemIdentifier" );
-        m_tabItemIdentifier = tabItemIdentifier;
 
         NullArgumentException.validateNotNull( panel, "panel" );
         if( !WICKET_ID_PANEL.equals( panel.getId() ) )
@@ -55,29 +67,36 @@ public final class DefaultOverviewTab extends AbstractTab
             throw new IllegalArgumentException( "[panel] argument must have wicket id [" + WICKET_ID_PANEL + "]." );
         }
 
+        m_tabItemIdentifier = tabItemIdentifier;
         m_panel = panel;
+
+        m_listeners = new ArrayList<AbstractOverviewTabListener>();
     }
 
     /**
-     * Set the listener of {@code DefaultOverviewTab}. Sets to {@code null} to remove listener.
-     *
-     * @param listener The listener.
-     *
-     * @since 0.1.0
-     */
-    public void setListener( OverviewTabListener listener )
-    {
-        m_listener = listener;
-    }
-
-    /**
-     * Returns the overview tab item identifier. This is used by {@code OverviewPage} to match the user http request.
+     * Returns a non-null String of the overview tab item identifier. This is used by {@code OverviewPage} to identify
+     * the requested selected tab.
      *
      * @since 0.1.0
      */
     public String getOverviewTabItemIdentifier()
     {
         return m_tabItemIdentifier;
+    }
+
+    /**
+     * Add the specified {@code listener} of this {@code DefaultOverviewTab} instance.
+     *
+     * @param listener The listener to be added. This argument must not be {@code null}.
+     *
+     * @throws IllegalArgumentException Thrown if the specified {@code listener} is {@code null}.
+     * @since 0.1.0
+     */
+    public void addListener( AbstractOverviewTabListener listener )
+        throws IllegalArgumentException
+    {
+        NullArgumentException.validateNotNull( listener, "listener" );
+        m_listeners.add( listener );
     }
 
     /**
@@ -91,19 +110,36 @@ public final class DefaultOverviewTab extends AbstractTab
      */
     public Panel getPanel( final String panelId )
     {
-        if( m_listener != null )
+        for( AbstractOverviewTabListener listener : m_listeners )
         {
-            m_listener.preGetPanel( this );
+            listener.preGetPanel( this );
         }
 
         return new OverviewTabPanel( panelId, m_panel );
     }
 
     /**
+     * Remove the {@code listener} of this {@code DefaultOverviewTab} instance.
+     *
+     * @param listener The listener to be removed. This argument must not be {@code null}.
+     *
+     * @throws IllegalArgumentException Thrown if the specified {@code listener} is {@code null}.
+     * @since 0.1.0
+     */
+    public void removeListener( AbstractOverviewTabListener listener )
+    {
+        NullArgumentException.validateNotNull( listener, "listener" );
+        m_listeners.remove( listener );
+    }
+
+    /**
+     * Instantiate {@code AbstractOverviewTabListener} and add to {@code DefaultOverviewTab} instance as listener to
+     * receive {@code preGetPanel} event. This is useful if the panel internal state need to be updated.
+     *
      * @author Edward Yakop
      * @since 0.1.0
      */
-    public static abstract class OverviewTabListener
+    public static abstract class AbstractOverviewTabListener
         implements Serializable
     {
 

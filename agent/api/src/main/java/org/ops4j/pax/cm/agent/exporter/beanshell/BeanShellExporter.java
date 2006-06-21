@@ -37,7 +37,6 @@ import org.osgi.framework.BundleContext;
 public final class BeanShellExporter extends AbstractExporter
     implements Exporter
 {
-
     /**
      * The exporter id of {@code BeanShellExporter}.
      *

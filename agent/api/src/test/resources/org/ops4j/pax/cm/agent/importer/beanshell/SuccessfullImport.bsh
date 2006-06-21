@@ -1,0 +1,33 @@
+package org.ops4j.pax.cm.agent.importer.beanshell;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+
+public final class Importer
+    implements Import
+{
+    public Importer()
+    {
+    }
+
+    public List performImport()
+    {
+        List configurations = new ArrayList();
+
+        Properties properties = new Properties();
+        properties.setProperty( "property1", "value1" );
+
+        for( int i = 0; i < 100; i++ )
+        {
+            PaxConfiguration configuration = new PaxConfiguration();
+            configuration.setPid( "pid_" + i );
+            configuration.setProperties( properties );
+
+            configurations.add( configuration );
+        }
+
+        return configurations;
+    }
+}

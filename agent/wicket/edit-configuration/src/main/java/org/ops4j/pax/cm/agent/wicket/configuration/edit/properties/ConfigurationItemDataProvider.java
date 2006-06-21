@@ -87,6 +87,14 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
         notifyListener( null );
     }
 
+    private void notifyListener( ConfigurationItem item )
+    {
+        if( m_listener != null )
+        {
+            m_listener.setConfigurationItem( item );
+        }
+    }
+
     void deleteSelectedConfigurationItem()
     {
         boolean isEmpty = m_configurationProperties.isEmpty();
@@ -202,14 +210,6 @@ final class ConfigurationItemDataProvider extends SortableDataProvider
         }
 
         notifyListener( item );
-    }
-
-    private void notifyListener( ConfigurationItem item )
-    {
-        if( m_listener != null )
-        {
-            m_listener.setConfigurationItem( item );
-        }
     }
 
     public void setSelectionListener( EditConfigurationItemPanel editConfigurationItemPanel )

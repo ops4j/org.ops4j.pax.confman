@@ -40,7 +40,6 @@ import org.osgi.service.cm.ManagedService;
 public abstract class AbstractExporter
     implements Exporter, ManagedService
 {
-
     private static final Log m_logger = LogFactory.getLog( AbstractExporter.class );
 
     private BundleContext m_bundleContext;

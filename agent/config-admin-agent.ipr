@@ -433,6 +433,20 @@
         <root url="file:///home/efy/dev/BeanShell/src" />
       </SOURCES>
     </library>
+    <library name="junit-3.8.2">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="jmock-1.0.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/jmock/jmock/1.0.1/jmock-1.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />

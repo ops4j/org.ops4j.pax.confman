@@ -70,7 +70,7 @@ public final class Activator
         PaxConfigurationFacade.setContext( bundleContext );
 
         String applicationName = WicketApplicationConstant.APPLICATION_NAME;
-        String overviewMenuDestinationId = WicketApplicationConstant.Overview.DESTINATION_ID_MENU_TAB;
+        String overviewMenuDestinationId = ConfigurationBrowserPanelContent.OVERVIEW_TAB_DESTINATION_ID;
         DefaultContent configurationBrowserPanelContent =
             new ConfigurationBrowserPanelContent( bundleContext, applicationName );
         configurationBrowserPanelContent.setDestinationId( overviewMenuDestinationId );

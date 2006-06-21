@@ -33,7 +33,6 @@ import org.osgi.service.cm.Configuration;
 public final class PaxConfiguration
     implements Serializable
 {
-
     public static final String PROPERTY_PID = "pid";
     public static final String PROPERTY_BUNDLE_LOCATION = "bundleLocation";
     public static final String PROPERTY_FACTORY_PID = "factoryPid";
@@ -52,6 +51,11 @@ public final class PaxConfiguration
         setPid( "" );
         setFactoryPid( "" );
         setProperties( new Hashtable() );
+    }
+
+    public void setFactoryPid( String factoryPid )
+    {
+        m_factoryPID = factoryPid;
     }
 
     /**
@@ -158,10 +162,5 @@ public final class PaxConfiguration
     public boolean isNew()
     {
         return m_isNew;
-    }
-
-    public void setFactoryPid( String factoryPid )
-    {
-        m_factoryPID = factoryPid;
     }
 }

@@ -36,7 +36,6 @@ import org.osgi.service.cm.ConfigurationAdmin;
  */
 public final class PaxConfigurationFacade
 {
-
     private static final Log m_logger = LogFactory.getLog( PaxConfigurationFacade.class );
 
     private static final String CONFIGURATION_ADMIN_CLASSNAME = ConfigurationAdmin.class.getName();

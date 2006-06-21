@@ -35,7 +35,6 @@ import wicket.PageParameters;
  */
 public final class EditConfigurationPageContent extends AbstractPageContent
 {
-
     private static final Logger m_logger = Logger.getLogger( EditConfigurationPageContent.class );
     private final BundleContext m_bundleContext;
     private final EditConfigurationPageContainer m_configurationEditorPageContainer;

@@ -32,7 +32,6 @@ import wicket.Component;
 
 public final class EditConfigurationPageContainer extends DefaultPageContainer
 {
-
     private static final Logger m_logger = Logger.getLogger( EditConfigurationPageContainer.class );
 
     public EditConfigurationPageContainer( BundleContext bundleContext, String containmentId, String applicationName )

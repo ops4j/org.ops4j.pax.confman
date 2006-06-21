@@ -23,7 +23,6 @@ import org.osgi.framework.BundleContext;
 public class Activator
     implements BundleActivator
 {
-
     private ConfigAdminTracker m_configAdminTracker;
 
     public void start( BundleContext bundleContext )
