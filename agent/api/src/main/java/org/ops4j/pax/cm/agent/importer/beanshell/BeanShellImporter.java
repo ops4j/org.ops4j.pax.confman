@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -38,19 +37,28 @@ import org.ops4j.pax.cm.agent.importer.Importer;
 import org.osgi.framework.BundleContext;
 
 /**
+ * {@code BeanShellImporter}
+ *
  * @author Edward Yakop
  * @since 0.1.0
  */
 public final class BeanShellImporter extends AbstractImporter
     implements Importer
 {
+
     /**
      * The importer id of {@code BeanShellImporter}.
      *
      * @since 0.1.0
      */
     public static final String ID = "BeanShell";
-    private static final String IMPORTER_CLASS_NAME = "org.ops4j.pax.cm.agent.importer.beanshell.Importer";
+
+    /**
+     * The beanshell must have class with the following full name defined.
+     *
+     * @since 0.1.0
+     */
+    private static final String IMPORTER_CLASS_NAME = "Importer";
 
     /**
      * Construct instance of {@code BeanShellImporter} with the specified arguments.
@@ -67,12 +75,34 @@ public final class BeanShellImporter extends AbstractImporter
         super( bundleContext, servicePID, ID );
     }
 
+    /**
+     * Perform import on data specified by {@code inputStream}.
+     *
+     * @param inputStream The input stream. This argument must not be {@code null}.
+     *
+     * @return List of {@code PaxConfiguration}, returns empty collection if there is no configuration.
+     *
+     * @throws IllegalArgumentException Thrown if the specified {@code inputStream} is {@code null}.
+     * @throws ImportException          Thrown if one or more of the following conditions fullfilled:
+     *                                  <ul>
+     *                                  <li>The script is not a valid bean shell script.</li>
+     *                                  <li>The script does not declare class with name as {@code IMPORTER_CLASS_NAME}.</li>
+     *                                  <li>The class with {@code Importer} name does not have default constructor.</li>
+     *                                  <li>The class with {@code Importer} name default constructor is not {@code public}.</li>
+     *                                  <li>The class with {@code Importer} name does not implement {@code Import} interface.</li>
+     *                                  <li>The method {@code performImport} is not public.</li>
+     *                                  </ul>
+     * @see BeanShellImporter#IMPORTER_CLASS_NAME
+     * @see Import
+     * @see java.util.Collections#emptyList()
+     * @since 0.1.0
+     */
     public List<PaxConfiguration> performImport( InputStream inputStream )
-        throws ImportException
+        throws IllegalArgumentException, ImportException
     {
         if( inputStream == null )
         {
-            return Collections.emptyList();
+            throw new IllegalArgumentException( "[inputStream] argument is [null]." );
         }
 
         Interpreter interpreter = new Interpreter();
@@ -93,25 +123,33 @@ public final class BeanShellImporter extends AbstractImporter
 
         BshClassManager classManager = interpreter.getClassManager();
 
-        if( classManager.classExists( IMPORTER_CLASS_NAME ) )
+        if( !classManager.classExists( IMPORTER_CLASS_NAME ) )
         {
-            Class clazz = classManager.classForName( IMPORTER_CLASS_NAME );
-
-            try
-            {
-                Import importz = (Import) clazz.newInstance();
-                return importz.performImport();
-            } catch( InstantiationException e )
-            {
-                throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
-            } catch( IllegalAccessException e )
-            {
-                throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
-            }
+            throw new ImportException( "Input stream does not have [" + IMPORTER_CLASS_NAME + "] class defined." );
         }
-        else
+
+        Class clazz = classManager.classForName( IMPORTER_CLASS_NAME );
+
+        try
         {
-            throw new ImportException( "Input stream does not have [" + IMPORTER_CLASS_NAME + "] defined." );
+            Object instance = clazz.newInstance();
+
+            Class<? extends Object> importClassName = instance.getClass();
+            if( !Import.class.isAssignableFrom( importClassName ) )
+            {
+                throw new ImportException(
+                    "[" + IMPORTER_CLASS_NAME + "] does not implement [" + Import.class.getName() + "] interface."
+                );
+            }
+
+            Import importz = (Import) instance;
+            return importz.performImport();
+        } catch( InstantiationException e )
+        {
+            throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
+        } catch( IllegalAccessException e )
+        {
+            throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
         }
     }
 

@@ -40,6 +40,7 @@ import org.osgi.service.cm.ManagedService;
 public abstract class AbstractImporter
     implements Importer, ManagedService
 {
+
     private static final Log m_logger = LogFactory.getLog( AbstractImporter.class );
 
     private BundleContext m_bundleContext;
@@ -78,13 +79,13 @@ public abstract class AbstractImporter
      *
      * @return List of {@code PaxConfiguration}, returns empty collection if there is no configuration.
      *
-     * @throws org.ops4j.pax.cm.agent.importer.ImportException
-     *          Thrown if there is import exception.
+     * @throws IllegalArgumentException Thrown if the specified {@code inputStream} is {@code null}.
+     * @throws ImportException          Thrown if there is import exception.
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */
     public abstract List<PaxConfiguration> performImport( InputStream inputStream )
-        throws ImportException;
+        throws IllegalArgumentException, ImportException;
 
     /**
      * @see org.osgi.service.cm.ManagedService#updated(java.util.Dictionary)

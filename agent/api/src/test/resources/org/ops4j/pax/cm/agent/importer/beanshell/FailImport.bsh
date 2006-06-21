@@ -3,10 +3,10 @@ import java.util.List;
 import java.util.Properties;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 
-public final class Importer
+public final class ClassNameIsNotImporter 
     implements Import
 {
-    public Importer()
+    public ClassNameIsNotImporter()
     {
     }
 

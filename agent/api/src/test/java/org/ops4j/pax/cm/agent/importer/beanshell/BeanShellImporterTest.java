@@ -34,9 +34,11 @@ import org.osgi.framework.BundleContext;
  */
 public final class BeanShellImporterTest extends MockObjectTestCase
 {
+
     private static final Log m_logger = LogFactory.getLog( BeanShellImporterTest.class );
 
     private static final String SUCCESSFULL_IMPORT_SCRIPT_FILE_NAME = "SuccessfullImport.bsh";
+    private static final String FAIL_IMPORT_SCRIPT_FILE_NAME = "FailImport.bsh";
 
     private BeanShellImporter mBeanShellImporter;
 
@@ -57,31 +59,35 @@ public final class BeanShellImporterTest extends MockObjectTestCase
         return (BundleContext) mock.proxy();
     }
 
-    public void testSuccessfullImport()
+    public void testFailImport()
     {
-        InputStream resourceAsStream = getClass().getResourceAsStream( SUCCESSFULL_IMPORT_SCRIPT_FILE_NAME );
-        if( resourceAsStream == null )
-        {
-            fail( "Test file [" + SUCCESSFULL_IMPORT_SCRIPT_FILE_NAME + "] is not found." );
-        }
+        InputStream resourceAsStream = getResourceAsStream( FAIL_IMPORT_SCRIPT_FILE_NAME );
 
         try
         {
-            List<PaxConfiguration> paxConfigurations = mBeanShellImporter.performImport( resourceAsStream );
+            mBeanShellImporter.performImport( resourceAsStream );
 
-            if( paxConfigurations == null || paxConfigurations.isEmpty() || paxConfigurations.size() != 100 )
-            {
-                fail( "Import fail. There should be 100 pax configurations." );
-            }
-        }
-        catch( ImportException importException )
+            fail( "Import should fail." );
+        } catch( ImportException ie )
         {
-            fail( "Import failed. Error [" + importException.getMessage() + "]." );
+            // Expected.
         }
         finally
         {
             closeInputStream( resourceAsStream );
         }
+    }
+
+    private InputStream getResourceAsStream( String resourceFileName )
+    {
+        InputStream resourceAsStream = getClass().getResourceAsStream( resourceFileName );
+
+        if( resourceAsStream == null )
+        {
+            fail( "Test file [" + resourceFileName + "] is not found." );
+        }
+
+        return resourceAsStream;
     }
 
     private static void closeInputStream( InputStream inputStream )
@@ -95,6 +101,43 @@ public final class BeanShellImporterTest extends MockObjectTestCase
             {
                 m_logger.warn( "Inputstream failed to be close [" + inputStream + "].", e );
             }
+        }
+    }
+
+    public void testInputArgument()
+    {
+        try
+        {
+            mBeanShellImporter.performImport( null );
+
+            fail( "[IllegalArgumentException] is expected to be thrown." );
+        } catch( IllegalArgumentException e )
+        {
+            // Expected.
+        }
+    }
+
+    public void testSuccessfullImport()
+    {
+        InputStream resourceAsStream = getResourceAsStream( SUCCESSFULL_IMPORT_SCRIPT_FILE_NAME );
+
+        try
+        {
+            List<PaxConfiguration> paxConfigurations = mBeanShellImporter.performImport( resourceAsStream );
+
+            if( paxConfigurations == null || paxConfigurations.isEmpty() || paxConfigurations.size() != 100 )
+            {
+                fail( "There should be 100 pax configurations." );
+            }
+        }
+        catch( ImportException importException )
+        {
+            fail( "Import failed. Error [" + importException.getMessage() + "]." );
+            m_logger.error( importException );
+        }
+        finally
+        {
+            closeInputStream( resourceAsStream );
         }
     }
 }
