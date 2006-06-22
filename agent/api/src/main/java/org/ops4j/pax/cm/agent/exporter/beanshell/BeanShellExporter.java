@@ -72,10 +72,6 @@ public final class BeanShellExporter extends AbstractExporter
           "    }\n" +
           "}\n" ).getBytes();
 
-    private static final byte[] EXPORT_NEW_CONFIGURATION =
-        ( "configuration = new PaxConfiguration();\n" +
-          "configurations.add( configuration );\n" ).getBytes();
-
     private static final byte[] DICTIONARY_DECLARATIONS =
         ( "dictionary = new Hashtable();\n" +
           "configuration.setProperties( dictionary );\n" ).getBytes();
@@ -112,10 +108,8 @@ public final class BeanShellExporter extends AbstractExporter
 
             for( PaxConfiguration configuration : configurations )
             {
-                stream.write( EXPORT_NEW_CONFIGURATION );
+                newConfiguration( configuration, stream );
 
-                streamPIDIfValid( configuration, stream );
-                streamFactoryPidIfValid( configuration, stream );
                 streamBundleLocationIfValid( configuration, stream );
                 streamPropertiesIfValid( configuration, stream );
             }
@@ -128,35 +122,39 @@ public final class BeanShellExporter extends AbstractExporter
         }
     }
 
-    private void streamPIDIfValid( PaxConfiguration configuration, OutputStream stream )
+    private void newConfiguration( PaxConfiguration configuration, OutputStream stream )
         throws IOException
     {
+        StringBuffer stmtBuffer = new StringBuffer();
+
         String pid = configuration.getPid();
         if( pid != null )
         {
-            String escaped = escapeString( pid );
-            String pidStatement = "configuration.setPid( \"" + escaped + "\" );\n";
-            byte[] pidStatementBytes = pidStatement.getBytes();
-            stream.write( pidStatementBytes );
+            String esacapedPid = escapeString( pid );
+            stmtBuffer.append( "configuration = new PaxConfiguration( \"" )
+                .append( esacapedPid )
+                .append( "\", false );\n" );
         }
+        else
+        {
+            String factoryPid = configuration.getFactoryPid();
+            String esacapedPid = escapeString( factoryPid );
+            stmtBuffer.append( "configuration = new PaxConfiguration( \"" )
+                .append( esacapedPid )
+                .append( "\", true );\n" );
+        }
+
+        stmtBuffer.append( "configurations.add( configuration );\n" );
+        String statement = stmtBuffer.toString();
+        stmtBuffer.setLength( 0 );
+
+        byte[] stmtBytes = statement.getBytes();
+        stream.write( stmtBytes );
     }
 
     private static String escapeString( String string )
     {
         return StringEscapeUtils.escapeJavaScript( string );
-    }
-
-    private void streamFactoryPidIfValid( PaxConfiguration configuration, OutputStream stream )
-        throws IOException
-    {
-        String factoryPid = configuration.getFactoryPid();
-        if( factoryPid != null )
-        {
-            String escaped = escapeString( factoryPid );
-            String factoryPidStatement = "configuration.setFactoryPid( \"" + escaped + "\" );\n";
-            byte[] factoryPidStatementBytes = factoryPidStatement.getBytes();
-            stream.write( factoryPidStatementBytes );
-        }
     }
 
     private void streamBundleLocationIfValid( PaxConfiguration configuration, OutputStream stream )

@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.configuration.validator.InvalidPaxConfigurationException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
@@ -81,11 +82,13 @@ public abstract class AbstractImporter
      *
      * @throws IllegalArgumentException Thrown if the specified {@code inputStream} is {@code null}.
      * @throws ImportException          Thrown if there is import exception.
+     * @throws InvalidPaxConfigurationException
+     *                                  Thrown if one of the imported {@code PaxConfiguration} is invalid.
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */
     public abstract List<PaxConfiguration> performImport( InputStream inputStream )
-        throws IllegalArgumentException, ImportException;
+        throws IllegalArgumentException, ImportException, InvalidPaxConfigurationException;
 
     /**
      * @see org.osgi.service.cm.ManagedService#updated(java.util.Dictionary)

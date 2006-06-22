@@ -56,13 +56,6 @@ public final class PaxConfiguration
         {
             m_pid = pid;
         }
-    }
-
-    public PaxConfiguration()
-    {
-        m_isNew = false;
-        setPid( "" );
-        setFactoryPid( "" );
         setProperties( new Hashtable() );
     }
 

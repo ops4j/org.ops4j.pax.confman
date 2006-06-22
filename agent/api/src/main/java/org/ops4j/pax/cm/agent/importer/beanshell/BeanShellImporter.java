@@ -25,13 +25,15 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
-import java.lang.reflect.InvocationTargetException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.configuration.validator.PaxConfigurationValidator;
+import org.ops4j.pax.cm.agent.configuration.validator.InvalidPaxConfigurationException;
 import org.ops4j.pax.cm.agent.importer.AbstractImporter;
 import org.ops4j.pax.cm.agent.importer.ImportException;
 import org.ops4j.pax.cm.agent.importer.Importer;
@@ -99,7 +101,7 @@ public final class BeanShellImporter extends AbstractImporter
      * @since 0.1.0
      */
     public List<PaxConfiguration> performImport( InputStream inputStream )
-        throws IllegalArgumentException, ImportException
+        throws IllegalArgumentException, ImportException, InvalidPaxConfigurationException
     {
         if( inputStream == null )
         {
@@ -145,7 +147,11 @@ public final class BeanShellImporter extends AbstractImporter
             }
 
             Import importz = (Import) instance;
-            return importz.performImport();
+            List importedConfigurations = importz.performImport();
+
+            validateConfigurations( importedConfigurations );
+
+            return importedConfigurations;
         } catch( InstantiationException e )
         {
             throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
@@ -155,6 +161,38 @@ public final class BeanShellImporter extends AbstractImporter
         } catch( InvocationTargetException e )
         {
             throw new ImportException( "Fail to perform import.", e.getTargetException() );
+        }
+    }
+
+    private static void validateConfigurations( List importedConfigurations )
+        throws ImportException, InvalidPaxConfigurationException
+    {
+        if( importedConfigurations == null )
+        {
+            throw new ImportException( "imported configuration must not be [null]." );
+        }
+
+        int i = 0;
+        for( Object value : importedConfigurations )
+        {
+            if( value == null )
+            {
+                throw new ImportException( "Configuration [" + i + "] must not be [null]." );
+            }
+
+            if( !( value instanceof PaxConfiguration ) )
+            {
+                String expectedClassName = PaxConfiguration.class.getName();
+                String valueClassName = value.getClass().getName();
+                String msg = "Configuration [" + i + "] is not an instance of [" + expectedClassName + "], found ["
+                             + valueClassName + "]";
+                throw new ImportException( msg );
+            }
+
+            PaxConfiguration configuration = (PaxConfiguration) value;
+            PaxConfigurationValidator.validatePaxConfiguration( configuration );
+
+            i++;
         }
     }
 

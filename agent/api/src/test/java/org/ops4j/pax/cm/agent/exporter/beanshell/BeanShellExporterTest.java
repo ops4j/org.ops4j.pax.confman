@@ -103,8 +103,6 @@ public class BeanShellExporterTest extends MockObjectTestCase
         byte[] exportedBeanShellScript = m_outputStream.toByteArray();
         ByteArrayInputStream inputStream = new ByteArrayInputStream( exportedBeanShellScript );
 
-        System.out.println( "Exported script\n" + m_outputStream.toString() );
-
         try
         {
             return m_beanShellImporter.performImport( inputStream );

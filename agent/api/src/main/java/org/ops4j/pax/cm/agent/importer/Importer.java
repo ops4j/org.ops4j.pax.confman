@@ -20,6 +20,7 @@ package org.ops4j.pax.cm.agent.importer;
 import java.io.InputStream;
 import java.util.List;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
+import org.ops4j.pax.cm.agent.configuration.validator.InvalidPaxConfigurationException;
 
 /**
  * @author Edward Yakop
@@ -27,6 +28,7 @@ import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
  */
 public interface Importer
 {
+
     /**
      * {@code IMPORTER_ID} is configuration property name that uniquely identified this importer.
      *
@@ -51,9 +53,11 @@ public interface Importer
      * @return List of {@code PaxConfiguration}, returns empty collection if there is no configuration.
      *
      * @throws ImportException Thrown if there is import exception.
+     * @throws InvalidPaxConfigurationException
+     *                         Thrown if one of the imported {@code PaxConfiguration} is invalid.
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */
     List<PaxConfiguration> performImport( InputStream inputStream )
-        throws ImportException;
+        throws ImportException, InvalidPaxConfigurationException;
 }

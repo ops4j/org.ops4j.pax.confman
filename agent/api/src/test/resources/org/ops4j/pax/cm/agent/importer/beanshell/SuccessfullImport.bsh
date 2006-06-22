@@ -19,8 +19,8 @@ public final class Importer
 
         for( int i = 0; i < 100; i++ )
         {
-            PaxConfiguration configuration = new PaxConfiguration();
-            configuration.setPid( "pid_" + i );
+            String pid = "pid_" + i;
+            PaxConfiguration configuration = new PaxConfiguration( pid, false );
             configuration.setProperties( properties );
 
             configurations.add( configuration );
