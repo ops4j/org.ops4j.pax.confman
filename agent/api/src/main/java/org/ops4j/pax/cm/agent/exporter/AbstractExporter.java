@@ -74,7 +74,7 @@ public abstract class AbstractExporter
     /**
      * Perform export of the specified {@code configurations} to the specified {@code stream}.
      *
-     * @param configurations The configurations to be exported. This argument must not be {@code null}.
+     * @param configurations The configurations to be exported.
      * @param stream         The output stream. This argument must not be {@code null}.
      *
      * @throws org.ops4j.pax.cm.agent.exporter.ExportException

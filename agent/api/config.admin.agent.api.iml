@@ -21,6 +21,8 @@
     <orderEntry type="library" name="bsh-reflect-2.0b4" level="project" />
     <orderEntry type="library" name="jmock-1.0.1" level="project" />
     <orderEntry type="library" name="junit-3.8.2" level="project" />
+    <orderEntry type="library" name="bsh-classgen-2.0b4" level="project" />
+    <orderEntry type="library" name="bsh-classpath-2.0b4" level="project" />
     <orderEntryProperties />
   </component>
 </module>

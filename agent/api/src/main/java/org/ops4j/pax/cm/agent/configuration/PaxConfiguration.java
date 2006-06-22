@@ -20,8 +20,8 @@ package org.ops4j.pax.cm.agent.configuration;
 import java.io.Serializable;
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Hashtable;
 import org.ops4j.lang.NullArgumentException;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.Configuration;
@@ -33,6 +33,7 @@ import org.osgi.service.cm.Configuration;
 public final class PaxConfiguration
     implements Serializable
 {
+
     public static final String PROPERTY_PID = "pid";
     public static final String PROPERTY_BUNDLE_LOCATION = "bundleLocation";
     public static final String PROPERTY_FACTORY_PID = "factoryPid";
@@ -44,6 +45,18 @@ public final class PaxConfiguration
     private String m_factoryPID;
     private Dictionary m_properties;
     private boolean m_isNew;
+
+    public PaxConfiguration( String pid, boolean isFactoryPid )
+    {
+        if( isFactoryPid )
+        {
+            m_factoryPID = pid;
+        }
+        else
+        {
+            m_pid = pid;
+        }
+    }
 
     public PaxConfiguration()
     {

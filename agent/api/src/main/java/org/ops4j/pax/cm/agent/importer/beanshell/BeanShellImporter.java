@@ -30,6 +30,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
+import java.lang.reflect.InvocationTargetException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.importer.AbstractImporter;
 import org.ops4j.pax.cm.agent.importer.ImportException;
@@ -107,7 +108,8 @@ public final class BeanShellImporter extends AbstractImporter
 
         Interpreter interpreter = new Interpreter();
         NameSpace nameSpace = interpreter.getNameSpace();
-        interpreter.setClassLoader( getClass().getClassLoader() );
+        ClassLoader classLoader = BeanShellImporter.class.getClassLoader();
+        interpreter.setClassLoader( classLoader );
         initializeNamespace( nameSpace );
 
         InputStreamReader in = new InputStreamReader( inputStream );
@@ -150,6 +152,9 @@ public final class BeanShellImporter extends AbstractImporter
         } catch( IllegalAccessException e )
         {
             throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
+        } catch( InvocationTargetException e )
+        {
+            throw new ImportException( "Fail to perform import.", e.getTargetException() );
         }
     }
 

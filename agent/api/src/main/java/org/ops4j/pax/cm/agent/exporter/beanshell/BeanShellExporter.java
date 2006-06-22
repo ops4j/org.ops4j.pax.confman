@@ -20,6 +20,7 @@ package org.ops4j.pax.cm.agent.exporter.beanshell;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.osgi.framework.BundleContext;
 public final class BeanShellExporter extends AbstractExporter
     implements Exporter
 {
+
     /**
      * The exporter id of {@code BeanShellExporter}.
      *
@@ -47,8 +49,8 @@ public final class BeanShellExporter extends AbstractExporter
     private static final Log m_logger = LogFactory.getLog( BeanShellExporter.class );
 
     private static final byte[] EXPORT_HEADER =
-        ( "package org.ops4j.pax.cm.agent.importer.beanshell;\n\n" +
-          "import java.util.ArrayList;\n" +
+        ( "import java.util.ArrayList;\n" +
+          "import java.util.Hashtable;\n" +
           "import java.util.List;\n" +
           "import java.util.Properties;\n" +
           "import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;\n" +
@@ -63,7 +65,7 @@ public final class BeanShellExporter extends AbstractExporter
           "    {\n" +
           "        List configurations = new ArrayList();\n" +
           "        PaxConfiguration configuration;\n" +
-          "        HashTable dictionary;\n" ).getBytes();
+          "        Hashtable dictionary;\n" ).getBytes();
 
     private static final byte[] EXPORT_FOOTER =
         ( "        return configurations;\n" +
@@ -74,7 +76,9 @@ public final class BeanShellExporter extends AbstractExporter
         ( "configuration = new PaxConfiguration();\n" +
           "configurations.add( configuration );\n" ).getBytes();
 
-    private static final byte[] DICTIONARY_DECLARATIONS = "dictionary = new HashTable();\n".getBytes();
+    private static final byte[] DICTIONARY_DECLARATIONS =
+        ( "dictionary = new Hashtable();\n" +
+          "configuration.setProperties( dictionary );\n" ).getBytes();
 
     public BeanShellExporter( BundleContext bundleContext, String serviceId )
         throws IllegalArgumentException
@@ -85,7 +89,7 @@ public final class BeanShellExporter extends AbstractExporter
     /**
      * Perform export of the specified {@code configurations} to the specified {@code stream}.
      *
-     * @param configurations The configurations to be exported. This argument must not be {@code null}.
+     * @param configurations The configurations to be exported.
      * @param stream         The output stream. This argument must not be {@code null}.
      *
      * @throws org.ops4j.pax.cm.agent.exporter.ExportException
@@ -95,8 +99,12 @@ public final class BeanShellExporter extends AbstractExporter
     public void performExport( List<PaxConfiguration> configurations, OutputStream stream )
         throws ExportException
     {
-        NullArgumentException.validateNotNull( configurations, "configurations" );
         NullArgumentException.validateNotNull( stream, "stream" );
+
+        if( configurations == null )
+        {
+            configurations = Collections.emptyList();
+        }
 
         try
         {
@@ -126,16 +134,16 @@ public final class BeanShellExporter extends AbstractExporter
         String pid = configuration.getPid();
         if( pid != null )
         {
-            String escaped = escaped( pid );
+            String escaped = escapeString( pid );
             String pidStatement = "configuration.setPid( \"" + escaped + "\" );\n";
             byte[] pidStatementBytes = pidStatement.getBytes();
             stream.write( pidStatementBytes );
         }
     }
 
-    private static String escaped( String string )
+    private static String escapeString( String string )
     {
-        return StringEscapeUtils.escapeJava( string );
+        return StringEscapeUtils.escapeJavaScript( string );
     }
 
     private void streamFactoryPidIfValid( PaxConfiguration configuration, OutputStream stream )
@@ -144,7 +152,7 @@ public final class BeanShellExporter extends AbstractExporter
         String factoryPid = configuration.getFactoryPid();
         if( factoryPid != null )
         {
-            String escaped = escaped( factoryPid );
+            String escaped = escapeString( factoryPid );
             String factoryPidStatement = "configuration.setFactoryPid( \"" + escaped + "\" );\n";
             byte[] factoryPidStatementBytes = factoryPidStatement.getBytes();
             stream.write( factoryPidStatementBytes );
@@ -157,7 +165,8 @@ public final class BeanShellExporter extends AbstractExporter
         String bundleLocation = configuration.getBundleLocation();
         if( bundleLocation != null )
         {
-            String bundleLocationStatement = "configuration.setBundleLocation( \"" + bundleLocation + "\" );\n";
+            String escaped = escapeString( bundleLocation );
+            String bundleLocationStatement = "configuration.setBundleLocation( \"" + escaped + "\" );\n";
             byte[] bundleLocationStatementBytes = bundleLocationStatement.getBytes();
             stream.write( bundleLocationStatementBytes );
         }
@@ -177,7 +186,7 @@ public final class BeanShellExporter extends AbstractExporter
                 String key = (String) keys.nextElement();
                 Object value = properties.get( key );
 
-                String escapedKey = escaped( key );
+                String escapedKey = escapeString( key );
                 String statement;
                 if( value == null )
                 {
@@ -235,15 +244,25 @@ public final class BeanShellExporter extends AbstractExporter
         if( value instanceof String )
         {
             String castedToString = value.toString();
-            return "\"" + escaped( castedToString ) + "\";\n";
+            return "\"" + escapeString( castedToString ) + "\"";
         }
         else if( value instanceof Character )
         {
             int charAsInt = (Character) value;
             return "new Character( (char) " + charAsInt + " )";
         }
+        else if( value instanceof Byte )
+        {
+            Byte byteValue = (Byte) value;
+            return "new Byte( (byte) " + byteValue.intValue() + ")";
+        }
+        else if( value instanceof Short )
+        {
+            Short shortValue = (Short) value;
+            return "new Short( (short) " + shortValue.intValue() + ")";
+        }
 
-        return "new " + clazz + "( " + value.toString() + " );";
+        return "new " + clazz + "( " + value.toString() + " )";
     }
 
     private String handleVector( String key, Object value )

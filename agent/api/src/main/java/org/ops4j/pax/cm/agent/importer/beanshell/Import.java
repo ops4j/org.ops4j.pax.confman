@@ -18,6 +18,7 @@
 package org.ops4j.pax.cm.agent.importer.beanshell;
 
 import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Edward Yakop
@@ -32,5 +33,6 @@ public interface Import
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */
-    List performImport();
+    List performImport()
+        throws InvocationTargetException;
 }

@@ -40,7 +40,7 @@ public final class BeanShellImporterTest extends MockObjectTestCase
     private static final String SUCCESSFULL_IMPORT_SCRIPT_FILE_NAME = "SuccessfullImport.bsh";
     private static final String FAIL_IMPORT_SCRIPT_FILE_NAME = "FailImport.bsh";
 
-    private BeanShellImporter mBeanShellImporter;
+    private BeanShellImporter m_beanShellImporter;
 
     public BeanShellImporterTest( String testName )
     {
@@ -49,14 +49,9 @@ public final class BeanShellImporterTest extends MockObjectTestCase
 
     public void setUp()
     {
-        BundleContext mockBundleContext = newBundleContextMock();
-        mBeanShellImporter = new BeanShellImporter( mockBundleContext, "beanShellImportPid" );
-    }
-
-    private BundleContext newBundleContextMock()
-    {
         Mock mock = mock( BundleContext.class );
-        return (BundleContext) mock.proxy();
+        BundleContext mockBundleContext = (BundleContext) mock.proxy();
+        m_beanShellImporter = new BeanShellImporter( mockBundleContext, "beanShellImportPid" );
     }
 
     public void testFailImport()
@@ -65,7 +60,7 @@ public final class BeanShellImporterTest extends MockObjectTestCase
 
         try
         {
-            mBeanShellImporter.performImport( resourceAsStream );
+            m_beanShellImporter.performImport( resourceAsStream );
 
             fail( "Import should fail." );
         } catch( ImportException ie )
@@ -108,7 +103,7 @@ public final class BeanShellImporterTest extends MockObjectTestCase
     {
         try
         {
-            mBeanShellImporter.performImport( null );
+            m_beanShellImporter.performImport( null );
 
             fail( "[IllegalArgumentException] is expected to be thrown." );
         } catch( IllegalArgumentException e )
@@ -123,7 +118,7 @@ public final class BeanShellImporterTest extends MockObjectTestCase
 
         try
         {
-            List<PaxConfiguration> paxConfigurations = mBeanShellImporter.performImport( resourceAsStream );
+            List<PaxConfiguration> paxConfigurations = m_beanShellImporter.performImport( resourceAsStream );
 
             if( paxConfigurations == null || paxConfigurations.isEmpty() || paxConfigurations.size() != 100 )
             {

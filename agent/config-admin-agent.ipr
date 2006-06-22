@@ -447,6 +447,20 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="bsh-classgen-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-classgen/2.0b4/bsh-classgen-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="bsh-classpath-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-classpath/2.0b4/bsh-classpath-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />
