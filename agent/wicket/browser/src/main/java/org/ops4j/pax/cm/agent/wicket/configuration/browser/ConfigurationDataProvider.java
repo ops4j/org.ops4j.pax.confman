@@ -60,7 +60,7 @@ final class ConfigurationDataProvider extends SortableDataProvider
 
         for( Configuration configuration : configurations )
         {
-            PaxConfiguration entry = new PaxConfiguration();
+            PaxConfiguration entry = new PaxConfiguration( "", false );
 
             String pid = configuration.getPid();
             entry.setPid( pid );
@@ -120,7 +120,7 @@ final class ConfigurationDataProvider extends SortableDataProvider
 
     void createNewPaxConfiguration()
     {
-        PaxConfiguration paxConfiguration = new PaxConfiguration();
+        PaxConfiguration paxConfiguration = new PaxConfiguration( "", false );
 
         paxConfiguration.setIsNew( true );
         m_configurations.add( m_selected, paxConfiguration );

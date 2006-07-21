@@ -64,7 +64,7 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
         }
         else
         {
-            configuration1 = new PaxConfiguration();
+            configuration1 = new PaxConfiguration( "", false );
         }
 
         m_dataProvider = new ConfigurationItemDataProvider( configuration1 );
@@ -105,7 +105,7 @@ public final class DefaultConfigurationPropertiesEditor extends Panel
     {
         if( configuration == null )
         {
-            configuration = new PaxConfiguration();
+            configuration = new PaxConfiguration( "", false );
         }
 
         m_dataProvider.setPaxConfiguration( configuration );

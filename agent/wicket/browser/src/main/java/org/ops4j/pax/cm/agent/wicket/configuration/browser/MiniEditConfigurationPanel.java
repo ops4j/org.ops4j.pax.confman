@@ -52,7 +52,7 @@ final class MiniEditConfigurationPanel extends Panel
 
         m_confDataProvider = confDataProvider;
         confDataProvider.setSelectionListener( this );
-        m_configuration = new PaxConfiguration();
+        m_configuration = new PaxConfiguration( "", false );
 
         m_form = new MiniConfigurationForm( WICKET_ID_FORM );
         m_form.setFormToDisableState();
@@ -64,7 +64,7 @@ final class MiniEditConfigurationPanel extends Panel
     {
         if( configuration == null )
         {
-            m_configuration = new PaxConfiguration();
+            m_configuration = new PaxConfiguration( "", false );
         }
         else
         {
