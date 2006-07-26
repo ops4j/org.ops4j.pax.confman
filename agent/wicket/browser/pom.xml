@@ -3,30 +3,30 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <groupId>org.ops4j.pax.config-admin.agent.wicket</groupId>
+    <groupId>org.ops4j.pax.cm.agent</groupId>
     <artifactId>wicket</artifactId>
-    <version>0.1.0.SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.ops4j.pax.config-admin.agent.wicket.panel</groupId>
+  <groupId>org.ops4j.pax.cm.agent.wicket.panel</groupId>
   <artifactId>browser</artifactId>
-  <version>0.1.0.SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <name>OPS4J - Pax:Wicket - config admin - agent - wicket - panels - browser.</name>
   <dependencies>
     <dependency>
-      <groupId>org.ops4j.pax.config-admin.agent</groupId>
+      <groupId>org.ops4j.pax.cm.agent</groupId>
       <artifactId>api</artifactId>
-      <version>0.1.0.SNAPSHOT</version>
+      <version>0.1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.ops4j.pax.config-admin.agent.wicket.page</groupId>
+      <groupId>org.ops4j.pax.cm.agent.wicket.page</groupId>
       <artifactId>edit-configuration</artifactId>
-      <version>0.1.0.SNAPSHOT</version>
+      <version>0.1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.ops4j.pax.config-admin.agent.wicket.pages</groupId>
+      <groupId>org.ops4j.pax.cm.agent.wicket.pages</groupId>
       <artifactId>overview</artifactId>
-      <version>0.1.0.SNAPSHOT</version>
+      <version>0.1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

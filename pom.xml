@@ -6,20 +6,17 @@
   <parent>
     <groupId>org.ops4j</groupId>
     <artifactId>pax</artifactId>
-    <version>1.2.0</version>
+    <version>1.2</version>
   </parent>
-  <groupId>org.ops4j.pax.config-admin</groupId>
-  <artifactId>config-admin</artifactId>
-  <version>0.1.0.SNAPSHOT</version>
+  <groupId>org.ops4j.pax</groupId>
+  <artifactId>cm</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OPS4J - Pax - Config Admin</name>
   <url>http://wiki.ops4j.org/</url>
   <scm>
     <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/config-admin</developerConnection>
   </scm>
-  <build>
-      <finalName>${artifactId}_${version}</finalName>
-  </build>
   <modules>
     <module>agent</module>
   </modules>
@@ -50,14 +47,21 @@
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.logging</groupId>
-        <artifactId>pax-logging-client</artifactId>
-        <version>0.8.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>avalon-framework</groupId>
-            <artifactId>avalon-framework-api</artifactId>
-          </exclusion>
-        </exclusions>
+        <artifactId>pax-logging-api</artifactId>
+        <version>0.9.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.logging</groupId>
+        <artifactId>pax-logging-log4j</artifactId>
+        <version>0.9.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.logging</groupId>
+        <artifactId>pax-logging-jcl</artifactId>
+        <version>0.9.0</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.ops4j.base</groupId>
@@ -68,11 +72,13 @@
         <groupId>org.osgi</groupId>
         <artifactId>osgi_R4_compendium</artifactId>
         <version>1.0</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>osgi_R4_core</artifactId>
         <version>1.0</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>wicket</groupId>
