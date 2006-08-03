@@ -30,17 +30,21 @@
       <artifactId>bsh-reflect</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_compendium</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.ops4j.base</groupId>
       <artifactId>ops4j-base</artifactId>
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.logging</groupId>
-      <artifactId>pax-logging-api</artifactId>
+      <artifactId>api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.logging</groupId>
+      <artifactId>jcl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi_R4_compendium</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>

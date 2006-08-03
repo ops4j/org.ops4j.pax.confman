@@ -20,7 +20,7 @@
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.cm.agent.wicket</groupId>
-      <artifactId>wicket-api</artifactId>
+      <artifactId>cm-wicket-api</artifactId>
       <version>0.1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
