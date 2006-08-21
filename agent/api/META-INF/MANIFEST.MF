@@ -14,5 +14,8 @@ Bundle-ClassPath: ops4j-base-0.2.0-SNAPSHOT.jar,
  pax-logging-client-0.7.2-SNAPSHOT.jar
 Export-Package: org.ops4j.pax.cm.agent,
  org.ops4j.pax.cm.agent.configuration,
- org.ops4j.pax.cm.agent.utils,
- org.ops4j.pax.cm.agent.wicket.configuration
+ org.ops4j.pax.cm.agent.configuration.validator,
+ org.ops4j.pax.cm.agent.exporter,
+ org.ops4j.pax.cm.agent.exporter.beanshell,
+ org.ops4j.pax.cm.agent.importer,
+ org.ops4j.pax.cm.agent.importer.beanshell

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry exported="true" kind="lib" path="pax-logging-client-0.7.2-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="ops4j-base-0.2.0-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.ops4j.base"/>
+	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.1/commons-lang-2.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/beanshell/bsh-core/2.0b4/bsh-core-2.0b4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

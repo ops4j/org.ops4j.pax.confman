@@ -7,7 +7,12 @@ Bundle-Vendor: OPS4J
 Bundle-Localization: plugin
 Bundle-ClassPath: ops4j-base-0.2.0-SNAPSHOT.jar,
  .
-Import-Package: wicket,
+Import-Package: org.apache.commons.logging,
+ org.ops4j.pax.cm.agent,
+ org.ops4j.pax.cm.agent.configuration,
+ org.osgi.framework;version="1.3.0",
+ wicket,
+ wicket.application,
  wicket.extensions.markup.html.repeater,
  wicket.extensions.markup.html.repeater.data,
  wicket.extensions.markup.html.repeater.data.grid,
@@ -18,4 +23,6 @@ Import-Package: wicket,
  wicket.extensions.markup.html.repeater.refreshing,
  wicket.extensions.markup.html.repeater.util,
  wicket.model
-Export-Package: org.ops4j.pax.cm.agent.wicket
+Export-Package: org.ops4j.pax.cm.agent.wicket,
+ org.ops4j.pax.cm.agent.wicket.configuration,
+ org.ops4j.pax.cm.agent.wicket.utils
