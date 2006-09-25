@@ -49,8 +49,6 @@
   <component name="CodeStyleProjectProfileManger">
     <option name="PROJECT_PROFILE" />
     <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
-    <scopes />
-    <profiles />
   </component>
   <component name="CodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
@@ -210,17 +208,17 @@
     <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
     <scopes />
     <profiles>
-      <profile version="1.0">
+      <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
         <used_levels>
           <error>
             <option name="myName" value="ERROR" />
-            <option name="myVal" value="400" />
+            <option name="myVal" value="200" />
           </error>
           <warning>
             <option name="myName" value="WARNING" />
-            <option name="myVal" value="300" />
+            <option name="myVal" value="100" />
           </warning>
           <information>
             <option name="myName" value="INFO" />
@@ -446,23 +444,26 @@
   </component>
   <component name="StarteamVcsAdapter" />
   <component name="VssVcs" />
+  <component name="com.intellij.jsf.UserDefinedFacesConfigs">
+    <option name="USER_DEFINED_CONFIGS">
+      <value>
+        <list size="0" />
+      </value>
+    </option>
+  </component>
   <component name="libraryTable">
     <library name="osgi_R4_core-1.0">
       <CLASSES>
         <root url="jar://$M2_REPO$/org/osgi/osgi_R4_core/1.0/osgi_R4_core-1.0.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="file:///home/efy/archive/documents/java/osgi/r4/javadoc" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES />
     </library>
     <library name="osgi_R4_compendium-1.0">
       <CLASSES>
         <root url="jar://$M2_REPO$/org/osgi/osgi_R4_compendium/1.0/osgi_R4_compendium-1.0.jar!/" />
       </CLASSES>
-      <JAVADOC>
-        <root url="file:///home/efy/archive/documents/java/osgi/r4/javadoc" />
-      </JAVADOC>
+      <JAVADOC />
       <SOURCES />
     </library>
     <library name="pax-wicket-service-0.2.1">
@@ -470,36 +471,28 @@
         <root url="jar://$M2_REPO$/org/ops4j/pax/wicket/service/0.2.1/service-0.2.1.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file:///home/efy/dev/ops4j/projects/pax/wicket/service/src/main/java" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="wicket-1.2">
       <CLASSES>
         <root url="jar://$M2_REPO$/wicket/wicket/1.2/wicket-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file:///home/efy/dev/wicket/branches/WICKET_1_2/wicket/src/java" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="wicket-auth-roles-1.2">
       <CLASSES>
         <root url="jar://$M2_REPO$/wicket/wicket-auth-roles/1.2/wicket-auth-roles-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file:///home/efy/dev/wicket/branches/WICKET_1_2/wicket-auth-roles/src/main/java" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="wicket-extensions-1.2">
       <CLASSES>
         <root url="jar://$M2_REPO$/wicket/wicket-extensions/1.2/wicket-extensions-1.2.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file:///home/efy/dev/wicket/branches/WICKET_1_2/wicket-extensions/src/java" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="ops4j-base-0.1.0">
       <CLASSES>
@@ -508,23 +501,12 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="pax-logging-client-0.8.1">
-      <CLASSES>
-        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.9.0-SNAPSHOT/pax-logging-client-0.9.0-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-client/0.9.0-SNAPSHOT/pax-logging-client-0.9.0-SNAPSHOT.jar!/" />
-      </SOURCES>
-    </library>
     <library name="bsh-core-2.0b4">
       <CLASSES>
         <root url="jar://$M2_REPO$/org/beanshell/bsh-core/2.0b4/bsh-core-2.0b4.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file:///home/efy/dev/BeanShell/src" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="commons-lang-2.1">
       <CLASSES>
@@ -538,9 +520,7 @@
         <root url="jar://$M2_REPO$/org/beanshell/bsh-reflect/2.0b4/bsh-reflect-2.0b4.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file:///home/efy/dev/BeanShell/src" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="junit-3.8.2">
       <CLASSES>
@@ -570,12 +550,21 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="log4j-0.9.5-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/log4j/0.9.5-SNAPSHOT/log4j-0.9.5-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
     <option name="DEFAULT_LAYOUT_MANAGER" value="GridLayoutManager" />
   </component>
-  <UsedPathMacros />
+  <UsedPathMacros>
+    <macro name="M2_REPO" />
+  </UsedPathMacros>
 </project>
 

@@ -23,8 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
@@ -40,7 +39,8 @@ import wicket.model.Model;
  */
 final class ConfigurationDataProvider extends SortableDataProvider
 {
-    private static final Log m_logger = LogFactory.getLog( ConfigurationDataProvider.class );
+
+    private static final Logger m_logger = Logger.getLogger( ConfigurationDataProvider.class );
 
     private ArrayList<PaxConfiguration> m_configurations;
     private int m_selected;
@@ -118,6 +118,36 @@ final class ConfigurationDataProvider extends SortableDataProvider
         );
     }
 
+    public Iterator iterator( int first, int count )
+    {
+        SortParam sort = getSort();
+
+        if( sort != null )
+        {
+            String sortProperty = sort.getProperty();
+            boolean isAscending = sort.isAscending();
+            sort( sortProperty, isAscending );
+            m_selected = 0;
+        }
+
+        if( m_configurations.isEmpty() )
+        {
+            m_selected = 0;
+        }
+
+        return m_configurations.listIterator( first );
+    }
+
+    public final int size()
+    {
+        return m_configurations.size();
+    }
+
+    public IModel model( Object configurationObject )
+    {
+        return new Model( (Serializable) configurationObject );
+    }
+
     void createNewPaxConfiguration()
     {
         PaxConfiguration paxConfiguration = new PaxConfiguration( "", false );
@@ -186,31 +216,6 @@ final class ConfigurationDataProvider extends SortableDataProvider
         }
     }
 
-    public Iterator iterator( int first, int count )
-    {
-        SortParam sort = getSort();
-
-        if( sort != null )
-        {
-            String sortProperty = sort.getProperty();
-            boolean isAscending = sort.isAscending();
-            sort( sortProperty, isAscending );
-            m_selected = 0;
-        }
-
-        if( m_configurations.isEmpty() )
-        {
-            m_selected = 0;
-        }
-
-        return m_configurations.listIterator( first );
-    }
-
-    public IModel model( Object configurationObject )
-    {
-        return new Model( (Serializable) configurationObject );
-    }
-
     void savePaxConfiguration( PaxConfiguration configuration )
     {
         try
@@ -258,10 +263,5 @@ final class ConfigurationDataProvider extends SortableDataProvider
     public final void setSelectionListener( SelectionChangeListener listener )
     {
         m_listener = listener;
-    }
-
-    public final int size()
-    {
-        return m_configurations.size();
     }
 }

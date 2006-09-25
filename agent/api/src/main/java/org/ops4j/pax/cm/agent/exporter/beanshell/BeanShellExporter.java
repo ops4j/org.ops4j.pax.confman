@@ -26,8 +26,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.exporter.AbstractExporter;
@@ -46,7 +45,7 @@ public final class BeanShellExporter extends AbstractExporter
      */
     public static final String ID = "BeanShell";
 
-    private static final Log m_logger = LogFactory.getLog( BeanShellExporter.class );
+    private static final Logger m_logger = Logger.getLogger( BeanShellExporter.class );
 
     private static final byte[] EXPORT_HEADER =
         ( "import java.util.ArrayList;\n" +

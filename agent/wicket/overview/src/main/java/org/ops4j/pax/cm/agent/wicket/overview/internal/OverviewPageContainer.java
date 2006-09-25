@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewTab;
@@ -33,7 +32,8 @@ import org.osgi.framework.BundleContext;
 
 public final class OverviewPageContainer extends DefaultPageContainer
 {
-    private static final Log m_logger = LogFactory.getLog( OverviewPageContainer.class );
+
+    private static final Logger m_logger = Logger.getLogger( OverviewPageContainer.class );
 
     public OverviewPageContainer( BundleContext bundleContext, String containmentId, String applicationName )
     {

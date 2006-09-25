@@ -21,8 +21,6 @@ import java.io.OutputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.osgi.framework.BundleContext;
@@ -30,6 +28,7 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
+import org.apache.log4j.Logger;
 
 /**
  * {@code AbstractExporter} provides some convenience to implement {@code Exporter} service.
@@ -40,7 +39,7 @@ import org.osgi.service.cm.ManagedService;
 public abstract class AbstractExporter
     implements Exporter, ManagedService
 {
-    private static final Log m_logger = LogFactory.getLog( AbstractExporter.class );
+    private static final Logger m_logger = Logger.getLogger( AbstractExporter.class );
 
     private BundleContext m_bundleContext;
     private String m_servicePID;

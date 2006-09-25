@@ -21,8 +21,7 @@ import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.validator.InvalidPaxConfigurationException;
@@ -42,7 +41,7 @@ public abstract class AbstractImporter
     implements Importer, ManagedService
 {
 
-    private static final Log m_logger = LogFactory.getLog( AbstractImporter.class );
+    private static final Logger m_logger = Logger.getLogger( AbstractImporter.class );
 
     private BundleContext m_bundleContext;
     private String m_servicePID;

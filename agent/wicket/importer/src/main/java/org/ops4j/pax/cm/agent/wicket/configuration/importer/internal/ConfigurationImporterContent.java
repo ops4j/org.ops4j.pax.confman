@@ -18,8 +18,7 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.importer.internal;
 
 import java.util.Locale;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.pax.cm.agent.wicket.overview.DefaultOverviewTab;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewTab;
 import org.ops4j.pax.cm.agent.wicket.overview.OverviewTabContent;
@@ -39,7 +38,7 @@ final class ConfigurationImporterContent extends DefaultContent
     implements OverviewTabContent
 {
     private static final String CONTENT_ID = "panel:configurationImporter";
-    private static final Log m_logger = LogFactory.getLog( ConfigurationImporterContent.class );
+    private static final Logger m_logger = Logger.getLogger( ConfigurationImporterContent.class );
 
     /**
      * Construct an instance of {@code ConfigurationImporterContent} with the specified arguments.

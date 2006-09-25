@@ -22,8 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
@@ -45,10 +44,10 @@ import wicket.util.lang.Bytes;
  */
 final class ImportPanel extends Panel
 {
-
-    private static final Log m_logger = LogFactory.getLog( ImportPanel.class );
     public static final Bytes MAX_CONFIGURATION_UPLOAD_FILE_SIZE = Bytes.kilobytes( 100 );
     public static final String WICKET_ID_IMPORT_FORM = "importForm";
+
+    private static final Logger m_logger = Logger.getLogger( ImportPanel.class );
 
     /**
      * Construct an instance of {@code ImportPanel} with the specified {@code wicketId}.
@@ -67,7 +66,6 @@ final class ImportPanel extends Panel
 
     private class ImportForm extends Form
     {
-
         private static final String WICKET_ID_LABEL_IMPORTER_IDS = "labelImporterIds";
         private static final String WICKET_ID_IMPORTER_IDS = "importerIds";
         private static final String WICKET_ID_IMPORT = "import";
@@ -150,7 +148,6 @@ final class ImportPanel extends Panel
                             e.printStackTrace();  //TODO: Auto-generated, need attention.
                         }
                     }
-
                 }
             };
             importButton.setEnabled( false );

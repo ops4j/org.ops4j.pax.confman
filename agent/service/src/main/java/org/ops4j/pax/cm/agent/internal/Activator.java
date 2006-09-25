@@ -18,7 +18,6 @@
 package org.ops4j.pax.cm.agent.internal;
 
 import java.util.Properties;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import org.ops4j.pax.cm.agent.exporter.beanshell.BeanShellExporter;
 import org.ops4j.pax.cm.agent.importer.beanshell.BeanShellImporter;
@@ -66,7 +65,6 @@ public final class Activator
     public void start( BundleContext bundleContext )
         throws Exception
     {
-        LogFactory.setBundleContext( bundleContext );
         PaxConfigurationFacade.setContext( bundleContext );
 
         String applicationName = WicketApplicationConstant.APPLICATION_NAME;

@@ -20,8 +20,7 @@ package org.ops4j.pax.cm.agent.importer.beanshell;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
@@ -35,7 +34,7 @@ import org.osgi.framework.BundleContext;
 public final class BeanShellImporterTest extends MockObjectTestCase
 {
 
-    private static final Log m_logger = LogFactory.getLog( BeanShellImporterTest.class );
+    private static final Logger m_logger = Logger.getLogger( BeanShellImporterTest.class );
 
     private static final String SUCCESSFULL_IMPORT_SCRIPT_FILE_NAME = "SuccessfullImport.bsh";
     private static final String FAIL_IMPORT_SCRIPT_FILE_NAME = "FailImport.bsh";

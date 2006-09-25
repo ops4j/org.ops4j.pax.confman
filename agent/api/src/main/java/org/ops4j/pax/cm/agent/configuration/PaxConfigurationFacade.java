@@ -19,8 +19,7 @@ package org.ops4j.pax.cm.agent.configuration;
 
 import java.io.IOException;
 import java.util.Dictionary;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -29,14 +28,15 @@ import org.osgi.service.cm.ConfigurationAdmin;
 
 /**
  * {@code PaxConfigurationFacade} provides convenient methods to retrieve, delete and update a configuration.
- * {@code PaxConfigurationFacade} must be initialized by invoking {@code setContext( bundleContext )} before used.
+ * {@code PaxConfigurationFacade} must be initialized by invoking {@code setContext(bundleContext)} before used.
  *
  * @author Edward Yakop
  * @since 0.1.0
  */
 public final class PaxConfigurationFacade
 {
-    private static final Log m_logger = LogFactory.getLog( PaxConfigurationFacade.class );
+
+    private static final Logger m_logger = Logger.getLogger( PaxConfigurationFacade.class );
 
     private static final String CONFIGURATION_ADMIN_CLASSNAME = ConfigurationAdmin.class.getName();
 

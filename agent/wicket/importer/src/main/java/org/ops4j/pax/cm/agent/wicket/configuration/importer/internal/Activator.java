@@ -17,7 +17,6 @@
  */
 package org.ops4j.pax.cm.agent.wicket.configuration.importer.internal;
 
-import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -31,6 +30,7 @@ import org.osgi.framework.BundleContext;
 public final class Activator
     implements BundleActivator
 {
+
     private ImporterTracker m_importerTracker;
 
     /**
@@ -40,8 +40,6 @@ public final class Activator
     public void start( BundleContext context )
         throws Exception
     {
-        LogFactory.setBundleContext( context );
-
         m_importerTracker = new ImporterTracker( context );
         m_importerTracker.open();
     }

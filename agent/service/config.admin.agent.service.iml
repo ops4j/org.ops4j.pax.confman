@@ -17,7 +17,7 @@
     <orderEntry type="library" name="wicket-extensions-1.2" level="project" />
     <orderEntry type="library" name="ops4j-base-0.1.0" level="project" />
     <orderEntry type="library" name="wicket-auth-roles-1.2" level="project" />
-    <orderEntry type="library" name="pax-logging-client-0.8.1" level="project" />
+    <orderEntry type="library" name="pax-logging-jcl-0.9.3" level="project" />
     <orderEntry type="module" module-name="page.overview" />
     <orderEntry type="module" module-name="config.admin.agent.api" />
     <orderEntry type="module" module-name="panel.browser" />

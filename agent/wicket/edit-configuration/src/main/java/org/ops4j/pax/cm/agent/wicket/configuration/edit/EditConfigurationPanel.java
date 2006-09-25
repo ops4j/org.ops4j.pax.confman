@@ -18,8 +18,6 @@
 package org.ops4j.pax.cm.agent.wicket.configuration.edit;
 
 import java.io.IOException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
 import org.ops4j.pax.cm.agent.configuration.ConfigurationAdminException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
@@ -36,6 +34,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
+import org.apache.log4j.Logger;
 
 /**
  * @author Edward Yakop
@@ -43,7 +42,7 @@ import wicket.model.CompoundPropertyModel;
  */
 final class EditConfigurationPanel extends Panel
 {
-    private static final Log m_logger = LogFactory.getLog( EditConfigurationPanel.class );
+    private static final Logger m_logger = Logger.getLogger( EditConfigurationPanel.class );
 
     static final String PAGE_ID = "editConfigurationPage";
 

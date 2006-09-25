@@ -17,8 +17,7 @@
  */
 package org.ops4j.pax.cm.agent.wicket.utils;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -34,7 +33,8 @@ import wicket.application.IClassResolver;
 public final class SimpleClassResolver
     implements IClassResolver
 {
-    private static final Log m_logger = LogFactory.getLog( SimpleClassResolver.class );
+
+    private static final Logger m_logger = Logger.getLogger( SimpleClassResolver.class );
 
     private final BundleContext m_bundleContext;
 
