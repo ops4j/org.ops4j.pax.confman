@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.configmanager.IConfigurationFileHandler;
 import org.osgi.framework.InvalidSyntaxException;
@@ -40,6 +41,7 @@ final class ConfigurationAdminFacade
 
     public ConfigurationAdminFacade()
     {
+        mLogger = LogFactory.getLog( getClass() );
         mHandlers = new ArrayList<IConfigurationFileHandler>();
     }
 
@@ -94,8 +96,8 @@ final class ConfigurationAdminFacade
             throw new IllegalStateException( "Configuration admin service is not available. Please start configuration admin bundle." );
         }
 
-        File file = getConfigDir();
-        if( file == null )
+        File configDir = getConfigDir();
+        if( configDir == null )
         {
             return;
         }
@@ -114,8 +116,28 @@ final class ConfigurationAdminFacade
                 configCache.add( existingConfiguration.getPid() );
             }
         }
+        // Create configuration for ManagedServiceFactory
+        createConfiguration( configuration, configDir, configCache, true );
+        // Create configuration for ManagedService
+        createConfiguration( configuration, configDir, configCache, false );
+    }
 
-        String[] files = file.list();
+    private void createConfiguration( String configuration, File configDir, HashSet<String> configCache, boolean isFactory ) throws IOException
+    {
+        File dir = null;
+        if( isFactory )
+        {
+            dir = new File( configDir, "factories" );
+        }
+        else
+        {
+            dir = new File( configDir, "services" );
+        }
+        if( !dir.exists() )
+        {
+            return;
+        }
+        String[] files = dir.list();
         for( String configFile : files )
         {
             if( configuration != null && !configFile.equals( configuration ) )
@@ -130,7 +152,7 @@ final class ConfigurationAdminFacade
                 continue;
             }
 
-            File f = new File( file, configFile );
+            File f = new File( dir, configFile );
             if( !f.isDirectory() )
             {
                 List<IConfigurationFileHandler> handlers;
@@ -151,18 +173,18 @@ final class ConfigurationAdminFacade
 
                         synchronized( this )
                         {
-                            if( mConfigAdminService != null )
+                            if( isFactory )
+                            {
+                                conf = mConfigAdminService.createFactoryConfiguration( servicePid );
+                            }
+                            else
                             {
                                 conf = mConfigAdminService.getConfiguration( servicePid, null );
                             }
                         }
 
-                        if( conf != null )
-                        {
-                            conf.update( prop );
-
-                            mLogger.info( "Register configuration [" + configFile + "]" );
-                        }
+                        conf.update( prop );
+                        mLogger.info( "Register configuration [" + servicePid + "]" );
                     }
                 }
             }
