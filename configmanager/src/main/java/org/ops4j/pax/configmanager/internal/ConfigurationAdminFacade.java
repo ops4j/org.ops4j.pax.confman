@@ -26,10 +26,12 @@ import org.osgi.service.cm.ConfigurationAdmin;
 final class ConfigurationAdminFacade
 {
 
-    private static final String BUNDLES_CONFIGURATION_LOCATION = "bundles.configuration.location";
+    /**
+     * System property to set where the ConfigurationAdminFacade should load the configuration files
+     * from. 
+     */
+    public static final String BUNDLES_CONFIGURATION_LOCATION = "bundles.configuration.location";
     
-    private static final String DEFAULT_CONFIGURATION_LOCATION = "config";
-
     private Log mLogger;
 
     private ConfigurationAdmin mConfigAdminService;
@@ -169,7 +171,10 @@ final class ConfigurationAdminFacade
 
     private File getConfigDir()
     {
-        String configArea = System.getProperty( BUNDLES_CONFIGURATION_LOCATION, DEFAULT_CONFIGURATION_LOCATION );
+        String configArea = System.getProperty( BUNDLES_CONFIGURATION_LOCATION );
+        // Only run the configuration changes if the configArea is set.
+        if( configArea == null )
+            return null;
         mLogger.info( "Using configuration from '" + configArea + "'" );
 		File dir = new File( configArea );
 		if( !dir.exists() )
