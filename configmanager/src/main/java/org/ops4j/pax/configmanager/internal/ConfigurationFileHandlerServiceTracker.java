@@ -35,7 +35,7 @@ final class ConfigurationFileHandlerServiceTracker extends ServiceTracker
     {
         IConfigurationFileHandler tConfigFileHandler = (IConfigurationFileHandler) mBundleContext.getService( serviceReference );
 
-        mConfigurationFacade.addFileHandler( tConfigFileHandler );
+        mConfigurationFacade.addFileHandler( tConfigFileHandler, mBundleContext );
 
         return tConfigFileHandler;
     }

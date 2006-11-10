@@ -14,9 +14,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.configmanager.IConfigurationFileHandler;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.cm.ManagedServiceFactory;
 
 /**
  * {@code ConfigurationAdminFacade} has most of the code from the old {@code Activator}.
@@ -50,10 +53,11 @@ final class ConfigurationAdminFacade
      * configuration file during {@code registerConfigurations}.
      *
      * @param handler The file handler. This argument must not be {@code null}.
+     * @param bundleContext TODO
      *
      * @throws IllegalArgumentException Thrown if the specified {@code handler} is {@code null}.
      */
-    final void addFileHandler( IConfigurationFileHandler handler )
+    final void addFileHandler( IConfigurationFileHandler handler, BundleContext bundleContext )
         throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( handler, "handler" );
@@ -65,7 +69,7 @@ final class ConfigurationAdminFacade
             try
             {
                 // Reload all configurations just in case if this is added later
-                registerConfigurations( null, false );
+                registerConfigurations( null, false, bundleContext );
             } catch( IOException e )
             {
                 String tMsg = "IOException by either getting the configuration admin or loading the configuration file.";
@@ -82,13 +86,13 @@ final class ConfigurationAdminFacade
      *
      * @param configuration if null then all configuration found will be registered.
      * @param overwrite   A {@code boolean} indicator to overwrite the configuration
-     *
+     * @param bundleContext TODO
      * @throws java.io.IOException   Thrown if there is an IO problem during loading of {@code configuration}.
      * @throws org.osgi.framework.InvalidSyntaxException
      *                               Thrown if there is an invalid exception during retrieval of configurations.
      * @throws IllegalStateException Thrown if the configuration admin service is not available.
      */
-    final void registerConfigurations( String configuration, boolean overwrite )
+    final void registerConfigurations( String configuration, boolean overwrite, BundleContext bundleContext )
         throws IOException, InvalidSyntaxException, IllegalStateException
     {
         if( mConfigAdminService == null )
@@ -101,7 +105,7 @@ final class ConfigurationAdminFacade
         {
             return;
         }
-
+        
         Configuration[] existingConfigurations;
 
         synchronized( this )
@@ -168,14 +172,14 @@ final class ConfigurationAdminFacade
                     {
                         String servicePid = handler.getServicePID( configFile );
                         Properties prop = handler.handle( f );
-
+                        System.out.println( prop );
                         Configuration conf = null;
 
                         synchronized( this )
                         {
                             if( isFactory )
                             {
-                                conf = mConfigAdminService.createFactoryConfiguration( servicePid );
+                                conf = mConfigAdminService.createFactoryConfiguration( servicePid, null );
                             }
                             else
                             {

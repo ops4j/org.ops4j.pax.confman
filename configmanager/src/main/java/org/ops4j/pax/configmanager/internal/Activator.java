@@ -9,7 +9,9 @@ import org.ops4j.pax.configmanager.internal.handlers.PropertiesFileConfiguration
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.util.tracker.ServiceTracker;
 
 public final class Activator implements BundleActivator
@@ -41,7 +43,6 @@ public final class Activator implements BundleActivator
 
         mConfigFileTracker = new ConfigurationFileHandlerServiceTracker( context, mConfigAdminFacade );
         mConfigFileTracker.open();
-
     }
 
 	private void registerPropertiesHandler( BundleContext context ) 

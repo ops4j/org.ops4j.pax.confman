@@ -40,7 +40,7 @@ final class ConfigAdminServiceTracker extends ServiceTracker
 
         try
         {
-            mFacade.registerConfigurations( null, false );
+            mFacade.registerConfigurations( null, false, mBundleContext );
         }
         catch( Exception e )
         {
