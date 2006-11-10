@@ -24,7 +24,10 @@ import wicket.model.AbstractReadOnlyModel;
 
 public final class PaxCssAttributeModel extends AbstractReadOnlyModel
 {
+    private static final long serialVersionUID = 1L;
+
     private static final String CSS_CLASS_EVEN = "even";
+
     private static final String CSS_CLASS_ODD = "odd";
 
     private final Item m_item;
@@ -37,6 +40,6 @@ public final class PaxCssAttributeModel extends AbstractReadOnlyModel
 
     public final Object getObject( Component component )
     {
-        return ( m_item.getIndex() % 2 == 1 ) ? CSS_CLASS_EVEN : CSS_CLASS_ODD;
+        return (m_item.getIndex() % 2 == 1) ? CSS_CLASS_EVEN : CSS_CLASS_ODD;
     }
 }

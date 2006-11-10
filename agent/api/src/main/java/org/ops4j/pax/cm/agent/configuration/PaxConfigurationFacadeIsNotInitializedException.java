@@ -19,6 +19,8 @@ package org.ops4j.pax.cm.agent.configuration;
 
 public final class PaxConfigurationFacadeIsNotInitializedException extends ConfigurationAdminException
 {
+    private static final long serialVersionUID = 1L;
+
     PaxConfigurationFacadeIsNotInitializedException()
     {
         super( "PaxConfigurationFacade#setContext() must be set prior of executing any facade methods." );

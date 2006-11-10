@@ -19,6 +19,8 @@ package org.ops4j.pax.cm.agent.configuration;
 
 public final class ConfigurationRetrievalFailedException extends ConfigurationAdminException
 {
+    private static final long serialVersionUID = 1L;
+
     ConfigurationRetrievalFailedException( String pid, Throwable cause )
     {
         super( "Retrieval of Configuration [" + pid + "] failed", cause );

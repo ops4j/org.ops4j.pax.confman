@@ -18,6 +18,7 @@
 package org.ops4j.pax.cm.agent.internal;
 
 import java.util.Properties;
+
 import org.ops4j.pax.cm.agent.configuration.PaxConfigurationFacade;
 import org.ops4j.pax.cm.agent.exporter.beanshell.BeanShellExporter;
 import org.ops4j.pax.cm.agent.importer.beanshell.BeanShellImporter;
@@ -32,10 +33,10 @@ import org.ops4j.pax.cm.agent.wicket.utils.SimpleClassResolver;
 import org.ops4j.pax.wicket.service.Content;
 import org.ops4j.pax.wicket.service.DefaultContent;
 import org.ops4j.pax.wicket.service.PaxWicketApplicationFactory;
-import org.ops4j.pax.wicket.service.PaxWicketAuthenticator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+
 import wicket.application.IClassResolver;
 
 /**
@@ -88,11 +89,9 @@ public final class Activator
         m_overviewPageContent = new OverviewPageContent( bundleContext, overviewPageContainer );
         m_overviewPageContent.register();
 
-        PaxWicketAuthenticator alwaysAdminAuthenticator = new ConfigAdminAuthenticator();
         PaxWicketApplicationFactory application = new PaxWicketApplicationFactory(
             bundleContext, OverviewPage.class, WicketApplicationConstant.MOUNT_POINT,
-            applicationName, alwaysAdminAuthenticator
-        );
+            applicationName );
         application.setDeploymentMode( true );
 
         EditConfigurationPageContainer configurationEditorPageContainer = new EditConfigurationPageContainer(

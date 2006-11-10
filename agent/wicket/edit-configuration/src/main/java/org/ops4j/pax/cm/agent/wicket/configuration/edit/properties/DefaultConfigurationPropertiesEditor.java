@@ -37,6 +37,8 @@ import wicket.model.Model;
 public final class DefaultConfigurationPropertiesEditor extends Panel
     implements ConfigurationPropertiesEditor
 {
+    private static final long serialVersionUID = 1L;
+    
     private static final String LOCALE_COLUMN_HEADER_KEY = "keyColumnHeader";
     private static final String LOCALE_COLUMN_HEADER_VALUE = "valueColumnHeader";
     private static final String LOCALE_TAB_PANEL_LABEL_VALUE = "browse";

@@ -43,10 +43,9 @@ public final class EditConfigurationPageContainer extends DefaultPageContainer
         throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( configuration, "configuration" );
-        Map<String, List<Content>> children = getChildren();
 
-        String keyConfigProps = WicketApplicationConstant.Configuration.Edit.DESTINATION_ID_CONFIGURATION_PROPERTIES;
-        List<Content> configurationProperties = children.get( keyConfigProps );
+        String keyConfigProps =  WicketApplicationConstant.Configuration.Edit.DESTINATION_ID_CONFIGURATION_PROPERTIES;
+        List<Content> configurationProperties = getContents( keyConfigProps );
 
         Component configurationPropertiesEditor = null;
         if( configurationProperties != null )

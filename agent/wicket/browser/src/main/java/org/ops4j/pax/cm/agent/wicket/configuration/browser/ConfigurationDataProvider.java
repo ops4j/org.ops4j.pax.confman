@@ -39,6 +39,8 @@ import wicket.model.Model;
  */
 final class ConfigurationDataProvider extends SortableDataProvider
 {
+    
+    private static final long serialVersionUID = 1L;
 
     private static final Logger m_logger = Logger.getLogger( ConfigurationDataProvider.class );
 

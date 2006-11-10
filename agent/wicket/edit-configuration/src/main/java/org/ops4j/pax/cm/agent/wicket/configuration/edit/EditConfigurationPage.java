@@ -31,6 +31,8 @@ import wicket.markup.html.basic.Label;
  */
 public final class EditConfigurationPage extends WebPage
 {
+    private static final long serialVersionUID = 1L;
+
     public static final String PAGE_PARAMETER_PID = "pid";
 
     static final String PAGE_ID = "editConfigurationPage";

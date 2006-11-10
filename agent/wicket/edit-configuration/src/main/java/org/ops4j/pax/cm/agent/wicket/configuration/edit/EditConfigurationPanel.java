@@ -42,6 +42,8 @@ import org.apache.log4j.Logger;
  */
 final class EditConfigurationPanel extends Panel
 {
+    private static final long serialVersionUID = 1L;
+
     private static final Logger m_logger = Logger.getLogger( EditConfigurationPanel.class );
 
     static final String PAGE_ID = "editConfigurationPage";

@@ -38,6 +38,8 @@ import wicket.model.PropertyModel;
 final class MiniEditConfigurationPanel extends Panel
     implements SelectionChangeListener
 {
+    private static final long serialVersionUID = 1L;
+
     private static final String WICKET_ID_FORM = "form";
 
     private PaxConfiguration m_configuration;

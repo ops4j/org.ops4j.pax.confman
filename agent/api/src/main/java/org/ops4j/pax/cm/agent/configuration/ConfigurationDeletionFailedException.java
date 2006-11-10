@@ -25,6 +25,8 @@ import java.io.IOException;
  */
 public final class ConfigurationDeletionFailedException extends ConfigurationAdminException
 {
+    private static final long serialVersionUID = 1L;
+
     /**
      * @since 0.1.0
      */

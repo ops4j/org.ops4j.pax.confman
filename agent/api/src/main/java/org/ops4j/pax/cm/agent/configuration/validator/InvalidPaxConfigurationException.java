@@ -29,6 +29,8 @@ import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 public final class InvalidPaxConfigurationException extends RuntimeException
 {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Construct {@code InvalidPaxConfigurationException} with the specified message. Only use this constructor if the
      * pax configuration does not have pid or factory pid. Example of usage,

@@ -19,6 +19,8 @@ package org.ops4j.pax.cm.agent.configuration;
 
 public final class ConfigurationAdminServiceIsNotAvailableException extends ConfigurationAdminException
 {
+    private static final long serialVersionUID = 1L;
+
     ConfigurationAdminServiceIsNotAvailableException()
     {
         super( "Configuration Admin service is not available." );

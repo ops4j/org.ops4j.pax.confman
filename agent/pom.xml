@@ -13,6 +13,20 @@
   <version>0.1.0-SNAPSHOT</version>
   <name>OPS4J - Pax:Wicket - config admin - agent.</name>
   <packaging>pom</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.ops4j.pax.maven</groupId>
+        <artifactId>maven-osgi-bundle</artifactId>
+        <version>0.9.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <libDirectory>lib</libDirectory>
+          <!--manifestFile>META-INF/MANIFEST.MF</manifestFile-->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   <modules>
     <module>api</module>
     <module>service</module>

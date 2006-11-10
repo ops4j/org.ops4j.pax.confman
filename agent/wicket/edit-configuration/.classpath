@@ -5,5 +5,13 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.ops4j.base"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.ops4j.pax.config-admin.agent.api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.ops4j.pax.config-admin.agent.wicket.api"/>
+	<classpathentry kind="var" path="M2_REPO/wicket/wicket/1.2.3/wicket-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/wicket/wicket-extensions/1.2.3/wicket-extensions-1.2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/ops4j/pax/logging/log4j/0.9.5-SNAPSHOT/log4j-0.9.5-SNAPSHOT.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.ops4j.pax.wicket.service"/>
+	<classpathentry kind="var" path="M2_REPO/org/osgi/osgi_R4_compendium/1.0/osgi_R4_compendium-1.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/osgi/osgi_R4_core/1.0/osgi_R4_core-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.agent.wicket.overview.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.wicket.WicketApplicationConstant;
@@ -44,9 +44,7 @@ public final class OverviewPageContainer extends DefaultPageContainer
     {
         NullArgumentException.validateNotNull( locale, "locale" );
 
-        Map<String, List<Content>> children = getChildren();
-
-        List<Content> contents = children.get( WicketApplicationConstant.Overview.COMPONENT_MENU_TAB );
+        List<Content> contents = getContents( WicketApplicationConstant.Overview.COMPONENT_MENU_TAB );
         List<OverviewTab> tabs = new ArrayList<OverviewTab>();
         for( Content content : contents )
         {
