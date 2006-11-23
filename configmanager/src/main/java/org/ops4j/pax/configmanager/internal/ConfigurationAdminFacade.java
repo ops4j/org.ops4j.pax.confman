@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.configmanager.IConfigurationFileHandler;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -172,7 +173,12 @@ final class ConfigurationAdminFacade
                         Properties prop = handler.handle( f );
                         System.out.println( prop );
                         Configuration conf = null;
-
+                        // Find out if a service pid is included, use it if it does
+                        String str = (String) prop.get( Constants.SERVICE_PID );
+                        if( str != null )
+                        {
+                            servicePid = str;
+                        }
                         synchronized( this )
                         {
                             if( isFactory )
