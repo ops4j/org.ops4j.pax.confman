@@ -24,40 +24,40 @@ import org.ops4j.pax.cm.agent.configuration.validator.InvalidPaxConfigurationExc
 
 /**
  * @author Edward Yakop
- * @since 0.1.0
+ * @since 1.0.0
  */
 public interface Importer
 {
 
     /**
      * {@code IMPORTER_ID} is configuration property name that uniquely identified this importer.
-     *
+     * 
      * @since 0.1.0
      */
     String IMPORTER_ID = "importerId";
 
     /**
      * Returns the importer id. This method must not return {@code null} or empty String.
-     *
+     * 
      * @return The importer id.
-     *
+     * 
      * @since 0.1.0
      */
     String getImporterId();
 
     /**
      * Perform import on data specified by {@code inputStream}.
-     *
+     * 
      * @param inputStream The input stream. This argument must not be {@code null}.
-     *
+     * 
      * @return List of {@code PaxConfiguration}, returns empty collection if there is no configuration.
-     *
+     * 
      * @throws ImportException Thrown if there is import exception.
-     * @throws InvalidPaxConfigurationException
-     *                         Thrown if one of the imported {@code PaxConfiguration} is invalid.
+     * @throws InvalidPaxConfigurationException Thrown if one of the imported {@code PaxConfiguration} is invalid.
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */
     List<PaxConfiguration> performImport( InputStream inputStream )
-        throws ImportException, InvalidPaxConfigurationException;
+        throws ImportException,
+        InvalidPaxConfigurationException;
 }

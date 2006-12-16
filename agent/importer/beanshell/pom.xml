@@ -1,20 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>agent</artifactId>
-    <groupId>org.ops4j.pax.cm</groupId>
+    <groupId>org.ops4j.pax.cm.agent</groupId>
+    <artifactId>importer</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.ops4j.pax.cm.agent</groupId>
-  <artifactId>api</artifactId>
-  <name>OPS4J - Pax:Wicket - config admin - agent - API.</name>
+  <groupId>org.ops4j.pax.cm.agent.importer</groupId>
+  <artifactId>beanshell</artifactId>
+  <name>OPS4J - Pax:Wicket - config admin agent importer - beanshell.</name>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>osgi-bundle</packaging>
   <dependencies>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.beanshell</groupId>
       <artifactId>bsh-classgen</artifactId>
@@ -32,8 +31,9 @@
       <artifactId>ops4j-base</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.ops4j.pax.logging</groupId>
+      <groupId>org.ops4j.pax.cm.agent</groupId>
       <artifactId>api</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -43,24 +43,16 @@
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_compendium</artifactId>
-      <scope>provided</scope>
+      <artifactId>osgi_R4_core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_core</artifactId>
-      <scope>provided</scope>
+      <artifactId>osgi_R4_compendium</artifactId>
     </dependency>
     <dependency>
-      <groupId>wicket</groupId>
-      <artifactId>wicket</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>bsh</groupId>
-      <artifactId>bsh</artifactId>
-      <version>2.0b4</version>
-      <scope>test</scope>
+      <groupId>org.ops4j.pax.cm.agent.importer</groupId>
+      <artifactId>api</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

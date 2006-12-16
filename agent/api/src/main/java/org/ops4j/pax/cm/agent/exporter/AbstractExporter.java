@@ -21,6 +21,9 @@ import java.io.OutputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
 import org.osgi.framework.BundleContext;
@@ -28,13 +31,12 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
-import org.apache.log4j.Logger;
 
 /**
- * {@code AbstractExporter} provides some convenience to implement {@code Exporter} service.
- *
+ * {@code AbstractExporter} provides some default implementation for export service registration.
+ * 
  * @author Edward Yakop
- * @since 0.1.0
+ * @since 1.0.0
  */
 public abstract class AbstractExporter
     implements Exporter, ManagedService
@@ -42,7 +44,7 @@ public abstract class AbstractExporter
     private static final Logger m_logger = Logger.getLogger( AbstractExporter.class );
 
     private BundleContext m_bundleContext;
-    private String m_servicePID;
+    private final String m_servicePID;
     private String m_exporterId;
     private ServiceRegistration m_serviceRegistration;
 
@@ -60,9 +62,9 @@ public abstract class AbstractExporter
 
     /**
      * Returns the exporter id. This method must not return {@code null} or empty String.
-     *
+     * 
      * @return The exporter id.
-     *
+     * 
      * @since 0.1.0
      */
     public final String getExporterId()
@@ -72,12 +74,11 @@ public abstract class AbstractExporter
 
     /**
      * Perform export of the specified {@code configurations} to the specified {@code stream}.
-     *
+     * 
      * @param configurations The configurations to be exported.
-     * @param stream         The output stream. This argument must not be {@code null}.
-     *
-     * @throws org.ops4j.pax.cm.agent.exporter.ExportException
-     *          Thrown if there is error ocurred during export.
+     * @param stream The output stream. This argument must not be {@code null}.
+     * 
+     * @throws org.ops4j.pax.cm.agent.exporter.ExportException Thrown if there is error ocurred during export.
      * @since 0.1.0
      */
     public abstract void performExport( List<PaxConfiguration> configurations, OutputStream stream )
@@ -89,10 +90,10 @@ public abstract class AbstractExporter
     public final void updated( Dictionary dictionary )
         throws ConfigurationException
     {
-        dictionary = onUpdated( dictionary );
+        onUpdated( dictionary );
 
         String exporterId = (String) dictionary.get( EXPORT_ID );
-        if( exporterId != null )
+        if ( exporterId != null )
         {
             m_exporterId = exporterId;
         }
@@ -101,39 +102,36 @@ public abstract class AbstractExporter
             dictionary.put( EXPORT_ID, m_exporterId );
         }
 
-        m_serviceRegistration.setProperties( dictionary );
+        synchronized ( this )
+        {
+            m_serviceRegistration.setProperties( dictionary );
+        }
     }
 
     /**
      * Override this method if child class wants to perform child specific operation.
-     *
+     * 
      * @param dictionary The dictionary. This argument might be {@code null}.
-     *
+     * 
      * @return A non-null dictionary instance.
-     *
+     * 
      * @throws ConfigurationException Thrown if there is a configuration exception.
      * @see AbstractExporter#newExporterConfigurations()
      * @since 0.1.0
      */
-    protected Dictionary onUpdated( Dictionary dictionary )
+    protected void onUpdated( Dictionary dictionary )
         throws ConfigurationException
     {
-        if( dictionary == null )
-        {
-            return newExporterConfigurations();
-        }
-
-        return dictionary;
     }
 
     /**
      * @return new exporter configurations.
-     *
+     * 
      * @since 0.1.0
      */
-    protected final Hashtable newExporterConfigurations()
+    protected final Properties newExporterConfigurations()
     {
-        Hashtable configurations = new Hashtable();
+        Properties configurations = new Properties();
 
         configurations.put( Constants.SERVICE_PID, m_servicePID );
         configurations.put( Exporter.EXPORT_ID, m_exporterId );
@@ -143,62 +141,29 @@ public abstract class AbstractExporter
 
     /**
      * Register this exporter service.
-     *
-     * @see AbstractExporter#unregister()
+     * 
      * @since 0.1.0
      */
-    public final synchronized void register()
+    public final ServiceRegistration register()
     {
-        if( m_serviceRegistration == null )
-        {
-            Hashtable configurations = newExporterConfigurations();
+        Hashtable configurations = newExporterConfigurations();
 
-            String[] serviceNames = { Exporter.class.getName(), ManagedService.class.getName() };
-            m_serviceRegistration = m_bundleContext.registerService( serviceNames, this, configurations );
-
-            if( m_logger.isDebugEnabled() )
-            {
-                m_logger.debug( "Exporter [" + m_servicePID + "] is registered." );
-            }
-        }
-        else
+        String[] serviceNames =
         {
-            if( m_logger.isDebugEnabled() )
-            {
-                String message = "Unable to re-register exporter [" + m_servicePID
-                                 + "]. This exporter is already in registered state.";
-                m_logger.warn( message );
-            }
-        }
-    }
+            Exporter.class.getName(), ManagedService.class.getName()
+        };
 
-    /**
-     * Unregister this {@code ExporterService}. This method must be invoked during {@code BundleActivator#stop()}
-     * invocation.
-     *
-     * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-     * @since 0.1.0
-     */
-    public synchronized final void unregister()
-    {
-        if( m_serviceRegistration == null )
+        ServiceRegistration registration = m_bundleContext.registerService( serviceNames, this, configurations );
+        if ( m_logger.isDebugEnabled() )
         {
-            if( m_logger.isWarnEnabled() )
-            {
-                String message =
-                    "Unable to unregister exporter [" + m_servicePID + "]. This exporter is not in registered state.";
-                m_logger.warn( message );
-            }
+            m_logger.debug( "Exporter [" + m_servicePID + "] is registered." );
         }
-        else
-        {
-            m_serviceRegistration.unregister();
-            m_serviceRegistration = null;
 
-            if( m_logger.isDebugEnabled() )
-            {
-                m_logger.debug( "Exporter [" + m_servicePID + "] is unregistered." );
-            }
+        synchronized ( this )
+        {
+            m_serviceRegistration = registration;
         }
+
+        return registration;
     }
 }

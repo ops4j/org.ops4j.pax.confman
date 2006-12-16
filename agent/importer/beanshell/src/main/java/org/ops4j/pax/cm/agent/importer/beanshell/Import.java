@@ -17,8 +17,8 @@
  */
 package org.ops4j.pax.cm.agent.importer.beanshell;
 
-import java.util.List;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * @author Edward Yakop
@@ -29,7 +29,7 @@ public interface Import
     /**
      * Returns list of {@code PaxConfiguration} to be imported to configuration admin service. Returns an instance of
      * empty collection if there's no configuration.
-     *
+     * 
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */

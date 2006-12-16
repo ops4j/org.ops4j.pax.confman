@@ -17,10 +17,6 @@
  */
 package org.ops4j.pax.cm.agent.importer.beanshell;
 
-import bsh.BshClassManager;
-import bsh.EvalError;
-import bsh.Interpreter;
-import bsh.NameSpace;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,17 +27,23 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
+
 import org.ops4j.pax.cm.agent.configuration.PaxConfiguration;
-import org.ops4j.pax.cm.agent.configuration.validator.PaxConfigurationValidator;
 import org.ops4j.pax.cm.agent.configuration.validator.InvalidPaxConfigurationException;
+import org.ops4j.pax.cm.agent.configuration.validator.PaxConfigurationValidator;
 import org.ops4j.pax.cm.agent.importer.AbstractImporter;
 import org.ops4j.pax.cm.agent.importer.ImportException;
 import org.ops4j.pax.cm.agent.importer.Importer;
 import org.osgi.framework.BundleContext;
 
+import bsh.BshClassManager;
+import bsh.EvalError;
+import bsh.Interpreter;
+import bsh.NameSpace;
+
 /**
  * {@code BeanShellImporter}
- *
+ * 
  * @author Edward Yakop
  * @since 0.1.0
  */
@@ -51,24 +53,24 @@ public final class BeanShellImporter extends AbstractImporter
 
     /**
      * The importer id of {@code BeanShellImporter}.
-     *
+     * 
      * @since 0.1.0
      */
     public static final String ID = "BeanShell";
 
     /**
      * The beanshell must have class with the following full name defined.
-     *
+     * 
      * @since 0.1.0
      */
     private static final String IMPORTER_CLASS_NAME = "Importer";
 
     /**
      * Construct instance of {@code BeanShellImporter} with the specified arguments.
-     *
+     * 
      * @param bundleContext The bundle context. This argument must not be {@code null}.
-     * @param servicePID    The service pid. This argument must not be {@code null} or empty.
-     *
+     * @param servicePID The service pid. This argument must not be {@code null} or empty.
+     * 
      * @throws IllegalArgumentException Thrown if one or both arguments are {@code null}.
      * @since 0.1.0
      */
@@ -80,30 +82,32 @@ public final class BeanShellImporter extends AbstractImporter
 
     /**
      * Perform import on data specified by {@code inputStream}.
-     *
+     * 
      * @param inputStream The input stream. This argument must not be {@code null}.
-     *
+     * 
      * @return List of {@code PaxConfiguration}, returns empty collection if there is no configuration.
-     *
+     * 
      * @throws IllegalArgumentException Thrown if the specified {@code inputStream} is {@code null}.
-     * @throws ImportException          Thrown if one or more of the following conditions fullfilled:
-     *                                  <ul>
-     *                                  <li>The script is not a valid bean shell script.</li>
-     *                                  <li>The script does not declare class with name as {@code IMPORTER_CLASS_NAME}.</li>
-     *                                  <li>The class with {@code Importer} name does not have default constructor.</li>
-     *                                  <li>The class with {@code Importer} name default constructor is not {@code public}.</li>
-     *                                  <li>The class with {@code Importer} name does not implement {@code Import} interface.</li>
-     *                                  <li>The method {@code performImport} is not public.</li>
-     *                                  </ul>
+     * @throws ImportException Thrown if one or more of the following conditions fullfilled:
+     *             <ul>
+     *             <li>The script is not a valid bean shell script.</li>
+     *             <li>The script does not declare class with name as {@code IMPORTER_CLASS_NAME}.</li>
+     *             <li>The class with {@code Importer} name does not have default constructor.</li>
+     *             <li>The class with {@code Importer} name default constructor is not {@code public}.</li>
+     *             <li>The class with {@code Importer} name does not implement {@code Import} interface.</li>
+     *             <li>The method {@code performImport} is not public.</li>
+     *             </ul>
      * @see BeanShellImporter#IMPORTER_CLASS_NAME
      * @see Import
      * @see java.util.Collections#emptyList()
      * @since 0.1.0
      */
     public List<PaxConfiguration> performImport( InputStream inputStream )
-        throws IllegalArgumentException, ImportException, InvalidPaxConfigurationException
+        throws IllegalArgumentException,
+        ImportException,
+        InvalidPaxConfigurationException
     {
-        if( inputStream == null )
+        if ( inputStream == null )
         {
             throw new IllegalArgumentException( "[inputStream] argument is [null]." );
         }
@@ -120,14 +124,15 @@ public final class BeanShellImporter extends AbstractImporter
         try
         {
             interpreter.eval( reader );
-        } catch( EvalError evalError )
+        }
+        catch ( EvalError evalError )
         {
             throw new ImportException( "Fail to evaluate.", evalError );
         }
 
         BshClassManager classManager = interpreter.getClassManager();
 
-        if( !classManager.classExists( IMPORTER_CLASS_NAME ) )
+        if ( !classManager.classExists( IMPORTER_CLASS_NAME ) )
         {
             throw new ImportException( "Input stream does not have [" + IMPORTER_CLASS_NAME + "] class defined." );
         }
@@ -139,11 +144,10 @@ public final class BeanShellImporter extends AbstractImporter
             Object instance = clazz.newInstance();
 
             Class<? extends Object> importClassName = instance.getClass();
-            if( !Import.class.isAssignableFrom( importClassName ) )
+            if ( !Import.class.isAssignableFrom( importClassName ) )
             {
-                throw new ImportException(
-                    "[" + IMPORTER_CLASS_NAME + "] does not implement [" + Import.class.getName() + "] interface."
-                );
+                throw new ImportException( "[" + IMPORTER_CLASS_NAME + "] does not implement ["
+                    + Import.class.getName() + "] interface." );
             }
 
             Import importz = (Import) instance;
@@ -152,40 +156,44 @@ public final class BeanShellImporter extends AbstractImporter
             validateConfigurations( importedConfigurations );
 
             return importedConfigurations;
-        } catch( InstantiationException e )
+        }
+        catch ( InstantiationException e )
         {
             throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
-        } catch( IllegalAccessException e )
+        }
+        catch ( IllegalAccessException e )
         {
             throw new ImportException( "Fail to instantiate [" + IMPORTER_CLASS_NAME + "].", e );
-        } catch( InvocationTargetException e )
+        }
+        catch ( InvocationTargetException e )
         {
             throw new ImportException( "Fail to perform import.", e.getTargetException() );
         }
     }
 
     private static void validateConfigurations( List importedConfigurations )
-        throws ImportException, InvalidPaxConfigurationException
+        throws ImportException,
+        InvalidPaxConfigurationException
     {
-        if( importedConfigurations == null )
+        if ( importedConfigurations == null )
         {
             throw new ImportException( "imported configuration must not be [null]." );
         }
 
         int i = 0;
-        for( Object value : importedConfigurations )
+        for ( Object value : importedConfigurations )
         {
-            if( value == null )
+            if ( value == null )
             {
                 throw new ImportException( "Configuration [" + i + "] must not be [null]." );
             }
 
-            if( !( value instanceof PaxConfiguration ) )
+            if ( !(value instanceof PaxConfiguration) )
             {
                 String expectedClassName = PaxConfiguration.class.getName();
                 String valueClassName = value.getClass().getName();
                 String msg = "Configuration [" + i + "] is not an instance of [" + expectedClassName + "], found ["
-                             + valueClassName + "]";
+                    + valueClassName + "]";
                 throw new ImportException( msg );
             }
 

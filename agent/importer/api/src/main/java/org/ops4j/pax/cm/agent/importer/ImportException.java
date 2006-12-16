@@ -19,6 +19,8 @@ package org.ops4j.pax.cm.agent.importer;
 
 public final class ImportException extends RuntimeException
 {
+    private static final long serialVersionUID = 1L;
+
     public ImportException( String message )
     {
         super( message );

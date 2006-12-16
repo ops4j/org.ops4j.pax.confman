@@ -29,6 +29,7 @@
   </build>
   <modules>
     <module>api</module>
+    <module>importer</module>
     <module>service</module>
     <module>test-data</module>
     <module>wicket</module>

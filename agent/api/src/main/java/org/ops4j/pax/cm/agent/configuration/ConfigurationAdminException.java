@@ -18,8 +18,10 @@
 package org.ops4j.pax.cm.agent.configuration;
 
 /**
+ * {@code ConfigurationAdminException} is a super class of all configuration admin exception.
+ * 
  * @author Edward Yakop
- * @since 0.1.0
+ * @since 1.0.0
  */
 public abstract class ConfigurationAdminException extends RuntimeException
 {
