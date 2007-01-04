@@ -397,16 +397,6 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/agent/api/agent-api.iml" filepath="$PROJECT_DIR$/agent/api/agent-api.iml" group="agent" />
-      <module fileurl="file://$PROJECT_DIR$/agent/importer/api/agent-importer-api.iml" filepath="$PROJECT_DIR$/agent/importer/api/agent-importer-api.iml" group="agent/importer" />
-      <module fileurl="file://$PROJECT_DIR$/agent/importer/beanshell/agent-importer-beanshell.iml" filepath="$PROJECT_DIR$/agent/importer/beanshell/agent-importer-beanshell.iml" group="agent/importer" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/edit-configuration/agent-page-configuration-edit.iml" filepath="$PROJECT_DIR$/agent/wicket/edit-configuration/agent-page-configuration-edit.iml" group="agent/view" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/overview/agent-page-overview.iml" filepath="$PROJECT_DIR$/agent/wicket/overview/agent-page-overview.iml" group="agent/view" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/browser/agent-panel-browser.iml" filepath="$PROJECT_DIR$/agent/wicket/browser/agent-panel-browser.iml" group="agent/view" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/importer/agent-panel-importer.iml" filepath="$PROJECT_DIR$/agent/wicket/importer/agent-panel-importer.iml" group="agent/view" />
-      <module fileurl="file://$PROJECT_DIR$/agent/service/agent-service.iml" filepath="$PROJECT_DIR$/agent/service/agent-service.iml" group="agent" />
-      <module fileurl="file://$PROJECT_DIR$/agent/test-data/agent-test-data.iml" filepath="$PROJECT_DIR$/agent/test-data/agent-test-data.iml" group="agent" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/api/agent-wicket-api.iml" filepath="$PROJECT_DIR$/agent/wicket/api/agent-wicket-api.iml" group="agent/view" />
       <module fileurl="file://$PROJECT_DIR$/configmanager/configmanager.iml" filepath="$PROJECT_DIR$/configmanager/configmanager.iml" />
     </modules>
   </component>
