@@ -26,5 +26,8 @@
     <orderEntry type="library" name="log4j-0.9.5-SNAPSHOT" level="project" />
     <orderEntryProperties />
   </component>
+  <component name="PluginUploader.UploadConfigurable">
+    <option name="_archivePath" />
+  </component>
 </module>
 

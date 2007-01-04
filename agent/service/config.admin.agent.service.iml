@@ -25,5 +25,8 @@
     <orderEntry type="module" module-name="wicket-api" />
     <orderEntryProperties />
   </component>
+  <component name="PluginUploader.UploadConfigurable">
+    <option name="_archivePath" />
+  </component>
 </module>
 
