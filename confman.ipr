@@ -397,17 +397,17 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/agent/importer/api/agent-importer-api.iml" filepath="$PROJECT_DIR$/agent/importer/api/agent-importer-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/importer/beanshell/agent-importer-beanshell.iml" filepath="$PROJECT_DIR$/agent/importer/beanshell/agent-importer-beanshell.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/api/config.admin.agent.api.iml" filepath="$PROJECT_DIR$/agent/api/config.admin.agent.api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/service/config.admin.agent.service.iml" filepath="$PROJECT_DIR$/agent/service/config.admin.agent.service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/agent/api/agent-api.iml" filepath="$PROJECT_DIR$/agent/api/agent-api.iml" group="agent" />
+      <module fileurl="file://$PROJECT_DIR$/agent/importer/api/agent-importer-api.iml" filepath="$PROJECT_DIR$/agent/importer/api/agent-importer-api.iml" group="agent/importer" />
+      <module fileurl="file://$PROJECT_DIR$/agent/importer/beanshell/agent-importer-beanshell.iml" filepath="$PROJECT_DIR$/agent/importer/beanshell/agent-importer-beanshell.iml" group="agent/importer" />
+      <module fileurl="file://$PROJECT_DIR$/agent/wicket/edit-configuration/agent-page-configuration-edit.iml" filepath="$PROJECT_DIR$/agent/wicket/edit-configuration/agent-page-configuration-edit.iml" group="agent/view" />
+      <module fileurl="file://$PROJECT_DIR$/agent/wicket/overview/agent-page-overview.iml" filepath="$PROJECT_DIR$/agent/wicket/overview/agent-page-overview.iml" group="agent/view" />
+      <module fileurl="file://$PROJECT_DIR$/agent/wicket/browser/agent-panel-browser.iml" filepath="$PROJECT_DIR$/agent/wicket/browser/agent-panel-browser.iml" group="agent/view" />
+      <module fileurl="file://$PROJECT_DIR$/agent/wicket/importer/agent-panel-importer.iml" filepath="$PROJECT_DIR$/agent/wicket/importer/agent-panel-importer.iml" group="agent/view" />
+      <module fileurl="file://$PROJECT_DIR$/agent/service/agent-service.iml" filepath="$PROJECT_DIR$/agent/service/agent-service.iml" group="agent" />
+      <module fileurl="file://$PROJECT_DIR$/agent/test-data/agent-test-data.iml" filepath="$PROJECT_DIR$/agent/test-data/agent-test-data.iml" group="agent" />
+      <module fileurl="file://$PROJECT_DIR$/agent/wicket/api/agent-wicket-api.iml" filepath="$PROJECT_DIR$/agent/wicket/api/agent-wicket-api.iml" group="agent/view" />
       <module fileurl="file://$PROJECT_DIR$/configmanager/configmanager.iml" filepath="$PROJECT_DIR$/configmanager/configmanager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/edit-configuration/page.configuration.edit.iml" filepath="$PROJECT_DIR$/agent/wicket/edit-configuration/page.configuration.edit.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/overview/page.overview.iml" filepath="$PROJECT_DIR$/agent/wicket/overview/page.overview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/browser/panel.browser.iml" filepath="$PROJECT_DIR$/agent/wicket/browser/panel.browser.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/importer/panel.importer.iml" filepath="$PROJECT_DIR$/agent/wicket/importer/panel.importer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/test-data/test-data.iml" filepath="$PROJECT_DIR$/agent/test-data/test-data.iml" />
-      <module fileurl="file://$PROJECT_DIR$/agent/wicket/api/wicket-api.iml" filepath="$PROJECT_DIR$/agent/wicket/api/wicket-api.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
@@ -428,7 +428,110 @@
       </value>
     </option>
   </component>
-  <component name="libraryTable" />
+  <component name="libraryTable">
+    <library name="osgi_R4_compendium-1.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/osgi/osgi_R4_compendium/1.0/osgi_R4_compendium-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="osgi_R4_core-1.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/osgi/osgi_R4_core/1.0/osgi_R4_core-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="jcl-0.9.4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/jcl/0.9.4/jcl-0.9.4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="ops4j-base-0.3.0">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/ops4j/base/ops4j-base/0.3.0/ops4j-base-0.3.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="bsh-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="bsh-core-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-core/2.0b4/bsh-core-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="bsh-classpath-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-classpath/2.0b4/bsh-classpath-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="bsh-classgen-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-classgen/2.0b4/bsh-classgen-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="bsh-reflect-2.0b4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/beanshell/bsh-reflect/2.0b4/bsh-reflect-2.0b4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="wicket-1.2.3">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/wicket/wicket/1.2.3/wicket-1.2.3.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$M2_REPO$/wicket/wicket/1.2.3/wicket-1.2.3-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$M2_REPO$/wicket/wicket/1.2.3/wicket-1.2.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="junit-4.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/junit/junit/4.1/junit-4.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="jmock-1.0.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/jmock/jmock/1.0.1/jmock-1.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="commons-lang-2.1">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="log4j-0.9.4">
+      <CLASSES>
+        <root url="jar://$M2_REPO$/org/ops4j/pax/logging/log4j/0.9.4/log4j-0.9.4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="false" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
