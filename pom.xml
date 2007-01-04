@@ -14,11 +14,9 @@
   <packaging>pom</packaging>
   <name>OPS4J - Pax - Config Admin</name>
   <url>http://wiki.ops4j.org/</url>
-  <scm>
-    <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/config-admin</developerConnection>
-  </scm>
   <modules>
     <module>agent</module>
+    <module>configmanager</module>
   </modules>
   <dependencies>
     <dependency>
@@ -48,19 +46,19 @@
       <dependency>
         <groupId>org.ops4j.pax.logging</groupId>
         <artifactId>api</artifactId>
-        <version>0.9.5-SNAPSHOT</version>
+        <version>0.9.4</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.logging</groupId>
         <artifactId>log4j</artifactId>
-        <version>0.9.5-SNAPSHOT</version>
+        <version>0.9.4</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.ops4j.base</groupId>
         <artifactId>ops4j-base</artifactId>
-        <version>0.1.0</version>
+        <version>0.3.0</version>
       </dependency>
       <dependency>
         <groupId>org.osgi</groupId>
@@ -77,7 +75,7 @@
       <dependency>
         <groupId>wicket</groupId>
         <artifactId>wicket</artifactId>
-        <version>1.2.1</version>
+        <version>1.2.3</version>
         <exclusions>
           <exclusion>
             <groupId>junit</groupId>
