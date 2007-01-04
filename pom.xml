@@ -7,7 +7,7 @@
   </parent>
   <groupId>org.ops4j.pax</groupId>
   <artifactId>confman</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OPS4J - Pax - Configuration Manager</name>
   <url>http://wiki.ops4j.org/</url>
@@ -143,9 +143,4 @@
     <system>jira</system>
     <url>http://issues.ops4j.org/jira/browse/PAXCMAGENT</url>
   </issueManagement>
-
-  <scm>
-    <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/pax/confman-0.1.0</connection>
-    <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/pax/confman-0.1.0</developerConnection>
-  </scm>
 </project>

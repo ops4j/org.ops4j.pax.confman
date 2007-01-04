@@ -2,14 +2,14 @@
   <parent>
     <artifactId>confman</artifactId>
     <groupId>org.ops4j.pax</groupId>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ops4j.pax.confman</groupId>
   <artifactId>propsloader</artifactId>
   <packaging>osgi-bundle</packaging>
   <name>OPS4J - Pax CM - Properties Loader</name>
-  <version>0.1.0</version>
+  <version>0.2.0-SNAPSHOT</version>
   <description>Pax Configuration Manger Service provides a framework to read files (default property files handling is supplied) from a directory and use ConfigurationAdmin to update the service with the properties loaded.</description>
   <dependencies>
     <dependency>
