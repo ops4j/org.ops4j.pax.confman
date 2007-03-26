@@ -17,7 +17,6 @@ final class ConfigurationFileHandlerServiceTracker extends ServiceTracker
 
     private static final String SERVICE_NAME = IConfigurationFileHandler.class.getName();
 
-    private final BundleContext mBundleContext;
     private final ConfigurationAdminFacade mConfigurationFacade;
 
     public ConfigurationFileHandlerServiceTracker( BundleContext bundleContext,
@@ -26,17 +25,14 @@ final class ConfigurationFileHandlerServiceTracker extends ServiceTracker
         super( bundleContext, SERVICE_NAME, null );
         NullArgumentException.validateNotNull( iConfigurationFacade, "iConfigurationFacade" );
 
-        mBundleContext = bundleContext;
         mConfigurationFacade = iConfigurationFacade;
     }
 
     @Override
     public Object addingService( ServiceReference serviceReference )
     {
-        IConfigurationFileHandler tConfigFileHandler = (IConfigurationFileHandler) mBundleContext.getService( serviceReference );
-
-        mConfigurationFacade.addFileHandler( tConfigFileHandler, mBundleContext );
-
+        IConfigurationFileHandler tConfigFileHandler = (IConfigurationFileHandler) context.getService( serviceReference );
+        mConfigurationFacade.addFileHandler( tConfigFileHandler, context );
         return tConfigFileHandler;
     }
 
@@ -53,6 +49,6 @@ final class ConfigurationFileHandlerServiceTracker extends ServiceTracker
         IConfigurationFileHandler tConfigFileHandler = (IConfigurationFileHandler) service;
 
         mConfigurationFacade.removeFileHandler( tConfigFileHandler );
-        mBundleContext.ungetService( serviceReference );
+        context.ungetService( serviceReference );
     }
 }

@@ -127,7 +127,7 @@ final class ConfigurationAdminFacade
 
     private void createConfiguration( String configuration, File configDir, HashSet<String> configCache, boolean isFactory ) throws IOException
     {
-        File dir = null;
+        File dir;
         if( isFactory )
         {
             dir = new File( configDir, "factories" );
@@ -143,60 +143,74 @@ final class ConfigurationAdminFacade
         String[] files = dir.list();
         for( String configFile : files )
         {
-            if( configuration != null && !configFile.equals( configuration ) )
+            createConfigurationForFile( configuration, configFile, configCache, dir, isFactory );
+        }
+    }
+
+    private void createConfigurationForFile( String configuration, String configFile, HashSet<String> configCache,
+                                             File dir, boolean isFactory
+    )
+        throws IOException
+    {
+        if( configuration != null && !configFile.equals( configuration ) )
+        {
+            return;
+        }
+
+        // If configuration already exist for the service, dont update.
+        // Will be empty if iIsOverwrite is true.
+        if( configCache.contains( configFile ) )
+        {
+            return;
+        }
+
+        File f = new File( dir, configFile );
+        if( !f.isDirectory() )
+        {
+            List<IConfigurationFileHandler> handlers;
+
+            synchronized( mHandlers )
             {
-                continue;
+                handlers = new ArrayList<IConfigurationFileHandler>( mHandlers );
             }
 
-            // If configuration already exist for the service, dont update.
-            // Will be empty if iIsOverwrite is true.
-            if( configCache.contains( configFile ) )
+            for( IConfigurationFileHandler handler : handlers )
             {
-                continue;
-            }
-
-            File f = new File( dir, configFile );
-            if( !f.isDirectory() )
-            {
-                List<IConfigurationFileHandler> handlers;
-
-                synchronized( mHandlers )
+                if( handler.canHandle( f ) )
                 {
-                    handlers = new ArrayList<IConfigurationFileHandler>( mHandlers );
-                }
-
-                for( IConfigurationFileHandler handler : handlers )
-                {
-                    if( handler.canHandle( f ) )
-                    {
-                        String servicePid = handler.getServicePID( configFile );
-                        Properties prop = handler.handle( f );
-                        System.out.println( prop );
-                        Configuration conf = null;
-                        // Find out if a service pid is included, use it if it does
-                        String str = (String) prop.get( Constants.SERVICE_PID );
-                        if( str != null )
-                        {
-                            servicePid = str;
-                        }
-                        synchronized( this )
-                        {
-                            if( isFactory )
-                            {
-                                conf = mConfigAdminService.createFactoryConfiguration( servicePid, null );
-                            }
-                            else
-                            {
-                                conf = mConfigAdminService.getConfiguration( servicePid, null );
-                            }
-                        }
-
-                        conf.update( prop );
-                        mLogger.info( "Register configuration [" + servicePid + "]" );
-                    }
+                    handle( handler, configFile, f, isFactory );
                 }
             }
         }
+    }
+
+    private void handle( IConfigurationFileHandler handler, String configFile, File f, boolean isFactory )
+        throws IOException
+    {
+        String servicePid = handler.getServicePID( configFile );
+        Properties prop = handler.handle( f );
+        System.out.println( prop );
+        // Find out if a service pid is included, use it if it does
+        String str = (String) prop.get( Constants.SERVICE_PID );
+        if( str != null )
+        {
+            servicePid = str;
+        }
+        Configuration conf;
+        synchronized( this )
+        {
+            if( isFactory )
+            {
+                conf = mConfigAdminService.createFactoryConfiguration( servicePid, null );
+            }
+            else
+            {
+                conf = mConfigAdminService.getConfiguration( servicePid, null );
+            }
+        }
+
+        conf.update( prop );
+        mLogger.info( "Register configuration [" + servicePid + "]" );
     }
 
     private File getConfigDir()
@@ -293,7 +307,6 @@ final class ConfigurationAdminFacade
         throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( handler, "handler" );
-
         synchronized( mHandlers )
         {
             mHandlers.remove( handler );

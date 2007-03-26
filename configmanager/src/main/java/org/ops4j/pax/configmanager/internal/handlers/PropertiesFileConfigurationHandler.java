@@ -64,9 +64,7 @@ public final class PropertiesFileConfigurationHandler
         {
             Properties prop = new Properties();
             FileInputStream fis = new FileInputStream( file );
-
             prop.load( fis );
-
             return prop;
         } catch( IOException e )
         {
