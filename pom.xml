@@ -12,7 +12,7 @@
   <name>OPS4J - Pax - Configuration Manager</name>
   <url>http://wiki.ops4j.org/</url>
   <modules>
-    <module>configmanager</module>
+    <module>propsloader</module>
   </modules>
   <dependencies>
     <dependency>
