@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: OPS4J Pax Configuration Manager
-Bundle-SymbolicName: org.ops4j.pax.configmanager
+Bundle-Name: OPS4J Pax Configuration Manager Properties Loader
+Bundle-SymbolicName: org.ops4j.pax.confman.propsloader
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Import-Package: org.apache.commons.logging;provider=paxlogging;version="[1.0.0,1.1.0)",
