@@ -17,38 +17,34 @@ final class ConfigurationFileHandlerServiceTracker extends ServiceTracker
 
     private static final String SERVICE_NAME = IConfigurationFileHandler.class.getName();
 
-    private final ConfigurationAdminFacade mConfigurationFacade;
+    private final ConfigurationAdminFacade m_configurationFacade;
 
-    public ConfigurationFileHandlerServiceTracker( BundleContext bundleContext,
-                                                   ConfigurationAdminFacade iConfigurationFacade )
+    ConfigurationFileHandlerServiceTracker( BundleContext context, ConfigurationAdminFacade facade )
+        throws IllegalArgumentException
     {
-        super( bundleContext, SERVICE_NAME, null );
-        NullArgumentException.validateNotNull( iConfigurationFacade, "iConfigurationFacade" );
+        super( context, SERVICE_NAME, null );
 
-        mConfigurationFacade = iConfigurationFacade;
+        NullArgumentException.validateNotNull( facade, "facade" );
+        m_configurationFacade = facade;
     }
 
     @Override
-    public Object addingService( ServiceReference serviceReference )
+    public final Object addingService( ServiceReference reference )
     {
-        IConfigurationFileHandler tConfigFileHandler = (IConfigurationFileHandler) context.getService( serviceReference );
-        mConfigurationFacade.addFileHandler( tConfigFileHandler, context );
-        return tConfigFileHandler;
+        IConfigurationFileHandler fileHandler = (IConfigurationFileHandler) super.addingService( reference );
+
+        m_configurationFacade.addFileHandler( fileHandler );
+
+        return fileHandler;
     }
 
     @Override
-    public void modifiedService( ServiceReference serviceReference, Object service )
+    public final void removedService( ServiceReference serviceReference, Object objService )
     {
-        removedService( serviceReference, service );
-        addingService( serviceReference );
-    }
+        IConfigurationFileHandler fileHandler = (IConfigurationFileHandler) objService;
 
-    @Override
-    public void removedService( ServiceReference serviceReference, Object service )
-    {
-        IConfigurationFileHandler tConfigFileHandler = (IConfigurationFileHandler) service;
+        m_configurationFacade.removeFileHandler( fileHandler );
 
-        mConfigurationFacade.removeFileHandler( tConfigFileHandler );
-        context.ungetService( serviceReference );
+        super.removedService( serviceReference, objService );
     }
 }

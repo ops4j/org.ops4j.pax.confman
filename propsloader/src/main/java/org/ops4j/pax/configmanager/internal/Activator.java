@@ -1,7 +1,6 @@
 package org.ops4j.pax.configmanager.internal;
 
 import java.util.Hashtable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.configmanager.IConfigurationFileHandler;
@@ -15,54 +14,55 @@ import org.osgi.util.tracker.ServiceTracker;
 public final class Activator implements BundleActivator
 {
 
-    private Log mLogger;
+    private static final Log LOGGER = LogFactory.getLog( Activator.class );
+    private static final String SERVICE_NAME = IConfigurationFileHandler.class.getName();
 
-    private ServiceTracker mConfigTracker;
-    private ConfigurationFileHandlerServiceTracker mConfigFileTracker;
-    private ServiceRegistration mPropConfigHandlerServiceReg;
-    private ConfigurationAdminFacade mConfigAdminFacade;
+    private ServiceTracker m_configTracker;
+    private ConfigurationFileHandlerServiceTracker m_configFileTracker;
+    private ServiceRegistration m_registration;
+    private ConfigurationAdminFacade m_configAdminFacade;
 
     public void start( BundleContext context )
         throws Exception
     {
-    	mLogger = LogFactory.getLog( getClass() );
-        if( mLogger.isDebugEnabled() )
+        if( LOGGER.isDebugEnabled() )
         {
             Bundle contextBundle = context.getBundle();
             String symbolicName = contextBundle.getSymbolicName();
-            mLogger.debug( "starting " + symbolicName + "..." );
+            LOGGER.debug( "Starting [" + symbolicName + "]..." );
         }
 
-        registerPropertiesHandler(context);
-        mConfigAdminFacade = new ConfigurationAdminFacade();
+        PropertiesFileConfigurationHandler handler = new PropertiesFileConfigurationHandler();
+        m_registration = context.registerService( SERVICE_NAME, handler, new Hashtable() );
+        m_configAdminFacade = new ConfigurationAdminFacade();
 
-        mConfigTracker = new ConfigAdminServiceTracker( context, mConfigAdminFacade );
-        mConfigTracker.open();
+        m_configTracker = new ConfigAdminServiceTracker( context, m_configAdminFacade );
+        m_configTracker.open();
 
-        mConfigFileTracker = new ConfigurationFileHandlerServiceTracker( context, mConfigAdminFacade );
-        mConfigFileTracker.open();
+        m_configFileTracker = new ConfigurationFileHandlerServiceTracker( context, m_configAdminFacade );
+        m_configFileTracker.open();
     }
-
-	private void registerPropertiesHandler( BundleContext context ) 
-	{
-		PropertiesFileConfigurationHandler handler = new PropertiesFileConfigurationHandler();
-        mPropConfigHandlerServiceReg = context.registerService( IConfigurationFileHandler.class.getName(), handler, new Hashtable() );
-	}
 
     public void stop( BundleContext context )
         throws Exception
     {
-        if( mLogger.isDebugEnabled() )
+        if( LOGGER.isDebugEnabled() )
         {
             Bundle contextBundle = context.getBundle();
             String symbolicName = contextBundle.getSymbolicName();
-            mLogger.debug( "Stopping " + symbolicName );
+            LOGGER.debug( "Stopping [" + symbolicName + "]" );
         }
 
-        mPropConfigHandlerServiceReg.unregister();
-        mConfigFileTracker.close();
-        mConfigTracker.close();
+        m_registration.unregister();
+        m_registration = null;
 
-        mConfigAdminFacade.dispose();
+        m_configFileTracker.close();
+        m_configFileTracker = null;
+
+        m_configTracker.close();
+        m_configTracker = null;
+
+        m_configAdminFacade.dispose();
+        m_configAdminFacade = null;
     }
 }

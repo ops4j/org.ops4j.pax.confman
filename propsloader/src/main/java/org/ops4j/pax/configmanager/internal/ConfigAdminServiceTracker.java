@@ -30,28 +30,22 @@ final class ConfigAdminServiceTracker extends ServiceTracker
     }
 
     @Override
-    public Object addingService( ServiceReference serviceReference )
+    public final Object addingService( ServiceReference serviceReference )
     {
-        ConfigurationAdmin configAdmin = (ConfigurationAdmin) context.getService( serviceReference );
-        mFacade.setConfigurationAdminService( configAdmin );
+        ConfigurationAdmin service = (ConfigurationAdmin) super.addingService( serviceReference );
+
+        mFacade.setConfigurationAdminService( service );
 
         try
         {
-            mFacade.registerConfigurations( null, false, context );
+            mFacade.registerConfigurations( null, false );
         }
-        catch( Exception e )
+        catch( Throwable e )
         {
             mLogger.error( "Can't load configuration", e );
         }
 
-        return configAdmin;
-    }
-
-    @Override
-    public void modifiedService( ServiceReference serviceReference, Object service )
-    {
-        removedService( serviceReference, service );
-        addingService( serviceReference );
+        return service;
     }
 
     @Override

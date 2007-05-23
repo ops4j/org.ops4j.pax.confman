@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-
+import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.configmanager.IConfigurationFileHandler;
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
@@ -29,22 +28,22 @@ import org.osgi.service.cm.ConfigurationAdmin;
 final class ConfigurationAdminFacade
 {
 
+    private static final Log LOGGER = LogFactory.getLog( ConfigurationAdminFacade.class );
+
+    private static final String DIRECTORY_NAME_FACTORIES = "factories";
+    private static final String DIRECTORY_NAME_SERVICES = "services";
+
     /**
-     * System property to set where the ConfigurationAdminFacade should load the configuration files
-     * from. 
+     * System property to set where the ConfigurationAdminFacade should load the configuration files from.
      */
     public static final String BUNDLES_CONFIGURATION_LOCATION = "bundles.configuration.location";
-    
-    private Log mLogger;
 
-    private ConfigurationAdmin mConfigAdminService;
-
-    private final List<IConfigurationFileHandler> mHandlers;
+    private final List<IConfigurationFileHandler> m_handlers;
+    private ConfigurationAdmin m_configAdminService;
 
     public ConfigurationAdminFacade()
     {
-        mLogger = LogFactory.getLog( getClass() );
-        mHandlers = new ArrayList<IConfigurationFileHandler>();
+        m_handlers = new ArrayList<IConfigurationFileHandler>();
     }
 
     /**
@@ -52,30 +51,30 @@ final class ConfigurationAdminFacade
      * configuration file during {@code registerConfigurations}.
      *
      * @param handler The file handler. This argument must not be {@code null}.
-     * @param bundleContext TODO
      *
      * @throws IllegalArgumentException Thrown if the specified {@code handler} is {@code null}.
+     * @since 1.0.0
      */
-    final void addFileHandler( IConfigurationFileHandler handler, BundleContext bundleContext )
+    final void addFileHandler( IConfigurationFileHandler handler )
         throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( handler, "handler" );
 
-        synchronized( mHandlers )
+        synchronized( m_handlers )
         {
-            mHandlers.add( 0, handler );
+            m_handlers.add( 0, handler );
 
+            // Reload all configurations just in case if this is added later
             try
             {
-                // Reload all configurations just in case if this is added later
-                registerConfigurations( null, false, bundleContext );
+                registerConfigurations( null, false );
             } catch( IOException e )
             {
-                String tMsg = "IOException by either getting the configuration admin or loading the configuration file.";
-                mLogger.error( tMsg, e );
+                String msg = "IOException by either getting the configuration admin or loading the configuration file.";
+                LOGGER.error( msg, e );
             } catch( InvalidSyntaxException e )
             {
-                mLogger.error( "Invalid syntax. This should not happened.", e );
+                LOGGER.error( "Invalid syntax. This should not happened.", e );
             }
         }
     }
@@ -84,19 +83,20 @@ final class ConfigurationAdminFacade
      * Registers configuration for OSGi Managed services.
      *
      * @param configuration if null then all configuration found will be registered.
-     * @param overwrite   A {@code boolean} indicator to overwrite the configuration
-     * @param bundleContext TODO
-     * @throws java.io.IOException   Thrown if there is an IO problem during loading of {@code configuration}.
-     * @throws org.osgi.framework.InvalidSyntaxException
-     *                               Thrown if there is an invalid exception during retrieval of configurations.
-     * @throws IllegalStateException Thrown if the configuration admin service is not available.
+     * @param overwrite     A {@code boolean} indicator to overwrite the configuration
+     *
+     * @throws IOException            Thrown if there is an IO problem during loading of {@code configuration}.
+     * @throws InvalidSyntaxException Thrown if there is an invalid exception during retrieval of configurations.
+     * @throws IllegalStateException  Thrown if the configuration admin service is not available.
      */
-    final void registerConfigurations( String configuration, boolean overwrite, BundleContext bundleContext )
+    final void registerConfigurations( String configuration, boolean overwrite )
         throws IOException, InvalidSyntaxException, IllegalStateException
     {
-        if( mConfigAdminService == null )
+        if( m_configAdminService == null )
         {
-            throw new IllegalStateException( "Configuration admin service is not available. Please start configuration admin bundle." );
+            throw new IllegalStateException(
+                "Configuration admin service is not available. Please start configuration admin bundle."
+            );
         }
 
         File configDir = getConfigDir();
@@ -104,42 +104,46 @@ final class ConfigurationAdminFacade
         {
             return;
         }
-        
-        Configuration[] existingConfigurations;
 
+        Configuration[] existingConfigurations;
         synchronized( this )
         {
-            existingConfigurations = mConfigAdminService.listConfigurations( null );
+            existingConfigurations = m_configAdminService.listConfigurations( null );
         }
-        HashSet<String> configCache = new HashSet<String>();
+
+        Set<String> configCache = new HashSet<String>();
         if( existingConfigurations != null && !overwrite )
         {
-            for( Configuration existingConfiguration : existingConfigurations )
+            for( Configuration existingConfig : existingConfigurations )
             {
-                configCache.add( existingConfiguration.getPid() );
+                configCache.add( existingConfig.getPid() );
             }
         }
+
         // Create configuration for ManagedServiceFactory
         createConfiguration( configuration, configDir, configCache, true );
         // Create configuration for ManagedService
         createConfiguration( configuration, configDir, configCache, false );
     }
 
-    private void createConfiguration( String configuration, File configDir, HashSet<String> configCache, boolean isFactory ) throws IOException
+    private void createConfiguration( String configuration, File configDir, Set<String> configCache, boolean isFactory )
+        throws IOException
     {
         File dir;
         if( isFactory )
         {
-            dir = new File( configDir, "factories" );
+            dir = new File( configDir, DIRECTORY_NAME_FACTORIES );
         }
         else
         {
-            dir = new File( configDir, "services" );
+            dir = new File( configDir, DIRECTORY_NAME_SERVICES );
         }
+
         if( !dir.exists() )
         {
             return;
         }
+
         String[] files = dir.list();
         for( String configFile : files )
         {
@@ -147,8 +151,8 @@ final class ConfigurationAdminFacade
         }
     }
 
-    private void createConfigurationForFile( String configuration, String configFile, HashSet<String> configCache,
-                                             File dir, boolean isFactory
+    private void createConfigurationForFile(
+        String configuration, String configFile, Set<String> configCache, File dir, boolean isFactory
     )
         throws IOException
     {
@@ -157,8 +161,7 @@ final class ConfigurationAdminFacade
             return;
         }
 
-        // If configuration already exist for the service, dont update.
-        // Will be empty if iIsOverwrite is true.
+        // If configuration already exist for the service, dont update. Will be empty if iIsOverwrite is true.
         if( configCache.contains( configFile ) )
         {
             return;
@@ -169,9 +172,9 @@ final class ConfigurationAdminFacade
         {
             List<IConfigurationFileHandler> handlers;
 
-            synchronized( mHandlers )
+            synchronized( m_handlers )
             {
-                handlers = new ArrayList<IConfigurationFileHandler>( mHandlers );
+                handlers = new ArrayList<IConfigurationFileHandler>( m_handlers );
             }
 
             for( IConfigurationFileHandler handler : handlers )
@@ -184,60 +187,65 @@ final class ConfigurationAdminFacade
         }
     }
 
-    private void handle( IConfigurationFileHandler handler, String configFile, File f, boolean isFactory )
+    private void handle( IConfigurationFileHandler handler, String configFile, File file, boolean isFactory )
         throws IOException
     {
         String servicePid = handler.getServicePID( configFile );
-        Properties prop = handler.handle( f );
-        System.out.println( prop );
+        Properties prop = handler.handle( file );
+
         // Find out if a service pid is included, use it if it does
         String str = (String) prop.get( Constants.SERVICE_PID );
         if( str != null )
         {
             servicePid = str;
         }
+
         Configuration conf;
         synchronized( this )
         {
             if( isFactory )
             {
-                conf = mConfigAdminService.createFactoryConfiguration( servicePid, null );
+                conf = m_configAdminService.createFactoryConfiguration( servicePid, null );
             }
             else
             {
-                conf = mConfigAdminService.getConfiguration( servicePid, null );
+                conf = m_configAdminService.getConfiguration( servicePid, null );
             }
         }
 
         conf.update( prop );
-        mLogger.info( "Register configuration [" + servicePid + "]" );
+
+        LOGGER.info( "Register configuration [" + servicePid + "]" );
     }
 
     private File getConfigDir()
     {
         String configArea = System.getProperty( BUNDLES_CONFIGURATION_LOCATION );
+
         // Only run the configuration changes if the configArea is set.
         if( configArea == null )
+        {
             return null;
-        mLogger.info( "Using configuration from '" + configArea + "'" );
-		File dir = new File( configArea );
-		if( !dir.exists() )
-		{
-			mLogger.error( "Configuration area '" + configArea + "' does not exist. Unable to load properties." );
-			return null;
-		}
-		return dir;
+        }
+
+        LOGGER.info( "Using configuration from '" + configArea + "'" );
+        File dir = new File( configArea );
+        if( !dir.exists() )
+        {
+            LOGGER.error( "Configuration area '" + configArea + "' does not exist. Unable to load properties." );
+            return null;
+        }
+        return dir;
     }
 
     /**
      * Dispose this {@code ConfigurationAdminFacade} instance. Once this object instance is disposed, it is not meant to
      * be used again.
-     *
      */
     void dispose()
     {
-        mConfigAdminService = null;
-        mHandlers.clear();
+        m_configAdminService = null;
+        m_handlers.clear();
     }
 
     final void printConfigFileList( PrintWriter writer, String fileName )
@@ -307,9 +315,10 @@ final class ConfigurationAdminFacade
         throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( handler, "handler" );
-        synchronized( mHandlers )
+
+        synchronized( m_handlers )
         {
-            mHandlers.remove( handler );
+            m_handlers.remove( handler );
         }
     }
 
@@ -322,7 +331,7 @@ final class ConfigurationAdminFacade
     {
         synchronized( this )
         {
-            mConfigAdminService = configurationAdminService;
+            m_configAdminService = configurationAdminService;
         }
     }
 }

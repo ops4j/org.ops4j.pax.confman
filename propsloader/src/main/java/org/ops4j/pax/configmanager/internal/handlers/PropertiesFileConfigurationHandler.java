@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
@@ -19,14 +18,15 @@ import org.ops4j.pax.configmanager.IConfigurationFileHandler;
 public final class PropertiesFileConfigurationHandler
     implements IConfigurationFileHandler
 {
+
     private static final String PROPERTIES_EXTENSION_FILE_NAME = ".properties";
 
-    private Log mLogger;
+    private static final Log LOGGER = LogFactory.getLog( PropertiesFileConfigurationHandler.class );
 
     public PropertiesFileConfigurationHandler()
     {
-    	mLogger = LogFactory.getLog( getClass() );
     }
+
     /**
      * Returns the configuration name of the specified {@code fileName}. The specified {@code fileName} must not have
      * file path prefix. Returns {@code null} if the file name can not be handled by this handler.
@@ -35,8 +35,8 @@ public final class PropertiesFileConfigurationHandler
      *
      * @return Returns the configuration name given the {@code fileName} argument.
      */
-    public String getServicePID( String fileName )
-    {    	
+    public final String getServicePID( String fileName )
+    {
         NullArgumentException.validateNotEmpty( fileName, "fileName" );
 
         if( fileName.endsWith( PROPERTIES_EXTENSION_FILE_NAME ) )
@@ -55,8 +55,12 @@ public final class PropertiesFileConfigurationHandler
      * @param file The configuration file to be loaded. This argument must not be {@code null}.
      *
      * @return Returns the {@code Properties} of the specified {@code file}.
+     *
+     * @throws IllegalArgumentException thrown if the specified {@code file} argument is {@code null}.
+     * @since 1.0.0
      */
-    public Properties handle( File file )
+    public final Properties handle( File file )
+        throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( file, "file" );
 
@@ -69,7 +73,7 @@ public final class PropertiesFileConfigurationHandler
         } catch( IOException e )
         {
             // TODO: handle error handling
-            mLogger.error( "Fail to handle file [" + file.getAbsolutePath() + "] configuration property.", e );
+            LOGGER.error( "Fail to handle file [" + file.getAbsolutePath() + "] configuration property.", e );
         }
 
         return null;
@@ -82,9 +86,11 @@ public final class PropertiesFileConfigurationHandler
      *
      * @return A {@code boolean} indicator whether this {@code IConfigurationFileHandler} able to handle {@code file}.
      *
+     * @throws IllegalArgumentException Thrown if the specified {@code file} argument is {@code null}.
      * @since 1.0.6
      */
-    public boolean canHandle( File file )
+    public final boolean canHandle( File file )
+        throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( file, "file" );
 

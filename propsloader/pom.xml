@@ -4,13 +4,52 @@
     <groupId>org.ops4j.pax</groupId>
     <version>0.2.0-SNAPSHOT</version>
   </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.ops4j.pax.confman</groupId>
   <artifactId>propsloader</artifactId>
-  <packaging>osgi-bundle</packaging>
-  <name>OPS4J - Pax CM - Properties Loader</name>
   <version>0.2.0-SNAPSHOT</version>
+
+  <packaging>bundle</packaging>
+
+  <name>OPS4J - Pax CM - Properties Loader</name>
   <description>Pax Configuration Manger Service provides a framework to read files (default property files handling is supplied) from a directory and use ConfigurationAdmin to update the service with the properties loaded.</description>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.ops4j.pax.maven</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.ops4j.pax.construct</groupId>
+        <artifactId>maven-pax-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>dependency-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.ops4j.base</groupId>
+                  <artifactId>ops4j-base</artifactId>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/classes</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>org.ops4j.pax.logging</groupId>
@@ -32,28 +71,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.ops4j.pax.maven</groupId>
-        <artifactId>maven-osgi-bundle</artifactId>
-        <version>0.9.8</version>
-        <extensions>true</extensions>
-        <configuration>
-          <libDirectory>lib</libDirectory>
-          <manifestFile>META-INF/MANIFEST.MF</manifestFile>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  <repositories>
-    <repository>
-      <id>ops4j-repository</id>
-      <name>The OPS4J Repository</name>
-      <url>http://repository.ops4j.org/maven2/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
+
 </project>
