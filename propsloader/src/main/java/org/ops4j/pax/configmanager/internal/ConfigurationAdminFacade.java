@@ -30,14 +30,14 @@ final class ConfigurationAdminFacade
 
     private static final Log LOGGER = LogFactory.getLog( ConfigurationAdminFacade.class );
 
-    private static final String DIRECTORY_NAME_FACTORIES = "factories";
-    private static final String DIRECTORY_NAME_SERVICES = "services";
+    public static final String DIRECTORY_NAME_FACTORIES = "factories";
+    public static final String DIRECTORY_NAME_SERVICES = "services";
+    public static final String DEFAULT_CONFIGURATION_LOCATION = "configurations";
 
     /**
      * System property to set where the ConfigurationAdminFacade should load the configuration files from.
      */
     public static final String BUNDLES_CONFIGURATION_LOCATION = "bundles.configuration.location";
-
     private final List<IConfigurationFileHandler> m_handlers;
     private ConfigurationAdmin m_configAdminService;
 
@@ -102,6 +102,7 @@ final class ConfigurationAdminFacade
         File configDir = getConfigDir();
         if( configDir == null )
         {
+
             return;
         }
 
@@ -141,6 +142,7 @@ final class ConfigurationAdminFacade
 
         if( !dir.exists() )
         {
+            LOGGER.info( "Directory [" + configDir + "] does not exists." );
             return;
         }
 
@@ -225,14 +227,17 @@ final class ConfigurationAdminFacade
         // Only run the configuration changes if the configArea is set.
         if( configArea == null )
         {
-            return null;
+            LOGGER.info( "System property [" + BUNDLES_CONFIGURATION_LOCATION + "] is not defined." );
+            LOGGER.info( "Using default configurations location [" + DEFAULT_CONFIGURATION_LOCATION + "]." );
+            configArea = DEFAULT_CONFIGURATION_LOCATION;
         }
 
-        LOGGER.info( "Using configuration from '" + configArea + "'" );
+        LOGGER.info( "Using configuration from [" + configArea + "]" );
         File dir = new File( configArea );
         if( !dir.exists() )
         {
-            LOGGER.error( "Configuration area '" + configArea + "' does not exist. Unable to load properties." );
+            String absolutePath = dir.getAbsolutePath();
+            LOGGER.error( "Configuration area [" + absolutePath + "] does not exist. Unable to load properties." );
             return null;
         }
         return dir;
@@ -265,7 +270,7 @@ final class ConfigurationAdminFacade
         }
 
         String configAbsolutePath = configDir.getAbsolutePath();
-        writer.println( "config dir: '" + configAbsolutePath + "' contains the following config files:" );
+        writer.println( "config dir: [" + configAbsolutePath + "] contains the following config files:" );
         String[] files = configDir.list();
         for( String file : files )
         {
@@ -276,9 +281,10 @@ final class ConfigurationAdminFacade
     private void printConfiguration( PrintWriter writer, String fileName, File configDir )
     {
         File configFile = new File( configDir, fileName );
+        String absolutePath = configFile.getAbsolutePath();
         if( !configFile.canRead() || !configFile.exists() )
         {
-            writer.println( "Can't read configfile '" + configFile.getAbsolutePath() + "'" );
+            writer.println( "Can't read configfile [" + absolutePath + "]" );
             return;
         }
 
@@ -290,12 +296,12 @@ final class ConfigurationAdminFacade
         }
         catch( Exception e )
         {
-            String message = "Can't read configfile '" + configFile.getAbsolutePath() + "' - not a correct config file";
+            String message = "Can't read configfile [" + absolutePath + "] - not a correct config file";
             writer.println( message );
             return;
         }
 
-        writer.println( "Config file: " + configFile.getAbsolutePath() );
+        writer.println( "Config file: [" + absolutePath + "]" );
         for( Object keyObject : props.keySet() )
         {
             String key = (String) keyObject;
