@@ -190,13 +190,25 @@ final class ConfigurationAdminFacade
         }
     }
 
+	/**
+	* Handle the extraction and registration of the configuration into the config service.
+	* If a property service.pid exists in the configuration, then that will be used to locate the service instance.
+	* To register the service with a service.pid, do something like
+	* <pre>
+	* Properties filterProp = new Properties();
+	* filterProp.put(Constants.SERVICE_PID, "my.test.service.Interface");
+	* bundleContext.registerService(ManagedService.class.getName(), myServiceInstance, filterProp);
+	* </pre>
+	* in your client code that registeres the managed service.
+	*/
     private void handle( IConfigurationFileHandler handler, String configFile, File file, boolean isFactory )
         throws IOException
     {
         String servicePid = handler.getServicePID( configFile );
         Properties prop = handler.handle( file );
 
-        // Find out if a service pid is included, use it if it does
+        // Find out if a service.pid property is included, use it if it does
+
         String str = (String) prop.get( Constants.SERVICE_PID );
         if( str != null )
         {
