@@ -99,7 +99,7 @@ final class ManagedFactoryPropertiesProcessor
             if( value == null )
                 continue;
             
-            retval.put( key, value );
+            retval.put( keys[i], value );
         }
         
         return retval;
