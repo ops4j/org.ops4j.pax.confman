@@ -40,7 +40,8 @@ final class ConfigurationAdminFacade
     public static final String BUNDLES_CONFIGURATION_LOCATION = "bundles.configuration.location";
     private final List<IConfigurationFileHandler> m_handlers;
     private ConfigurationAdmin m_configAdminService;
-
+    private final ManagedFactoryPropertiesProcessor m_processor = new ManagedFactoryPropertiesProcessor();
+    
     public ConfigurationAdminFacade()
     {
         m_handlers = new ArrayList<IConfigurationFileHandler>();
@@ -202,20 +203,18 @@ final class ConfigurationAdminFacade
             servicePid = str;
         }
 
-        Configuration conf;
         synchronized( this )
         {
             if( isFactory )
             {
-                conf = m_configAdminService.createFactoryConfiguration( servicePid, null );
+                m_processor.process( m_configAdminService, servicePid, prop );                
             }
             else
             {
-                conf = m_configAdminService.getConfiguration( servicePid, null );
+                Configuration conf = m_configAdminService.getConfiguration( servicePid, null );
+                conf.update( prop );
             }
         }
-
-        conf.update( prop );
 
         LOGGER.info( "Register configuration [" + servicePid + "]" );
     }
