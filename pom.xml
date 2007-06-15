@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.ops4j.pax</groupId>
     <artifactId>project</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.5</version>
   </parent>
   <groupId>org.ops4j.pax</groupId>
   <artifactId>confman</artifactId>
@@ -135,4 +135,22 @@
     <system>jira</system>
     <url>http://issues.ops4j.org/jira/browse/PAXCMAGENT</url>
   </issueManagement>
+  <repositories>
+    <repository>
+      <id>ops4j-repository</id>
+      <name>The OPS4J Repository</name>
+      <url>http://repository.ops4j.org/maven2/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>central</id>
+      <name>Maven Repository Switchboard</name>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 </project>
