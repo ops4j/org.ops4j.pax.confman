@@ -143,7 +143,7 @@ final class ConfigurationAdminFacade
 
         if( !dir.exists() )
         {
-            LOGGER.info( "Directory [" + configDir + "] does not exist." );
+            LOGGER.info( "Directory [" + dir + "] does not exist." );
             return;
         }
 
