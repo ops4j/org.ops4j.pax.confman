@@ -11,6 +11,10 @@
   <packaging>pom</packaging>
   <name>Pax - ConfMan</name>
   <url>http://wiki.ops4j.org/</url>
+  <scm>
+    <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/confman</connection>
+    <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/confman</developerConnection>
+  </scm>
   <modules>
     <module>propsloader</module>
   </modules>
