@@ -12,7 +12,7 @@
 
   <packaging>bundle</packaging>
 
-  <name>OPS4J - Pax CM - Properties Loader</name>
+  <name>Pax ConfMan - Properties Loader</name>
   <description>Pax Configuration Manger Service provides a framework to read files (default property files handling is supplied) from a directory and use ConfigurationAdmin to update the service with the properties loaded.</description>
 
   <build>
