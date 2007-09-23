@@ -3,10 +3,10 @@
   <parent>
     <groupId>org.ops4j.pax</groupId>
     <artifactId>project</artifactId>
-    <version>1.6</version>
+    <version>1.9</version>
   </parent>
   <groupId>org.ops4j.pax</groupId>
-  <artifactId>confman</artifactId>
+  <artifactId>pax-confman</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OPS4J - Pax - Configuration Manager</name>
@@ -17,36 +17,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>2.1</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>2.3</version>
-      </dependency>
-      <dependency>
-        <groupId>jmock</groupId>
-        <artifactId>jmock</artifactId>
-        <version>1.0.1</version>
-      </dependency>
-      <dependency>
         <groupId>org.ops4j.pax.logging</groupId>
-        <artifactId>api</artifactId>
-        <version>0.9.4</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.ops4j.pax.logging</groupId>
-        <artifactId>log4j</artifactId>
-        <version>0.9.4</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.ops4j.pax.logging</groupId>
-        <artifactId>jcl</artifactId>
-        <version>0.9.4</version>
+        <artifactId>pax-logging-api</artifactId>
+        <version>0.9.6</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -66,74 +39,11 @@
         <version>1.0</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <groupId>wicket</groupId>
-        <artifactId>wicket</artifactId>
-        <version>1.2.3</version>
-        <exclusions>
-          <exclusion>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.beanshell</groupId>
-        <artifactId>bsh-classgen</artifactId>
-        <version>2.0b4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.beanshell</groupId>
-        <artifactId>bsh-classpath</artifactId>
-        <version>2.0b4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.beanshell</groupId>
-        <artifactId>bsh-reflect</artifactId>
-        <version>2.0b4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.ops4j.pax.wicket</groupId>
-        <artifactId>service</artifactId>
-        <version>0.3.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>wicket</groupId>
-        <artifactId>wicket-auth-roles</artifactId>
-        <version>1.2.1</version>
-      </dependency>
-      <dependency>
-        <groupId>wicket</groupId>
-        <artifactId>wicket-extensions</artifactId>
-        <version>1.2.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <issueManagement>
     <system>jira</system>
-    <url>http://issues.ops4j.org/jira/browse/PAXCMAGENT</url>
+    <url>http://issues.ops4j.org/jira/browse/CONFMAN</url>
   </issueManagement>
   <repositories>
     <repository>

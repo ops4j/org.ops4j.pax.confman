@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module relativePaths="true" type="JAVA_MODULE" version="4">
+<module version="4" relativePaths="true" type="JAVA_MODULE">
+  <component name="ModuleRootManager" />
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -11,10 +12,8 @@
     <orderEntry type="library" name="jcl-0.9.4" level="project" />
     <orderEntry type="library" name="osgi_R4_compendium-1.0" level="project" />
     <orderEntry type="library" name="ops4j-base-0.4.0" level="project" />
+    <orderEntry type="library" name="pax-logging-api-0.9.6" level="project" />
     <orderEntryProperties />
-  </component>
-  <component name="PluginUploader.UploadConfigurable">
-    <option name="_archivePath" />
   </component>
 </module>
 
