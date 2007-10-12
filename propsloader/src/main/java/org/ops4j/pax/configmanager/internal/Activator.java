@@ -22,7 +22,7 @@ public final class Activator implements BundleActivator
     private ServiceRegistration m_registration;
     private ConfigurationAdminFacade m_configAdminFacade;
 
-    public void start( BundleContext context )
+    public void start( final BundleContext context )
         throws Exception
     {
         if( LOGGER.isDebugEnabled() )
@@ -34,7 +34,21 @@ public final class Activator implements BundleActivator
 
         PropertiesFileConfigurationHandler handler = new PropertiesFileConfigurationHandler();
         m_registration = context.registerService( SERVICE_NAME, handler, new Hashtable() );
-        m_configAdminFacade = new ConfigurationAdminFacade();
+        m_configAdminFacade = new ConfigurationAdminFacade(
+            new ConfigurationAdminFacade.PropertyResolver()
+            {
+
+                /**
+                 * Resolves properties from bundle context.
+                 * @see ConfigurationAdminFacade.PropertyResolver#getProperty(String)
+                 */
+                public String getProperty( final String key )
+                {
+                    return context.getProperty( key );
+                }
+
+            }
+        );
 
         m_configTracker = new ConfigAdminServiceTracker( context, m_configAdminFacade );
         m_configTracker.open();

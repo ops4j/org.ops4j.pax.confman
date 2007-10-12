@@ -41,9 +41,14 @@ final class ConfigurationAdminFacade
     private final List<IConfigurationFileHandler> m_handlers;
     private ConfigurationAdmin m_configAdminService;
     private final ManagedFactoryPropertiesProcessor m_processor = new ManagedFactoryPropertiesProcessor();
-    
-    public ConfigurationAdminFacade()
+    /**
+     * Property resolver used to resolve properies.
+     */
+    private final PropertyResolver m_propertyResolver;
+
+    public ConfigurationAdminFacade( PropertyResolver propertyResolver )
     {
+        m_propertyResolver = propertyResolver;
         m_handlers = new ArrayList<IConfigurationFileHandler>();
     }
 
@@ -190,17 +195,17 @@ final class ConfigurationAdminFacade
         }
     }
 
-	/**
-	* Handle the extraction and registration of the configuration into the config service.
-	* If a property service.pid exists in the configuration, then that will be used to locate the service instance.
-	* To register the service with a service.pid, do something like
-	* <pre>
-	* Properties filterProp = new Properties();
-	* filterProp.put(Constants.SERVICE_PID, "my.test.service.Interface");
-	* bundleContext.registerService(ManagedService.class.getName(), myServiceInstance, filterProp);
-	* </pre>
-	* in your client code that registeres the managed service.
-	*/
+    /**
+     * Handle the extraction and registration of the configuration into the config service.
+     * If a property service.pid exists in the configuration, then that will be used to locate the service instance.
+     * To register the service with a service.pid, do something like
+     * <pre>
+     * Properties filterProp = new Properties();
+     * filterProp.put(Constants.SERVICE_PID, "my.test.service.Interface");
+     * bundleContext.registerService(ManagedService.class.getName(), myServiceInstance, filterProp);
+     * </pre>
+     * in your client code that registeres the managed service.
+     */
     private void handle( IConfigurationFileHandler handler, String configFile, File file, boolean isFactory )
         throws IOException
     {
@@ -219,7 +224,7 @@ final class ConfigurationAdminFacade
         {
             if( isFactory )
             {
-                m_processor.process( m_configAdminService, servicePid, prop );                
+                m_processor.process( m_configAdminService, servicePid, prop );
             }
             else
             {
@@ -233,7 +238,7 @@ final class ConfigurationAdminFacade
 
     private File getConfigDir()
     {
-        String configArea = System.getProperty( BUNDLES_CONFIGURATION_LOCATION );
+        String configArea = m_propertyResolver.getProperty( BUNDLES_CONFIGURATION_LOCATION );
 
         // Only run the configuration changes if the configArea is set.
         if( configArea == null )
@@ -350,5 +355,23 @@ final class ConfigurationAdminFacade
         {
             m_configAdminService = configurationAdminService;
         }
+    }
+
+    /**
+     * Resolves properties without coupling the facade to specific properties sources as System.getproperty or
+     * BundleContext.getproperty.
+     */
+    static interface PropertyResolver
+    {
+
+        /**
+         * Returns the value of the specified property.
+         *
+         * @param key the name of the requested property
+         *
+         * @return the value of the requested property, or null if not available
+         */
+        String getProperty( String key );
+
     }
 }
