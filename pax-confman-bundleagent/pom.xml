@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.ops4j.pax.confman.pax-confman-build</groupId>
+    <artifactId>pax-confman-build-root</artifactId>
+    <version>0.3.0-SNAPSHOT</version>
+    <relativePath>../</relativePath>
+  </parent>
+
+  <groupId>org.ops4j.pax.confman</groupId>
+  <artifactId>pax-confman-bundleagent</artifactId>
+  <version>0.3.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+
+  <name>OPS4J Pax ConfMan - Bundle Agent</name>
+  <description>
+    Pax Configuration Manager Service provides a framework to read files (default property files handling is
+    supplied) from a directory and use ConfigurationAdmin to update the service with the properties loaded.
+  </description>
+
+  <properties>
+    <bundle.package>org.ops4j.pax.confman.bundleagent</bundle.package>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.ops4j.pax.maven</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.ops4j.pax.construct</groupId>
+        <artifactId>maven-pax-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.ops4j.pax.swissbox</groupId>
+      <artifactId>pax-swissbox</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.confman</groupId>
+      <artifactId>pax-confman-service</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+</project>

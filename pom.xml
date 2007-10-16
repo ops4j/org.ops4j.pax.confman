@@ -33,6 +33,8 @@
 
   <modules>
     <module>propsloader</module>
+    <module>pax-confman-bundleagent</module>
+    <module>pax-confman-service</module>
   </modules>
 
   <build>
@@ -184,6 +186,11 @@
         <groupId>org.ops4j.base</groupId>
         <artifactId>ops4j-base</artifactId>
         <version>0.4.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.swissbox</groupId>
+        <artifactId>pax-swissbox</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

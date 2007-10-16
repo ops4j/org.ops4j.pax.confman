@@ -12,12 +12,12 @@ import java.util.Properties;
 import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.configmanager.IConfigurationFileHandler;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.configmanager.IConfigurationFileHandler;
 
 /**
  * {@code ConfigurationAdminFacade} has most of the code from the old {@code Activator}.

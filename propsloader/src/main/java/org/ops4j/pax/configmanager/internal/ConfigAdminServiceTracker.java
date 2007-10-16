@@ -2,11 +2,11 @@ package org.ops4j.pax.configmanager.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.lang.NullArgumentException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
+import org.ops4j.lang.NullArgumentException;
 
 /**
  * {@code ConfigAdminServiceTracker} trackes configuration admin service.

@@ -365,7 +365,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/pax-confman-build-root.iml" filepath="$PROJECT_DIR$/pax-confman-build-root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pax-confman-bundleagent/pax-confman-bundleagent.iml" filepath="$PROJECT_DIR$/pax-confman-bundleagent/pax-confman-bundleagent.iml" />
       <module fileurl="file://$PROJECT_DIR$/propsloader/pax-confman-propsloader.iml" filepath="$PROJECT_DIR$/propsloader/pax-confman-propsloader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pax-confman-service/pax-confman-service.iml" filepath="$PROJECT_DIR$/pax-confman-service/pax-confman-service.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" />
