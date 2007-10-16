@@ -18,7 +18,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-api/0.9.6/pax-logging-api-0.9.6.jar!/" />
+          <root url="jar://$M2_REPO$/org/osgi/osgi_R4_compendium/1.0/osgi_R4_compendium-1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -27,7 +27,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/osgi/osgi_R4_compendium/1.0/osgi_R4_compendium-1.0.jar!/" />
+          <root url="jar://$M2_REPO$/org/ops4j/pax/logging/pax-logging-api/0.9.6/pax-logging-api-0.9.6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -45,7 +45,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
+          <root url="jar://$M2_REPO$/org/ops4j/pax/swissbox/pax-swissbox/0.1.0-SNAPSHOT/pax-swissbox-0.1.0-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -54,7 +54,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/ops4j/pax/swissbox/pax-swissbox/0.1.0-SNAPSHOT/pax-swissbox-0.1.0-SNAPSHOT.jar!/" />
+          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

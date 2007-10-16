@@ -43,9 +43,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.ops4j.base</groupId>
-      <artifactId>ops4j-base</artifactId>
-    </dependency>
+      <groupId>org.ops4j.pax.swissbox</groupId>
+      <artifactId>pax-swissbox</artifactId>
+    </dependency>    
   </dependencies>
 
 </project>
