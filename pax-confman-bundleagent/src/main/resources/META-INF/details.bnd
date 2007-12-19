@@ -1,7 +1,0 @@
-Bundle-Activator: org.ops4j.pax.confman.bundleagent.internal.Activator
-Include-Resource=\
-src/main/resources,\
-@target/dependency/pax-swissbox.jar!/org/ops4j/lang/**,\
-@target/dependency/pax-swissbox.jar!/org/ops4j/pax/swissbox/bundle/**,\
-@target/dependency/pax-swissbox.jar!/org/ops4j/pax/swissbox/lifecycle/**,\
-@target/dependency/pax-swissbox.jar!/org/ops4j/pax/swissbox/tracker/**

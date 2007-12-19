@@ -3,14 +3,13 @@ package org.ops4j.pax.configmanager.internal;
 import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ops4j.pax.configmanager.IConfigurationFileHandler;
+import org.ops4j.pax.configmanager.internal.handlers.PropertiesFileConfigurationHandler;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.cm.ConfigurationAdmin;
-import org.ops4j.pax.configmanager.IConfigurationFileHandler;
-import org.ops4j.pax.configmanager.internal.handlers.PropertiesFileConfigurationHandler;
-import org.ops4j.pax.swissbox.tracker.ReplaceableService;
+import org.osgi.util.tracker.ServiceTracker;
 
 public final class Activator implements BundleActivator
 {
@@ -18,7 +17,7 @@ public final class Activator implements BundleActivator
     private static final Log LOGGER = LogFactory.getLog( Activator.class );
     private static final String SERVICE_NAME = IConfigurationFileHandler.class.getName();
 
-    private ReplaceableService<ConfigurationAdmin> m_confiAdminRS;
+    private ServiceTracker m_configTracker;
     private ConfigurationFileHandlerServiceTracker m_configFileTracker;
     private ServiceRegistration m_registration;
     private ConfigurationAdminFacade m_configAdminFacade;
@@ -41,7 +40,6 @@ public final class Activator implements BundleActivator
 
                 /**
                  * Resolves properties from bundle context.
-                 *
                  * @see ConfigurationAdminFacade.PropertyResolver#getProperty(String)
                  */
                 public String getProperty( final String key )
@@ -52,12 +50,8 @@ public final class Activator implements BundleActivator
             }
         );
 
-        m_confiAdminRS = new ReplaceableService<ConfigurationAdmin>(
-            context,
-            ConfigurationAdmin.class,
-            new ConfigAdminServiceListener( m_configAdminFacade )
-        );
-        m_confiAdminRS.start();
+        m_configTracker = new ConfigAdminServiceTracker( context, m_configAdminFacade );
+        m_configTracker.open();
 
         m_configFileTracker = new ConfigurationFileHandlerServiceTracker( context, m_configAdminFacade );
         m_configFileTracker.open();
@@ -79,11 +73,8 @@ public final class Activator implements BundleActivator
         m_configFileTracker.close();
         m_configFileTracker = null;
 
-        if( m_confiAdminRS != null )
-        {
-            m_confiAdminRS.stop();
-            m_confiAdminRS = null;
-        }
+        m_configTracker.close();
+        m_configTracker = null;
 
         m_configAdminFacade.dispose();
         m_configAdminFacade = null;
