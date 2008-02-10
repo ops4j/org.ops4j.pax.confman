@@ -1,70 +1,119 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.ops4j.pax</groupId>
-    <artifactId>project</artifactId>
-    <version>1.9</version>
+    <artifactId>master</artifactId>
+    <version>1.10</version>
   </parent>
-  <groupId>org.ops4j.pax.confman</groupId>
-  <artifactId>pax-confman</artifactId>
+
+  <groupId>org.ops4j.pax</groupId>
+  <artifactId>confman</artifactId>
   <version>0.3.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Pax - ConfMan</name>
-  <url>http://wiki.ops4j.org/</url>
+
+  <name>OPS4J Pax ConfMan</name>
+  <description>
+    OPS4J Pax ConfMan - Configuration Agents.
+  </description>
+
   <scm>
     <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/confman</connection>
     <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/confman</developerConnection>
   </scm>
-  <modules>
-    <module>propsloader</module>
-  </modules>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.ops4j.pax.logging</groupId>
-        <artifactId>pax-logging-api</artifactId>
-        <version>0.9.6</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.ops4j.base</groupId>
-        <artifactId>ops4j-base</artifactId>
-        <version>0.4.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>osgi_R4_compendium</artifactId>
-        <version>1.0</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>osgi_R4_core</artifactId>
-        <version>1.0</version>
-        <scope>provided</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+
   <issueManagement>
     <system>jira</system>
     <url>http://issues.ops4j.org/jira/browse/CONFMAN</url>
   </issueManagement>
+
+  <modules>
+    <module>propsloader</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>retrotranslator-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>translate-project</goal>
+            </goals>
+            <configuration>
+              <classifier>jdk14</classifier>
+              <embed>jdk14</embed>
+              <attach>true</attach>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>1.2.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <_include>-osgi.bnd</_include>
+            </instructions>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <properties>
+    <dependency.base.version>0.5.0</dependency.base.version>
+    <dependency.swissbox.version>0.1.0</dependency.swissbox.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- OPS4J Base -->
+      <dependency>
+        <groupId>org.ops4j.base</groupId>
+        <artifactId>ops4j-base-lang</artifactId>
+        <version>${dependency.base.version}</version>
+      </dependency>
+      <!-- OPS4J Pax Swissbox -->
+      <dependency>
+        <groupId>org.ops4j.pax.swissbox</groupId>
+        <artifactId>pax-swissbox-optional-jcl</artifactId>
+        <version>${dependency.swissbox.version}</version>
+      </dependency>
+      <!-- OSGi Alliance -->
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>4.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <version>4.0.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <repositories>
     <repository>
-      <id>ops4j-repository</id>
-      <name>The OPS4J Repository</name>
+      <id>ops4j.releases</id>
+      <name>The OPS4J Release Repository</name>
       <url>http://repository.ops4j.org/maven2/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository>
-      <id>central</id>
-      <name>Maven Repository Switchboard</name>
-      <url>http://repo1.maven.org/maven2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
   </repositories>
+
 </project>

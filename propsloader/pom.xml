@@ -1,75 +1,70 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <artifactId>pax-confman</artifactId>
-    <groupId>org.ops4j.pax.confman</groupId>
+    <groupId>org.ops4j.pax</groupId>
+    <artifactId>confman</artifactId>
     <version>0.3.0-SNAPSHOT</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
   <groupId>org.ops4j.pax.confman</groupId>
   <artifactId>pax-confman-propsloader</artifactId>
   <version>0.3.0-SNAPSHOT</version>
-
   <packaging>bundle</packaging>
 
-  <name>Pax ConfMan - Properties Loader</name>
-  <description>Pax Configuration Manger Service provides a framework to read files (default property files handling is supplied) from a directory and use ConfigurationAdmin to update the service with the properties loaded.</description>
+  <name>OPS4J Pax ConfMan - Properties Loader</name>
+  <description>
+    Pax Configuration Manger Service provides a framework to read files (default property files handling is supplied)
+    from a directory and use ConfigurationAdmin to update the service with the properties loaded.
+  </description>
+
+  <properties>
+    <bundle.symbolicName>org.ops4j.pax.configmanager</bundle.symbolicName>
+    <bundle.namespace>org.ops4j.pax.configmanager</bundle.namespace>
+  </properties>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.ops4j.pax.maven</groupId>
+        <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.ops4j.pax.construct</groupId>
-        <artifactId>maven-pax-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>dependency-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.ops4j.base</groupId>
-                  <artifactId>ops4j-base</artifactId>
-                </artifactItem>
-              </artifactItems>
-              <outputDirectory>${project.build.directory}/classes</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
 
   <dependencies>
-    <dependency>
-      <groupId>org.ops4j.pax.logging</groupId>
-      <artifactId>pax-logging-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_compendium</artifactId>
-      <scope>provided</scope>
-    </dependency>
+
+    <!-- Embeded dependencies (not transitive) -->
     <dependency>
       <groupId>org.ops4j.base</groupId>
-      <artifactId>ops4j-base</artifactId>
+      <artifactId>ops4j-base-lang</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.swissbox</groupId>
+      <artifactId>pax-swissbox-optional-jcl</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Provided dependencies (not transitive) -->
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
-      <artifactId>osgi_R4_core</artifactId>
+      <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
     </dependency>
+
   </dependencies>
 
 </project>
