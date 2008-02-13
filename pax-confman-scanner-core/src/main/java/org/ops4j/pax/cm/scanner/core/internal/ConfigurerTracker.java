@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.scanner.core;
+package org.ops4j.pax.cm.scanner.core.internal;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;

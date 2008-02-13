@@ -18,6 +18,9 @@
   <packaging>bundle</packaging>
 
   <name>OPS4J Pax ConfMan - Adaptor - Basic</name>
+  <description>
+    OPS4j Pax Configuration Manager basic dictionary adapters.
+  </description>
 
   <properties>
     <bundle.symbolicName>org.ops4j.pax.cm.adapter.basic</bundle.symbolicName>

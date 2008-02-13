@@ -19,12 +19,12 @@
 
   <name>OPS4J Pax ConfMan - Scanner - Core</name>
   <description>
-    Shared between scanners.
+    OPS4J Pax Configuration Manager scanner related shared utilities.
   </description>
 
   <dependencies>
 
-    <!-- Compile dependnecies (transitive) -->
+    <!-- Compile dependencies (transitive) -->
     <dependency>
       <groupId>org.ops4j.base</groupId>
       <artifactId>ops4j-base-lang</artifactId>
@@ -42,16 +42,10 @@
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.confman</groupId>
-      <artifactId>pax-confman-api</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.ops4j.pax.confman</groupId>
       <artifactId>pax-confman-domain</artifactId>
       <version>0.3.0-SNAPSHOT</version>
       <scope>compile</scope>
-    </dependency>    
+    </dependency>
 
     <!-- Provided dependencies (not transitive) -->
     <dependency>
@@ -62,6 +56,12 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.compendium</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.confman</groupId>
+      <artifactId>pax-confman-api</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 

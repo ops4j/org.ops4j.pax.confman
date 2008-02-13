@@ -15,8 +15,25 @@
   <groupId>org.ops4j.pax.confman</groupId>
   <artifactId>pax-confman-domain</artifactId>
   <version>0.3.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging>
 
   <name>OPS4J Pax ConfMan - Domain</name>
+  <description>
+    OPS4j Pax Configuration Manager domain.
+  </description>
+
+  <properties>
+    <bundle.symbolicName>org.ops4j.pax.cm.domain</bundle.symbolicName>
+    <bundle.namespace>org.ops4j.pax.cm.domain</bundle.namespace>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>  
 
 </project>

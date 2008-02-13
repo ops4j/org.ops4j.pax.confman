@@ -8,16 +8,12 @@ Bundle-SymbolicName:\
   ${bundle.symbolicName}
 
 Import-Package:\
-  org.ops4j.pax.cm.configurer; version="${pom.version}",\
+  org.ops4j.pax.cm.api; version="${pom.version}",\
   org.apache.commons.logging; version="1.0.4"; resolution:=optional,\
   org.osgi.framework; version="[1.0.0,2.0.0)",\
   org.osgi.util.tracker;version="[1.0.0,2.0.0)"
 
-Export-Package:\
-  !*
-
-Private-Package:\
-  ${bundle.namespace}.internal.*
+Export-Package:
 
 Private-Package:\
   ${bundle.namespace}.internal.*
@@ -27,7 +23,9 @@ Embed-Dependency:\
 
 Embed-Transitive: true
 
+# TODO when maven bundle plugin > 1.2.0 is out remove Export-Package entry
 -removeheaders:\
+  Export-Package,\
   Include-Resource,\
   Private-Package,\
   Embed-Dependency,\

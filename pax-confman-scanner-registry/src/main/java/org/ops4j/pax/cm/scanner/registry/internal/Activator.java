@@ -21,8 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.ops4j.pax.cm.scanner.core.ConfigurerTracker;
-import org.ops4j.pax.cm.scanner.core.ConfigurationQueue;
+import org.ops4j.pax.cm.scanner.core.internal.ConfigurerTracker;
+import org.ops4j.pax.cm.scanner.core.internal.ConfigurationQueue;
 
 /**
  * Activator for RegistryScanner.

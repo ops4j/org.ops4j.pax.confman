@@ -1,0 +1,13 @@
+Bundle-Version>:\
+  ${pom.version}
+
+Bundle-SymbolicName:\
+  ${bundle.symbolicName}
+
+Import-Package:\
+  ${bundle.namespace}.*; version="${pom.version}",\
+  org.qi4j.*; version="${pom.version}"
+
+Export-Package:\
+  ${bundle.namespace}.*; version="${pom.version}",\
+  org.qi4j.*; version="${pom.version}"

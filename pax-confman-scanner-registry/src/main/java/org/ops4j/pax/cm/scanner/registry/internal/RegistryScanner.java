@@ -28,7 +28,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.domain.builder.ConfigurationSourceCompositeBuilder;
-import org.ops4j.pax.cm.scanner.core.ConfigurationQueue;
+import org.ops4j.pax.cm.scanner.core.internal.ConfigurationQueue;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
