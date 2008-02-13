@@ -26,7 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
-import org.ops4j.pax.cm.composite.ConfigurationSourceComposite;
+import org.ops4j.pax.cm.domain.composite.ConfigurationSourceComposite;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**

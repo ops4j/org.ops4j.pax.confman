@@ -27,7 +27,7 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.builder.ConfigurationSourceCompositeBuilder;
+import org.ops4j.pax.cm.domain.builder.ConfigurationSourceCompositeBuilder;
 import org.ops4j.pax.cm.scanner.core.ConfigurationQueue;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;

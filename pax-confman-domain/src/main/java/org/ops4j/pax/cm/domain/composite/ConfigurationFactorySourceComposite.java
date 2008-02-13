@@ -15,22 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.composite;
+package org.ops4j.pax.cm.domain.composite;
 
-import org.ops4j.pax.cm.domain.Pid;
-import org.ops4j.pax.cm.domain.Location;
-import org.ops4j.pax.cm.domain.Metadata;
-import org.ops4j.pax.cm.domain.PropertiesSource;
-import org.ops4j.pax.cm.domain.ConfigurationProperties;
+import org.ops4j.pax.cm.domain.FactoryPid;
 
 /**
- * Configuration target.
+ * Configuration factory source.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public interface ConfigurationTargetComposite
-    extends Pid, Location, ConfigurationProperties
+public interface ConfigurationFactorySourceComposite
+    extends ConfigurationSourceComposite, FactoryPid
 {
 
 }

@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.builder;
+package org.ops4j.pax.cm.domain.builder;
 
 import java.util.Dictionary;
 import org.qi4j.property.ReadOnlyPropertyMixin;
-import org.ops4j.pax.cm.composite.ConfigurationSourceComposite;
-import org.ops4j.pax.cm.mixin.ConfigurationSourceCompositeMixin;
+import org.ops4j.pax.cm.domain.composite.ConfigurationSourceComposite;
+import org.ops4j.pax.cm.domain.mixin.ConfigurationSourceCompositeMixin;
 
 /**
  * Bundle location.

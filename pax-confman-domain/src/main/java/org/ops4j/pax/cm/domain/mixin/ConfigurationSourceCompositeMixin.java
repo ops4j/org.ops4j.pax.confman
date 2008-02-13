@@ -1,8 +1,8 @@
-package org.ops4j.pax.cm.mixin;
+package org.ops4j.pax.cm.domain.mixin;
 
 import java.util.Dictionary;
 import org.qi4j.property.Property;
-import org.ops4j.pax.cm.composite.ConfigurationSourceComposite;
+import org.ops4j.pax.cm.domain.composite.ConfigurationSourceComposite;
 
 /**
  * Created by IntelliJ IDEA.
