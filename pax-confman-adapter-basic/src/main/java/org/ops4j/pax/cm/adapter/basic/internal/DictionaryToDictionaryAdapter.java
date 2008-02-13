@@ -21,8 +21,8 @@ import java.util.Dictionary;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.configurer.DictionaryAdapter;
-import org.ops4j.pax.cm.configurer.Specification;
+import org.ops4j.pax.cm.api.DictionaryAdapter;
+import org.ops4j.pax.cm.api.Specification;
 
 /**
  * Adapts a dictionary to a dictionary (quite easy).
@@ -82,7 +82,7 @@ public class DictionaryToDictionaryAdapter
     /**
      * Delegates to specification.
      *
-     * @see org.ops4j.pax.cm.configurer.DictionaryAdapter#isSatisfiedBy(Dictionary)
+     * @see org.ops4j.pax.cm.api.DictionaryAdapter#isSatisfiedBy(Dictionary)
      */
     public boolean isSatisfiedBy( final Dictionary metadata )
     {

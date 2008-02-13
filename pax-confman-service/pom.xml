@@ -13,15 +13,15 @@
   </parent>
 
   <groupId>org.ops4j.pax.confman</groupId>
-  <artifactId>pax-confman-adapter-basic</artifactId>
+  <artifactId>pax-confman-service</artifactId>
   <version>0.3.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>OPS4J Pax ConfMan - Adaptor - Basic</name>
+  <name>OPS4J Pax ConfMan - Service</name>
 
   <properties>
-    <bundle.symbolicName>org.ops4j.pax.cm.adapter.basic</bundle.symbolicName>
-    <bundle.namespace>org.ops4j.pax.cm.adapter.basic</bundle.namespace>
+    <bundle.symbolicName>org.ops4j.pax.cm.service</bundle.symbolicName>
+    <bundle.namespace>org.ops4j.pax.cm.service</bundle.namespace>
   </properties>
 
   <build>
@@ -48,6 +48,19 @@
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.swissbox</groupId>
+      <artifactId>pax-swissbox-lifecycle</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.confman</groupId>
+      <artifactId>pax-confman-api</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
 
     <!-- Provided dependencies (not transitive) -->
     <dependency>
@@ -58,12 +71,6 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.compendium</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.ops4j.pax.confman</groupId>
-      <artifactId>pax-confman-api</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 

@@ -33,8 +33,11 @@
   </issueManagement>
 
   <modules>
-    <module>pax-confman-configurer</module>
+    <module>pax-confman-domain</module>
+    <module>pax-confman-api</module>
+    <module>pax-confman-service</module>
     <module>pax-confman-adapter-basic</module>
+    <module>pax-confman-scanner-core</module>
     <module>pax-confman-scanner-registry</module>
     <module>propsloader</module>
     <module>samples</module>

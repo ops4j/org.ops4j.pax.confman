@@ -21,7 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.ops4j.pax.cm.configurer.ConfigurerTracker;
+import org.ops4j.pax.cm.scanner.core.ConfigurerTracker;
+import org.ops4j.pax.cm.scanner.core.ConfigurationQueue;
 
 /**
  * Activator for RegistryScanner.
@@ -42,6 +43,10 @@ public class Activator
      */
     private ConfigurerTracker m_configurerTracker;
     /**
+     * Configuration Queue.
+     */
+    private ConfigurationQueue m_queue;
+    /**
      * Registry scanner.
      */
     private RegistryScanner m_registryScanner;
@@ -52,10 +57,13 @@ public class Activator
     public void start( final BundleContext bundleContext )
     {
         LOG.debug( "Starting OPS4J Pax ConfMan service registry tracker" );
-        m_registryScanner = new RegistryScanner( bundleContext );
-        m_configurerTracker = new ConfigurerTracker( bundleContext, m_registryScanner );
+
+        m_queue = new ConfigurationQueue();
+        m_configurerTracker = new ConfigurerTracker( bundleContext, m_queue );
+        m_registryScanner = new RegistryScanner( bundleContext, m_queue );
 
         m_configurerTracker.start();
+        m_queue.start();
         m_registryScanner.start();
     }
 
@@ -65,15 +73,21 @@ public class Activator
     public void stop( final BundleContext bundleContext )
     {
         LOG.debug( "Stopping OPS4J Pax ConfMan service registry tracker" );
+
+        if( m_registryScanner != null )
+        {
+            m_registryScanner.stop();
+            m_registryScanner = null;
+        }
         if( m_configurerTracker != null )
         {
             m_configurerTracker.stop();
             m_configurerTracker = null;
         }
-        if( m_registryScanner != null )
+        if( m_queue != null )
         {
-            m_registryScanner.stop();
-            m_registryScanner = null;
+            m_queue.stop();
+            m_queue = null;
         }
     }
 

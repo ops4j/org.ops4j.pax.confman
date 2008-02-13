@@ -24,8 +24,8 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
-import org.ops4j.pax.cm.configurer.DictionaryAdapter;
-import org.ops4j.pax.cm.configurer.Metadata;
+import org.ops4j.pax.cm.api.DictionaryAdapter;
+import org.ops4j.pax.cm.api.MetadataConstants;
 
 /**
  * Registers basic adapters services.
@@ -86,7 +86,7 @@ public class Activator
         {
             final StringBuilder builder = new StringBuilder()
                 .append( "(" )
-                .append( Metadata.OBJECTCLASS ).append( "=" ).append( objectClass )
+                .append( MetadataConstants.OBJECTCLASS ).append( "=" ).append( objectClass )
                 .append( ")" );
 
             return bundleContext.createFilter( builder.toString() );

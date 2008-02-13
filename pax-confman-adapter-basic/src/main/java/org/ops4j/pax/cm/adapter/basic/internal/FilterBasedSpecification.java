@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.adapter.basic.internal;
 import java.util.Dictionary;
 import org.osgi.framework.Filter;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.configurer.Specification;
+import org.ops4j.pax.cm.api.Specification;
 
 /**
  * Specification that is statisfied by matching metadata agains an OSGi filter.

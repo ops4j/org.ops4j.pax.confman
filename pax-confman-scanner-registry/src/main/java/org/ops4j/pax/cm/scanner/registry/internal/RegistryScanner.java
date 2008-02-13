@@ -27,9 +27,9 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.configurer.Configurer;
-import org.ops4j.pax.cm.configurer.ConfigurerSetter;
-import org.ops4j.pax.cm.configurer.Metadata;
+import org.ops4j.pax.cm.builder.ConfigurationSourceCompositeBuilder;
+import org.ops4j.pax.cm.scanner.core.ConfigurationQueue;
+import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
@@ -40,7 +40,6 @@ import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
  */
 public class RegistryScanner
     extends AbstractLifecycle
-    implements ConfigurerSetter
 {
 
     /**
@@ -52,21 +51,26 @@ public class RegistryScanner
      */
     private final ServiceTracker m_registryTracker;
     /**
-     * Configurer in use.
+     * Configuration buffer.
      */
-    private Configurer m_configurer;
+    private final ConfigurationQueue m_configurationQueue;
 
     /**
      * Creates a new registry scanner.
      *
-     * @param bundleContext bundle context; cannot be null
+     * @param bundleContext      bundle context; cannot be null
+     * @param configurationQueue configurations buffer; canot be null
      *
      * @throws NullArgumentException - If bundle context is null
+     *                               - If configurations buffer is null
      */
-    public RegistryScanner( final BundleContext bundleContext )
+    public RegistryScanner( final BundleContext bundleContext,
+                            final ConfigurationQueue configurationQueue )
     {
         NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
+        NullArgumentException.validateNotNull( configurationQueue, "Configurations buffer" );
 
+        m_configurationQueue = configurationQueue;
         m_registryTracker = new ServiceTracker( bundleContext, createFilter( bundleContext ), null )
         {
             @Override
@@ -74,17 +78,28 @@ public class RegistryScanner
             {
                 Object service = super.addingService( serviceReference );
                 LOG.trace( "Found possible configuration: " + service );
-                // TODO what shall be done if configurere is null. queue configurations?
-                if( m_configurer != null )
+                // create metadata
+                final Dictionary metadata = createMetdata( serviceReference );
+                LOG.trace( "Configuration metadata: " + metadata );
+                // find out the pid and configure
+                final String pid = getMetdataProperty( metadata, MetadataConstants.CONFIG_PID );
+                if( pid != null )
                 {
-                    final Dictionary metadata = createMetdata( serviceReference );
-                    LOG.trace( "Configuration metadata: " + metadata );
-                    final String pid = getMetdataProperty( metadata, Metadata.CONFIG_PID );
-                    if( pid != null )
+                    final String factoryPid = getMetdataProperty( metadata, MetadataConstants.CONFIG_FACTORY_PID );
+                    final String location = getMetdataProperty( metadata, MetadataConstants.CONFIG_BUNDLELOCATION );
+                    if( factoryPid == null )
                     {
-                        final String factoryPid = getMetdataProperty( metadata, Metadata.CONFIG_FACTORY_PID );
-                        final String location = getMetdataProperty( metadata, Metadata.CONFIG_BUNDLELOCATION );
-                        m_configurer.configure( pid, location, service, metadata );
+                        m_configurationQueue.configure(
+                            new ConfigurationSourceCompositeBuilder()
+                                .indentifiedBy( pid )
+                                .with( location )
+                                .taggedWith( metadata )
+                                .from( service )
+                                .newInstance()
+                        );
+                    }
+                    else
+                    {
                         //TODO factory configuration
                     }
                 }
@@ -145,7 +160,7 @@ public class RegistryScanner
     {
         final StringBuilder filterBuilder = new StringBuilder()
             .append( "(" )
-            .append( Metadata.CONFIG_PID ).append( "=*" )
+            .append( MetadataConstants.CONFIG_PID ).append( "=*" )
             .append( ")" );
         try
         {
@@ -157,16 +172,6 @@ public class RegistryScanner
             LOG.trace( "Internal error: " + ignore.getMessage() );
             throw new IllegalStateException( "Internal error", ignore );
         }
-    }
-
-    /**
-     * Setter.
-     *
-     * @param configurer to be set
-     */
-    public void setConfigurer( final Configurer configurer )
-    {
-        m_configurer = configurer;
     }
 
     /**
