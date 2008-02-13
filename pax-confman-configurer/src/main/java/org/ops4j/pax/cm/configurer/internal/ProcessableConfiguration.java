@@ -7,11 +7,10 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: alindreghiciu
- * Date: Feb 12, 2008
- * Time: 3:27:56 PM
- * To change this template use File | Settings | File Templates.
+ * TODO add JavaDoc
+ *
+ * @author Alin Dreghiciu
+ * @since 0.3.0, February 12, 2008
  */
 class ProcessableConfiguration
     implements Processable
@@ -71,4 +70,14 @@ class ProcessableConfiguration
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append( this.getClass().getSimpleName() )
+            .append( "{" )
+            .append( "pid=" ).append( m_pid )
+            .append( "}" )
+            .toString();
+    }
 }
