@@ -27,9 +27,11 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.domain.builder.ConfigurationSourceCompositeBuilder;
-import org.ops4j.pax.cm.scanner.core.internal.ConfigurationQueue;
 import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.domain.ConfigurationSource;
+import org.ops4j.pax.cm.domain.Pid;
+import org.ops4j.pax.cm.domain.PropertiesSource;
+import org.ops4j.pax.cm.scanner.core.internal.ConfigurationQueue;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
@@ -90,12 +92,10 @@ public class RegistryScanner
                     if( factoryPid == null )
                     {
                         m_configurationQueue.configure(
-                            new ConfigurationSourceCompositeBuilder()
-                                .indentifiedBy( pid )
-                                .with( location )
-                                .taggedWith( metadata )
-                                .from( service )
-                                .newInstance()
+                            new ConfigurationSource(
+                                new Pid( pid, location ),
+                                new PropertiesSource( service, metadata )
+                            )
                         );
                     }
                     else

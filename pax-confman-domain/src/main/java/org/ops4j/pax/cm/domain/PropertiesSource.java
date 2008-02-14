@@ -17,22 +17,70 @@
  */
 package org.ops4j.pax.cm.domain;
 
-import org.qi4j.property.Property;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import org.ops4j.lang.NullArgumentException;
 
 /**
- * Configuration properties source object.
+ * Configuration properties source model.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 12, 2008
+ * @since 0.3.0, February 14, 2008
  */
-public interface PropertiesSource
+public class PropertiesSource
 {
+
+    /**
+     * Properties source object
+     */
+    private final Object m_source;
+    /**
+     * Properties source related metadata.
+     */
+    private final Dictionary m_metadata;
+
+    /**
+     * Create a new configuration properties source model.
+     *
+     * @param source   properties source object
+     * @param metadata properties source related metadata; optional
+     *
+     * @throws org.ops4j.lang.NullArgumentException
+     *          - If source is null
+     */
+    public PropertiesSource( final Object source, final Dictionary metadata )
+    {
+        NullArgumentException.validateNotNull( source, "Properties source" );
+
+        this.m_source = source;
+        if( metadata == null )
+        {
+            m_metadata = new Hashtable();
+        }
+        else
+        {
+            m_metadata = metadata;
+        }
+    }
 
     /**
      * Getter.
      *
-     * @return configuration properties source object
+     * @return properties source related metadata
      */
-    Property<Object> configurationSource();
+    public Dictionary getMetadata()
+    {
+        return m_metadata;
+    }
 
+    /**
+     * Getter.
+     *
+     * @return configuration properties source
+     */
+    public Object getSource()
+    {
+        return m_source;
+    }
+    
 }

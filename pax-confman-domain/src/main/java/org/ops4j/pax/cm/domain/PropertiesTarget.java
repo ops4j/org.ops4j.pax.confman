@@ -18,22 +18,39 @@
 package org.ops4j.pax.cm.domain;
 
 import java.util.Dictionary;
-import org.qi4j.property.Property;
 
 /**
- * Configuration properties.
+ * Configuration properties target model.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 12, 2008
+ * @since 0.3.0, February 14, 2008
  */
-public interface ConfigurationProperties
+public class PropertiesTarget
 {
+
+    /**
+     * Properties source related metadata.
+     */
+    private final Dictionary m_properties;
+
+    /**
+     * Create a new configuration properties target model.
+     *
+     * @param properties  configuration properties
+     */
+    public PropertiesTarget( final Dictionary properties )
+    {
+            m_properties = properties;
+    }
 
     /**
      * Getter.
      *
      * @return configuration properties
      */
-    Property<Dictionary> configurationProperties();
+    public Dictionary getProperties()
+    {
+        return m_properties;
+    }
 
 }

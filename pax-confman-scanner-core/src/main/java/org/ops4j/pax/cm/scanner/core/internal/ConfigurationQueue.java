@@ -26,7 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
-import org.ops4j.pax.cm.domain.composite.ConfigurationSourceComposite;
+import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
@@ -127,7 +127,7 @@ public class ConfigurationQueue
      *
      * @see Configurer#configure(String, String, java.util.Dictionary, Object)
      */
-    public void configure( final ConfigurationSourceComposite configurationSource )
+    public void configure( final ConfigurationSource configurationSource )
     {
         m_queue.add( new ConfigureCommand( configurationSource ) );
     }
@@ -196,14 +196,14 @@ public class ConfigurationQueue
         /**
          * Configuration source.
          */
-        private final ConfigurationSourceComposite m_configurationSource;
+        private final ConfigurationSource m_configurationSource;
 
         /**
          * Create a new configuration command.
          *
          * @param configurationSource configuration source
          */
-        ConfigureCommand( final ConfigurationSourceComposite configurationSource )
+        ConfigureCommand( final ConfigurationSource configurationSource )
         {
             NullArgumentException.validateNotNull( configurationSource, "Configuration source" );
             m_configurationSource = configurationSource;
@@ -215,10 +215,10 @@ public class ConfigurationQueue
         public void run()
         {
             m_configurer.configure(
-                m_configurationSource.pid().get(),
-                m_configurationSource.location().get(),
-                m_configurationSource.metadata().get(),
-                m_configurationSource.configurationSource().get()
+                m_configurationSource.getPid().getPid(),
+                m_configurationSource.getPid().getLocation(),
+                m_configurationSource.getSource().getMetadata(),
+                m_configurationSource.getSource().getSource()
             );
         }
 

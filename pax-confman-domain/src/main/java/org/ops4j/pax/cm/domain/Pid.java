@@ -17,22 +17,60 @@
  */
 package org.ops4j.pax.cm.domain;
 
-import org.qi4j.property.Property;
+import org.ops4j.lang.NullArgumentException;
 
 /**
- * Persitent identifier.
+ * Persistent identifier model.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 12, 2008
+ * @since 0.3.0, February 14, 2008
  */
-public interface Pid
+public class Pid
 {
+
+    /**
+     * Persistent identifier.
+     */
+    private final String m_pid;
+    /**
+     * Bundle location.
+     */
+    private final String m_location;
+
+    /**
+     * Create a new persistent identifier model.
+     *
+     * @param pid      persistent identifier
+     * @param location bundle location; optional
+     *
+     * @throws NullArgumentException - If pid is null or empty
+     */
+    public Pid( final String pid, final String location )
+    {
+        NullArgumentException.validateNotEmpty( pid, true, "Persistent identifier" );
+
+        this.m_pid = pid;
+        this.m_location = location;
+    }
 
     /**
      * Getter.
      *
      * @return persistent identifier
      */
-    Property<String> pid();
+    public String getPid()
+    {
+        return m_pid;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return bundle location
+     */
+    public String getLocation()
+    {
+        return m_location;
+    }
 
 }
