@@ -17,6 +17,8 @@
  */
 package org.ops4j.pax.cm.scanner.registry.internal;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.apache.commons.logging.Log;
@@ -145,7 +147,9 @@ public class RegistryScanner
         {
             metadata.put( key, serviceReference.getProperty( key ) );
         }
-        return metadata;
+        // add extra information
+        metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.registry" );
+         return metadata;
     }
 
     /**

@@ -18,12 +18,14 @@
 package org.ops4j.pax.cm.service.internal;
 
 import java.util.Dictionary;
+import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.DictionaryAdapter;
 import org.ops4j.pax.cm.api.DictionaryAdapterRepository;
+import org.ops4j.pax.cm.api.MetadataConstants;
 
 /**
  * TODO add JavaDoc
@@ -76,7 +78,9 @@ public class ConfigurerImpl
             LOG.trace( "Adapted configuguration properties: " + adapted );
             if( adapted != null )
             {
-                m_processingQueue.add( new ProcessableConfiguration( pid, location, adapted ) );
+                m_processingQueue.add(
+                    new ProcessableConfiguration( pid, location, copyInfoMetadata( metadata, adapted ) )
+                );
             }
         }
         else
@@ -85,5 +89,21 @@ public class ConfigurerImpl
         }
     }
 
+    /**
+     * Copy all info metadata to configuration properties.
+     *
+     * @param metadata metadata containing info properties
+     * @param adapted  destination
+     *
+     * @return dictionary containing the info prepertties copied from metadata.
+     */
+    private static Dictionary copyInfoMetadata( final Dictionary metadata,
+                                                final Dictionary adapted )
+    {
+        final Dictionary result = new Hashtable();
+        DictionaryUtils.copyDictionary( adapted, result );
+        DictionaryUtils.copyDictionary( MetadataConstants.INFO_PREFIX.replaceAll( ".", "\\." ) + ".*", metadata, result );
+        return result;
+    }
 
 }

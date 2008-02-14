@@ -18,6 +18,7 @@
 package org.ops4j.pax.cm.service.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -44,13 +45,21 @@ class DictionaryAdapterRepositoryImpl
 
     DictionaryAdapterRepositoryImpl()
     {
-        m_adapters = new ArrayList<DictionaryAdapter>();
+        m_adapters = Collections.synchronizedList( new ArrayList<DictionaryAdapter>() );
     }
 
     public void register( final DictionaryAdapter adapter )
     {
         LOG.trace( "Registered adapters: " + adapter );
-        m_adapters.add( adapter );
+        m_adapters.add(
+            new CleanupDictionaryAdapterWrapper(
+                new InfoDictionaryAdapterWrapper(
+                    new AdaptorTypeInfoDictionaryAdapterWrapper(
+                        adapter
+                    )
+                )
+            )
+        );
     }
 
     public void unregister( final DictionaryAdapter adapter )
@@ -61,11 +70,14 @@ class DictionaryAdapterRepositoryImpl
 
     public DictionaryAdapter find( final Dictionary metadata )
     {
-        for( DictionaryAdapter adapter : m_adapters )
+        synchronized( m_adapters )
         {
-            if( adapter.isSatisfiedBy( metadata ) )
+            for( DictionaryAdapter adapter : m_adapters )
             {
-                return adapter;
+                if( adapter.isSatisfiedBy( metadata ) )
+                {
+                    return adapter;
+                }
             }
         }
         return null;
