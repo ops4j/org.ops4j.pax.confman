@@ -73,4 +73,16 @@ public class Pid
         return m_location;
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder( )
+            .append( this.getClass().getSimpleName() )
+            .append( "{" )
+            .append( "pid=" ).append( m_pid )
+            .append( ",location=" ).append( m_location )
+            .append( "}" )
+            .toString();
+    }    
+
 }

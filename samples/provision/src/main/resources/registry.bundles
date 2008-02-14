@@ -1,5 +1,5 @@
 # Pax ConfMan bundles
-mvn:org.ops4j.pax.confman/pax-confman-configurer/0.3.0-SNAPSHOT
+mvn:org.ops4j.pax.confman/pax-confman-service/0.3.0-SNAPSHOT
 mvn:org.ops4j.pax.confman/pax-confman-adapter-basic/0.3.0-SNAPSHOT
 mvn:org.ops4j.pax.confman/pax-confman-scanner-registry/0.3.0-SNAPSHOT
 

@@ -58,4 +58,15 @@ public class ConfigurationSource
         return m_source;
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder( )
+            .append( this.getClass().getSimpleName() )
+            .append( "{" )
+            .append( "pid=" ).append( m_pid )
+            .append( "}" )
+            .toString();
+    }
+    
 }
