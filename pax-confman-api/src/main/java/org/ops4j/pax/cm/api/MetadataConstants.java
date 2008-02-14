@@ -33,10 +33,24 @@ public interface MetadataConstants
     String CONFIG_PID = "config." + Constants.SERVICE_PID;
     String CONFIG_FACTORY_PID = "config." + ConfigurationAdmin.SERVICE_FACTORYPID;
     String CONFIG_BUNDLELOCATION = "config." + ConfigurationAdmin.SERVICE_BUNDLELOCATION;
+
+    /**
+     * Service PID (service.pid) as regular expression.
+     */
+    String SERVICE_PID_AS_REGEX = Constants.SERVICE_PID.replaceAll( "\\.", "\\\\." ) + ".*";
+    /**
+     * Service factory PID (service.facpid) as regular expression.
+     */
+    String SERVICE_FACTORYPID_AS_REGEX = ConfigurationAdmin.SERVICE_FACTORYPID.replaceAll( "\\.", "\\\\." ) + ".*";
+
     /**
      * Prefix for information properties.
      */
     String INFO_PREFIX = "org.ops4j.pax.cm.info";
+    /**
+     * Prefix for information properties as a regular expression.
+     */
+    String INFO_PREFIX_AS_REGEX = INFO_PREFIX.replaceAll( "\\.", "\\\\." ) + ".*";
     /**
      * OPS4j Pax Configuration Manager Agent name.
      * Optional, provided as information.
@@ -46,7 +60,7 @@ public interface MetadataConstants
      * OPS4j Pax Configuration Manager Agent adaptor type.
      * Optional, provided as information.
      */
-    String INFO_ADAPTOR = INFO_PREFIX + ".adaptor";    
+    String INFO_ADAPTOR = INFO_PREFIX + ".adaptor";
     /**
      * OPS4j Pax Configuration Manager Agent human readable timestamp.
      * Optional, provided as information.

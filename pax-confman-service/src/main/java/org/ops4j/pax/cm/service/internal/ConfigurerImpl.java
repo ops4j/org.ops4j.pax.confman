@@ -21,6 +21,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.Constants;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.DictionaryAdapter;
@@ -63,23 +64,29 @@ public class ConfigurerImpl
 
     public void configure( final String pid,
                            final String location,
-                           final Dictionary metadata, final Object configuration
+                           final Dictionary metadata,
+                           final Object configuration
     )
     {
         LOG.trace( "Configuring pid: " + pid );
         LOG.trace( "Metadata: " + metadata );
         LOG.trace( "Properties: " + configuration );
 
-        final DictionaryAdapter adapter = m_dictionaryAdapterRepository.find( metadata );
+        // make a copy of metadata to avoid readonly dictionaries (if there is such a case?)
+        final Dictionary writableMetadata = DictionaryUtils.copy( metadata, new Hashtable() );
+        // add standard properties
+        writableMetadata.put( Constants.SERVICE_PID, pid );
+
+        final DictionaryAdapter adapter = m_dictionaryAdapterRepository.find( writableMetadata );
         if( adapter != null )
         {
             LOG.trace( "Configuration adapter: " + adapter );
-            final Dictionary adapted = adapter.adapt( configuration );
-            LOG.trace( "Adapted configuguration properties: " + adapted );
+            final Dictionary adapted = copyPropertiesFromMetadata( writableMetadata, adapter.adapt( configuration ) );
+            LOG.trace( "Adapted configuration properties: " + adapted );
             if( adapted != null )
             {
                 m_processingQueue.add(
-                    new ProcessableConfiguration( pid, location, copyInfoMetadata( metadata, adapted ) )
+                    new ProcessableConfiguration( pid, location, adapted )
                 );
             }
         }
@@ -90,19 +97,31 @@ public class ConfigurerImpl
     }
 
     /**
-     * Copy all info metadata to configuration properties.
+     * Copy all necessary metadata properties .
      *
-     * @param metadata metadata containing info properties
+     * @param metadata metadata
      * @param adapted  destination
      *
      * @return dictionary containing the info prepertties copied from metadata.
      */
-    private static Dictionary copyInfoMetadata( final Dictionary metadata,
-                                                final Dictionary adapted )
+    private static Dictionary copyPropertiesFromMetadata( final Dictionary metadata,
+                                                          final Dictionary adapted )
     {
+        if( adapted == null )
+        {
+            return null;
+        }
         final Dictionary result = new Hashtable();
         DictionaryUtils.copy( adapted, result );
-        DictionaryUtils.copy( MetadataConstants.INFO_PREFIX.replaceAll( ".", "\\." ) + ".*", metadata, result );
+        DictionaryUtils.copy(
+            new DictionaryUtils.OrSpecification(
+                new DictionaryUtils.RegexSpecification( MetadataConstants.INFO_PREFIX_AS_REGEX ),
+                new DictionaryUtils.RegexSpecification( MetadataConstants.SERVICE_PID_AS_REGEX ),
+                new DictionaryUtils.RegexSpecification( MetadataConstants.SERVICE_FACTORYPID_AS_REGEX )
+            ),
+            metadata,
+            result
+        );
         return result;
     }
 

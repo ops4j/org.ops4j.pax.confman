@@ -17,6 +17,7 @@
  */
 package org.ops4j.pax.cm.samples.registry.internal;
 
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.apache.commons.logging.Log;
@@ -51,10 +52,27 @@ public class Activator
         // we target pax confman logger sample
         msProps.put( "config.service.pid", "org.ops4j.pax.cm.samples.logger" );
 
-        // register a dictionary
-        final Dictionary<String, String> cfgAsDict = new Hashtable<String, String>();
+        Dictionary<String, Object> cfgAsDict;
+
+        // register a dictionary where the keys / values are always the same so it should be sent to config admin only
+        // once
+        cfgAsDict = new Hashtable<String, Object>();
         cfgAsDict.put( "foo.from.a.dictionary", "bar" );
         cfgAsDict.put( "bar.from.a.dictionary", "foo" );
+        // we configure also a property that should be removed while processing as is not supported by config admin
+        cfgAsDict.put( "a.property.that.should.be.ignored", new Date() );
+        bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, msProps );
+
+        // register a dictionary service properties that do not contain the pid property so this config should not be
+        // picked by registry scanner
+        cfgAsDict = new Hashtable<String, Object>();
+        cfgAsDict.put( "this.should.never.be.picked.by.registry.scanner", "foo" );
+        bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, null );
+
+        // registere a dictionary that has a property with a value that changes at each registration so it should be
+        // updated every time
+        cfgAsDict = new Hashtable<String, Object>();
+        cfgAsDict.put( "a.changing.property", System.currentTimeMillis() );
         bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, msProps );
 
     }

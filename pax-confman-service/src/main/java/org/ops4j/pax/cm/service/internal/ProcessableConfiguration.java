@@ -2,9 +2,13 @@ package org.ops4j.pax.cm.service.internal;
 
 import java.io.IOException;
 import java.util.Dictionary;
+import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.api.MetadataConstants;
 
 /**
  * TODO add JavaDoc
@@ -15,6 +19,18 @@ import org.ops4j.lang.NullArgumentException;
 class ProcessableConfiguration
     implements Processable
 {
+
+    /**
+     * Logger.
+     */
+    private static final Log LOG = LogFactory.getLog( ProcessableConfiguration.class );
+    /**
+     * Key specification that eliminates INFO keys.
+     */
+    private final static DictionaryUtils.KeySpecification NOT_INFO_KEY_SPEC =
+        new DictionaryUtils.NotSpecification(
+            new DictionaryUtils.RegexSpecification( MetadataConstants.INFO_PREFIX_AS_REGEX )
+        );
 
     /**
      * Process identifier. Cannot be null.
@@ -62,13 +78,37 @@ class ProcessableConfiguration
     {
         NullArgumentException.validateNotNull( configurationAdmin, "Configuration Admin service" );
 
+        LOG.trace( "Looking for a configuration for " + m_pid );
         final Configuration configuration = configurationAdmin.getConfiguration( m_pid, m_location );
-        if( configuration != null
-            && !DictionaryUtils.deepCompare( configuration.getProperties(), m_properties ) )
+        if( configuration != null )
         {
-            configuration.setBundleLocation( m_location );
-            configuration.update( m_properties );
+            LOG.trace( "Found configuration with properties: " + configuration.getProperties() );
+            if( configurationsAreNotEqual( configuration.getProperties(), m_properties ) )
+            {
+                configuration.setBundleLocation( m_location );
+                configuration.update( m_properties );
+            }
+            else
+            {
+                LOG.trace( "Configuration is the same as the processing one. Not updating" );
+            }
         }
+    }
+
+    /**
+     * Compare two configurations excluding the info entries.
+     *
+     * @param target target dictionary to compare
+     * @param source source dictionary to compare
+     *
+     * @return true if configurations are not equal
+     */
+    private boolean configurationsAreNotEqual( final Dictionary source, final Dictionary target )
+    {
+        return !DictionaryUtils.equal(
+            DictionaryUtils.copy( NOT_INFO_KEY_SPEC, source, new Hashtable() ),
+            DictionaryUtils.copy( NOT_INFO_KEY_SPEC, target, new Hashtable() )
+        );
     }
 
     @Override
@@ -81,4 +121,5 @@ class ProcessableConfiguration
             .append( "}" )
             .toString();
     }
+
 }
