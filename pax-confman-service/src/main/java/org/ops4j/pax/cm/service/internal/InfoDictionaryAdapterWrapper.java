@@ -58,7 +58,7 @@ class InfoDictionaryAdapterWrapper
         wrapped.put( MetadataConstants.INFO_TIMESTAMP, DateFormat.getDateInstance().format( currentTime ) );
         wrapped.put( MetadataConstants.INFO_TIMESTAMP_MILLIS, currentTime.getTime() );
         // and do the adaptation
-        DictionaryUtils.copyDictionary( m_delegate.adapt( object ), wrapped );
+        DictionaryUtils.copy( m_delegate.adapt( object ), wrapped );
         return wrapped;
     }
 }

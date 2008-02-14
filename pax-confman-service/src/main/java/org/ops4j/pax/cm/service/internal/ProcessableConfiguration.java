@@ -63,7 +63,8 @@ class ProcessableConfiguration
         NullArgumentException.validateNotNull( configurationAdmin, "Configuration Admin service" );
 
         final Configuration configuration = configurationAdmin.getConfiguration( m_pid, m_location );
-        if( configuration != null )
+        if( configuration != null
+            && !DictionaryUtils.deepCompare( configuration.getProperties(), m_properties ) )
         {
             configuration.setBundleLocation( m_location );
             configuration.update( m_properties );

@@ -101,8 +101,8 @@ public class ConfigurerImpl
                                                 final Dictionary adapted )
     {
         final Dictionary result = new Hashtable();
-        DictionaryUtils.copyDictionary( adapted, result );
-        DictionaryUtils.copyDictionary( MetadataConstants.INFO_PREFIX.replaceAll( ".", "\\." ) + ".*", metadata, result );
+        DictionaryUtils.copy( adapted, result );
+        DictionaryUtils.copy( MetadataConstants.INFO_PREFIX.replaceAll( ".", "\\." ) + ".*", metadata, result );
         return result;
     }
 

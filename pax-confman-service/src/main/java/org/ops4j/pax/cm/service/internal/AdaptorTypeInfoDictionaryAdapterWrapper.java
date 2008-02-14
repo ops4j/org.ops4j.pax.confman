@@ -61,7 +61,7 @@ class AdaptorTypeInfoDictionaryAdapterWrapper
         // first we add the properties in order to allow adaptors to overide them
         wrapped.put( MetadataConstants.INFO_ADAPTOR, m_adaptorType );
         // and do the adaptation
-        DictionaryUtils.copyDictionary( m_delegate.adapt( object ), wrapped );
+        DictionaryUtils.copy( m_delegate.adapt( object ), wrapped );
         return wrapped;
     }
 }

@@ -82,7 +82,7 @@ class CleanupDictionaryAdapterWrapper
     public Dictionary adapt( final Object object )
     {
         final Dictionary adapted = new Hashtable();
-        DictionaryUtils.copyDictionary( m_delegate.adapt( object ), adapted );
+        DictionaryUtils.copy( m_delegate.adapt( object ), adapted );
         if( !adapted.isEmpty() )
         {
             final Enumeration keys = adapted.keys();
