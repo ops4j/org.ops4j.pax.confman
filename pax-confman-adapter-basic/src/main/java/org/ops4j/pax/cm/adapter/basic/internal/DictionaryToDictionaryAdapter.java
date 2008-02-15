@@ -31,14 +31,14 @@ import org.ops4j.pax.cm.api.Specification;
  * @author Alin Dreghiciu
  * @since 0.3.0, January 11, 2008
  */
-public class DictionaryToAdapter
+public class DictionaryToDictionaryAdapter
     implements Adapter
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( DictionaryToAdapter.class );
+    private static final Log LOG = LogFactory.getLog( DictionaryToDictionaryAdapter.class );
 
     /**
      * Specification in use. Cannot be null.
@@ -52,7 +52,7 @@ public class DictionaryToAdapter
      *
      * @throws NullArgumentException - If specification is null
      */
-    public DictionaryToAdapter( final Specification specification )
+    public DictionaryToDictionaryAdapter( final Specification specification )
     {
         NullArgumentException.validateNotNull( specification, "Specification" );
 
