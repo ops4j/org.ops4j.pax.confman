@@ -20,14 +20,16 @@ package org.ops4j.pax.cm.service.internal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.AdapterRepository;
 
 /**
- * TODO add JavaDoc
+ * AdaptorRepository implementation.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
@@ -41,33 +43,73 @@ class AdapterRepositoryImpl
      */
     private static final Log LOG = LogFactory.getLog( ConfigurerImpl.class );
 
+    /**
+     * List of adaptors.
+     */
     private final List<Adapter> m_adapters;
+    /**
+     * Mapping between registred wrapper and actual adapter.
+     */
+    private final Map<Adapter, Adapter> m_wrapperMappings;
 
+    /**
+     * Constructor.
+     */
     AdapterRepositoryImpl()
     {
         m_adapters = Collections.synchronizedList( new ArrayList<Adapter>() );
+        m_wrapperMappings = Collections.synchronizedMap( new HashMap<Adapter, Adapter>() );
     }
 
+    /**
+     * Registrers adaptor wrapped with default adaptors:<br/>
+     * - CleanupAdapterWrapper<br/>
+     * - InfoAdapterWrapper<br/>
+     * - AdaptorTypeInfoAdapterWrapper<br/>
+     *
+     * @see AdapterRepository#register(Adapter)
+     */
     public void register( final Adapter adapter )
     {
-        LOG.trace( "Registered adapters: " + adapter );
-        m_adapters.add(
-            new CleanupAdapterWrapper(
-                new InfoAdapterWrapper(
-                    new AdaptorTypeInfoAdapterWrapper(
-                        adapter
-                    )
-                )
-            )
-        );
+        synchronized( m_adapters )
+        {
+            if( !m_wrapperMappings.containsKey( adapter ) )
+            {
+                LOG.trace( "Registered adapter: " + adapter );
+                final Adapter wrapper =
+                    new CleanupAdapterWrapper(
+                        new InfoAdapterWrapper(
+                            new AdaptorTypeInfoAdapterWrapper(
+                                adapter
+                            )
+                        )
+                    );
+                m_adapters.add( wrapper );
+                m_wrapperMappings.put( adapter, wrapper );
+            }
+        }
     }
 
+    /**
+     * @see AdapterRepository#unregister(Adapter)
+     */
     public void unregister( final Adapter adapter )
     {
-        LOG.trace( "Unegistered adapters: " + adapter );
-        m_adapters.remove( adapter );
+        synchronized( m_adapters )
+        {
+            final Adapter wrapper = m_wrapperMappings.get( adapter );
+            if( wrapper != null )
+            {
+                LOG.trace( "Unegistered adapter: " + adapter );
+                m_adapters.remove( wrapper );
+                m_wrapperMappings.remove( adapter );
+            }
+        }
     }
 
+    /**
+     * @see AdapterRepository#find(Dictionary, Object)  
+     */
     public Adapter find( final Dictionary metadata, final Object sourceObject )
     {
         synchronized( m_adapters )
