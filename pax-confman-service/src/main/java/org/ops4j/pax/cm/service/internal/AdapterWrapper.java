@@ -19,29 +19,29 @@ package org.ops4j.pax.cm.service.internal;
 
 import java.util.Dictionary;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
+import org.ops4j.pax.cm.api.Adapter;
 
 /**
- * A DictionaryAdapter wrapper .
+ * A Adapter wrapper .
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 14, 2008
  */
-class DictionaryAdapterWrapper
-    implements DictionaryAdapter
+class AdapterWrapper
+    implements Adapter
 {
 
     /**
-     * Wrapped DictionaryAdapter. Cannot be null.
+     * Wrapped Adapter. Cannot be null.
      */
-    protected final DictionaryAdapter m_delegate;
+    protected final Adapter m_delegate;
 
     /**
      * Constructor.
      *
-     * @param delegate wrapped DictionaryAdapter
+     * @param delegate wrapped Adapter
      */
-    DictionaryAdapterWrapper( final DictionaryAdapter delegate )
+    AdapterWrapper( final Adapter delegate )
     {
         NullArgumentException.validateNotNull( delegate, "Wrapped dictionary adapter" );
 
@@ -49,9 +49,9 @@ class DictionaryAdapterWrapper
     }
 
     /**
-     * Delegates to wrapped DictionaryAdapter.
+     * Delegates to wrapped Adapter.
      *
-     * @see org.ops4j.pax.cm.api.DictionaryAdapter#adapt(Object)
+     * @see org.ops4j.pax.cm.api.Adapter#adapt(Object)
      */
     public Object adapt( final Object object )
     {
@@ -59,9 +59,9 @@ class DictionaryAdapterWrapper
     }
 
     /**
-     * Delegates to wrapped DictionaryAdapter.
+     * Delegates to wrapped Adapter.
      *
-     * @see org.ops4j.pax.cm.api.DictionaryAdapter#isSatisfiedBy(java.util.Dictionary,Object)
+     * @see org.ops4j.pax.cm.api.Adapter#isSatisfiedBy(java.util.Dictionary,Object)
      */
     public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {

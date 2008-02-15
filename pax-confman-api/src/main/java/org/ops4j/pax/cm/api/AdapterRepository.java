@@ -25,13 +25,13 @@ import java.util.Dictionary;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public interface DictionaryAdapterRepository
+public interface AdapterRepository
 {
 
-    void register( DictionaryAdapter adapter );
+    void register( Adapter adapter );
 
-    void unregister( DictionaryAdapter adapter );
+    void unregister( Adapter adapter );
 
-    DictionaryAdapter find( Dictionary metadata, Object sourceObject );
+    Adapter find( Dictionary metadata, Object sourceObject );
 
 }

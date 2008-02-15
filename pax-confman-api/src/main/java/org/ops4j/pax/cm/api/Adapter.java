@@ -23,7 +23,7 @@ package org.ops4j.pax.cm.api;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public interface DictionaryAdapter
+public interface Adapter
     extends Specification
 {
 

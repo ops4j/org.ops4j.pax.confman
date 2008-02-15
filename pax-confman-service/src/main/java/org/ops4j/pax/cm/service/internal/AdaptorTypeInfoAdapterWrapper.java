@@ -19,18 +19,18 @@ package org.ops4j.pax.cm.service.internal;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
+import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.MetadataConstants;
 
 /**
- * A DictionaryAdapter wrapper that adds information about the type of adaptor.
+ * A Adapter wrapper that adds information about the type of adaptor.
  * ! Should be the last wrapper before adaptor as this to work.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 14, 2008
  */
-class AdaptorTypeInfoDictionaryAdapterWrapper
-    extends DictionaryAdapterWrapper
+class AdaptorTypeInfoAdapterWrapper
+    extends AdapterWrapper
 {
 
     /**
@@ -41,18 +41,18 @@ class AdaptorTypeInfoDictionaryAdapterWrapper
     /**
      * Constructor.
      *
-     * @param delegate wrapped DictionaryAdapter
+     * @param delegate wrapped Adapter
      */
-    AdaptorTypeInfoDictionaryAdapterWrapper( final DictionaryAdapter delegate )
+    AdaptorTypeInfoAdapterWrapper( final Adapter delegate )
     {
         super( delegate );
         m_adaptorType = delegate.getClass().getName();
     }
 
     /**
-     * Delegates to wrapped DictionaryAdapter ands information entries.
+     * Delegates to wrapped Adapter ands information entries.
      *
-     * @see org.ops4j.pax.cm.api.DictionaryAdapter#adapt(Object)
+     * @see org.ops4j.pax.cm.api.Adapter#adapt(Object)
      */
     @SuppressWarnings( "unchecked" )
     public Object adapt( final Object object )

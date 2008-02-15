@@ -21,33 +21,33 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
+import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.MetadataConstants;
 
 /**
- * A DictionaryAdapter wrapper that adds extra properties containing pax confman related info.
+ * A Adapter wrapper that adds extra properties containing pax confman related info.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 14, 2008
  */
-class InfoDictionaryAdapterWrapper
-    extends DictionaryAdapterWrapper
+class InfoAdapterWrapper
+    extends AdapterWrapper
 {
 
     /**
      * Constructor.
      *
-     * @param delegate wrapped DictionaryAdapter
+     * @param delegate wrapped Adapter
      */
-    InfoDictionaryAdapterWrapper( final DictionaryAdapter delegate )
+    InfoAdapterWrapper( final Adapter delegate )
     {
         super( delegate );
     }
 
     /**
-     * Delegates to wrapped DictionaryAdapter and add information entries.
+     * Delegates to wrapped Adapter and add information entries.
      *
-     * @see org.ops4j.pax.cm.api.DictionaryAdapter#adapt(Object)
+     * @see org.ops4j.pax.cm.api.Adapter#adapt(Object)
      */
     @SuppressWarnings( "unchecked" )
     public Object adapt( final Object object )

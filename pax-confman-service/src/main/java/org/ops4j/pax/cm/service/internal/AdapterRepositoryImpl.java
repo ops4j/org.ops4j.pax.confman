@@ -23,8 +23,8 @@ import java.util.Dictionary;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
-import org.ops4j.pax.cm.api.DictionaryAdapterRepository;
+import org.ops4j.pax.cm.api.Adapter;
+import org.ops4j.pax.cm.api.AdapterRepository;
 
 /**
  * TODO add JavaDoc
@@ -32,8 +32,8 @@ import org.ops4j.pax.cm.api.DictionaryAdapterRepository;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-class DictionaryAdapterRepositoryImpl
-    implements DictionaryAdapterRepository
+class AdapterRepositoryImpl
+    implements AdapterRepository
 {
 
     /**
@@ -41,20 +41,20 @@ class DictionaryAdapterRepositoryImpl
      */
     private static final Log LOG = LogFactory.getLog( ConfigurerImpl.class );
 
-    private final List<DictionaryAdapter> m_adapters;
+    private final List<Adapter> m_adapters;
 
-    DictionaryAdapterRepositoryImpl()
+    AdapterRepositoryImpl()
     {
-        m_adapters = Collections.synchronizedList( new ArrayList<DictionaryAdapter>() );
+        m_adapters = Collections.synchronizedList( new ArrayList<Adapter>() );
     }
 
-    public void register( final DictionaryAdapter adapter )
+    public void register( final Adapter adapter )
     {
         LOG.trace( "Registered adapters: " + adapter );
         m_adapters.add(
-            new CleanupDictionaryAdapterWrapper(
-                new InfoDictionaryAdapterWrapper(
-                    new AdaptorTypeInfoDictionaryAdapterWrapper(
+            new CleanupAdapterWrapper(
+                new InfoAdapterWrapper(
+                    new AdaptorTypeInfoAdapterWrapper(
                         adapter
                     )
                 )
@@ -62,17 +62,17 @@ class DictionaryAdapterRepositoryImpl
         );
     }
 
-    public void unregister( final DictionaryAdapter adapter )
+    public void unregister( final Adapter adapter )
     {
         LOG.trace( "Unegistered adapters: " + adapter );
         m_adapters.remove( adapter );
     }
 
-    public DictionaryAdapter find( final Dictionary metadata, final Object sourceObject )
+    public Adapter find( final Dictionary metadata, final Object sourceObject )
     {
         synchronized( m_adapters )
         {
-            for( DictionaryAdapter adapter : m_adapters )
+            for( Adapter adapter : m_adapters )
             {
                 if( adapter.isSatisfiedBy( metadata, sourceObject ) )
                 {

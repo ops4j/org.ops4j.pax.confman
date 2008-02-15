@@ -21,7 +21,7 @@ import java.util.Dictionary;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
+import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.Specification;
 
 /**
@@ -31,14 +31,14 @@ import org.ops4j.pax.cm.api.Specification;
  * @author Alin Dreghiciu
  * @since 0.3.0, January 11, 2008
  */
-public class DictionaryToDictionaryAdapter
-    implements DictionaryAdapter
+public class DictionaryToAdapter
+    implements Adapter
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( DictionaryToDictionaryAdapter.class );
+    private static final Log LOG = LogFactory.getLog( DictionaryToAdapter.class );
 
     /**
      * Specification in use. Cannot be null.
@@ -52,7 +52,7 @@ public class DictionaryToDictionaryAdapter
      *
      * @throws NullArgumentException - If specification is null
      */
-    public DictionaryToDictionaryAdapter( final Specification specification )
+    public DictionaryToAdapter( final Specification specification )
     {
         NullArgumentException.validateNotNull( specification, "Specification" );
 
@@ -80,7 +80,7 @@ public class DictionaryToDictionaryAdapter
     /**
      * Delegates to specification.
      *
-     * @see org.ops4j.pax.cm.api.DictionaryAdapter#isSatisfiedBy(Dictionary,Object)
+     * @see org.ops4j.pax.cm.api.Adapter#isSatisfiedBy(Dictionary,Object)
      */
     public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
