@@ -133,7 +133,6 @@ public class ConfigurerImpl
             LOG.trace( "Using adapter " + adapter );
             final Class previousSourceClass = sourceObject.getClass();
             sourceObject = adapter.adapt( sourceObject );
-            LOG.trace( "Source object adapted to: " + sourceObject );
             if( sourceObject == null )
             {
                 // less probably but if a source object becomes null there is no reason to look further
@@ -143,7 +142,7 @@ public class ConfigurerImpl
             {
                 adapted = (Dictionary) sourceObject;
             }
-            LOG.trace( "Source object converted from a " + previousSourceClass + " to " + sourceObject.getClass() );
+            LOG.trace( "Source object converted from " + previousSourceClass + " to " + sourceObject.getClass() );
             if( previousSourceClass.equals( sourceObject.getClass() ) )
             {
                 // if still the same class get out to avoid an infinite loop as tere is no reason to believe
