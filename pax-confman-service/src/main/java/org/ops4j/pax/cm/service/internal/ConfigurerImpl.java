@@ -24,8 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
-import org.ops4j.pax.cm.api.DictionaryAdapterRepository;
+import org.ops4j.pax.cm.api.Adapter;
+import org.ops4j.pax.cm.api.AdapterRepository;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
@@ -55,7 +55,7 @@ public class ConfigurerImpl
     /**
      * Repository of dictionary adapters. Cannot be null.
      */
-    private final DictionaryAdapterRepository m_adapterRepository;
+    private final AdapterRepository m_adapterRepository;
     /**
      * Configuration Admin commands processor.
      */
@@ -70,7 +70,7 @@ public class ConfigurerImpl
      * @throws NullArgumentException - If dictionaryAdapterRepository is null
      *                               - If processingQueue is null
      */
-    public ConfigurerImpl( final DictionaryAdapterRepository adapterRepository,
+    public ConfigurerImpl( final AdapterRepository adapterRepository,
                            final CommandProcessor<ConfigurationAdmin> processor )
     {
         NullArgumentException.validateNotNull( adapterRepository, "Dictionary adapters repository" );
@@ -121,7 +121,7 @@ public class ConfigurerImpl
         // loop adaptors till we have an adapted dictionary or sourceObject becomes null
         while( adapted == null )
         {
-            final DictionaryAdapter adapter = m_adapterRepository.find(
+            final Adapter adapter = m_adapterRepository.find(
                 source.getPropertiesSource().getMetadata(),
                 sourceObject
             );

@@ -24,7 +24,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
+import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.MetadataConstants;
 
 /**
@@ -53,8 +53,8 @@ public class Activator
         LOG.debug( "Starting OPS4J Pax ConfMan basic adapters" );
 
         bundleContext.registerService(
-            DictionaryAdapter.class.getName(),
-            new DictionaryToDictionaryAdapter(
+            Adapter.class.getName(),
+            new DictionaryToAdapter(
                 new FilterBasedSpecification( createFilterSpecification( bundleContext, Dictionary.class.getName() ) )
             ),
             null // no properties

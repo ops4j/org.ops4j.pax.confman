@@ -23,8 +23,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.pax.cm.api.Configurer;
-import org.ops4j.pax.cm.api.DictionaryAdapter;
-import org.ops4j.pax.cm.api.DictionaryAdapterRepository;
+import org.ops4j.pax.cm.api.Adapter;
+import org.ops4j.pax.cm.api.AdapterRepository;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 
 /**
@@ -58,17 +58,17 @@ public class Activator
         m_processor = new CommandProcessor<ConfigurationAdmin>();
         m_processor.start();
 
-        final DictionaryAdapterRepository dictionaryAdapterRepository = new DictionaryAdapterRepositoryImpl();
-        final ConfigurerImpl configurer = new ConfigurerImpl( dictionaryAdapterRepository, m_processor );
+        final AdapterRepository adapterRepository = new AdapterRepositoryImpl();
+        final ConfigurerImpl configurer = new ConfigurerImpl( adapterRepository, m_processor );
 
         m_configAdminTracker = createConfigAdminTracker( bundleContext, m_processor );
         m_configAdminTracker.open();
 
-        m_dictionaryAdaptorTracker = createDictionaryAdaptorTracker( bundleContext, dictionaryAdapterRepository );
+        m_dictionaryAdaptorTracker = createDictionaryAdaptorTracker( bundleContext, adapterRepository );
         m_dictionaryAdaptorTracker.open();
 
         bundleContext.registerService( Configurer.class.getName(), configurer, null );
-        bundleContext.registerService( DictionaryAdapterRepository.class.getName(), dictionaryAdapterRepository, null );
+        bundleContext.registerService( AdapterRepository.class.getName(), adapterRepository, null );
     }
 
     /**
@@ -117,15 +117,15 @@ public class Activator
     }
 
     private static ServiceTracker createDictionaryAdaptorTracker( final BundleContext bundleContext,
-                                                                  final DictionaryAdapterRepository repository )
+                                                                  final AdapterRepository repository )
     {
-        return new ServiceTracker( bundleContext, DictionaryAdapter.class.getName(), null )
+        return new ServiceTracker( bundleContext, Adapter.class.getName(), null )
         {
             @Override
             public Object addingService( ServiceReference serviceReference )
             {
                 final Object service = super.addingService( serviceReference );
-                repository.register( (DictionaryAdapter) service );
+                repository.register( (Adapter) service );
                 return service;
             }
 
@@ -133,7 +133,7 @@ public class Activator
             public void removedService( ServiceReference serviceReference, Object service )
             {
                 super.removedService( serviceReference, service );
-                repository.unregister( (DictionaryAdapter) service );
+                repository.unregister( (Adapter) service );
             }
 
         };
