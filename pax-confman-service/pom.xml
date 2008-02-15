@@ -68,6 +68,13 @@
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.ops4j.pax.confman</groupId>
+      <artifactId>pax-confman-common</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
 
     <!-- Provided dependencies (not transitive) -->
     <dependency>

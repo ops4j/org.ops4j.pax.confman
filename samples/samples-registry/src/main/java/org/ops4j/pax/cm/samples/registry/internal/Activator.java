@@ -73,7 +73,7 @@ public class Activator
         // updated every time
         cfgAsDict = new Hashtable<String, Object>();
         cfgAsDict.put( "a.changing.property", System.currentTimeMillis() );
-        bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, msProps );
+        //bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, msProps );
 
     }
 

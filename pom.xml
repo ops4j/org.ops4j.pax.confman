@@ -33,6 +33,7 @@
   </issueManagement>
 
   <modules>
+    <module>pax-confman-common</module>
     <module>pax-confman-domain</module>
     <module>pax-confman-api</module>
     <module>pax-confman-service</module>

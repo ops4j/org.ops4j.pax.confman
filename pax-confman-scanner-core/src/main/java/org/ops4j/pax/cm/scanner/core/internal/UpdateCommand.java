@@ -19,6 +19,7 @@ package org.ops4j.pax.cm.scanner.core.internal;
 
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
+import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.lang.NullArgumentException;
 
 /**
@@ -28,7 +29,7 @@ import org.ops4j.lang.NullArgumentException;
  * @since 0.3.0, January 12, 2008
  */
 public class UpdateCommand
-    implements ConfigurerCommand
+    implements Command<Configurer>
 {
 
         /**
@@ -44,12 +45,12 @@ public class UpdateCommand
         public UpdateCommand( final ConfigurationSource configurationSource )
         {
             NullArgumentException.validateNotNull( configurationSource, "Configuration source" );
+            
             m_configurationSource = configurationSource;
         }
 
         /**
          * Process configuration source.
-         * @see ConfigurerCommand#execute(org.ops4j.pax.cm.api.Configurer)
          */
         public void execute( final Configurer configurer )
         {

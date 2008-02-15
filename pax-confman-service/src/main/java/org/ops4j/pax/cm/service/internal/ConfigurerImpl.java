@@ -21,16 +21,18 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.DictionaryAdapter;
 import org.ops4j.pax.cm.api.DictionaryAdapterRepository;
 import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.common.internal.processor.Command;
+import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.PropertiesTarget;
-import org.ops4j.pax.cm.service.internal.AdminCommand;
 
 /**
  * TODO add JavaDoc
@@ -55,27 +57,27 @@ public class ConfigurerImpl
      */
     private final DictionaryAdapterRepository m_adapterRepository;
     /**
-     * Queue of processable items. Canot be null.
+     * Configuration Admin commands processor.
      */
-    private final ProcessingQueue m_processingQueue;
+    private final CommandProcessor<ConfigurationAdmin> m_processor;
 
     /**
      * Constructor.
      *
      * @param adapterRepository adaptor repository to use
-     * @param processingQueue   processing queue to use
+     * @param processor         processing queue to use
      *
      * @throws NullArgumentException - If dictionaryAdapterRepository is null
      *                               - If processingQueue is null
      */
     public ConfigurerImpl( final DictionaryAdapterRepository adapterRepository,
-                           final ProcessingQueue processingQueue )
+                           final CommandProcessor<ConfigurationAdmin> processor )
     {
         NullArgumentException.validateNotNull( adapterRepository, "Dictionary adapters repository" );
-        NullArgumentException.validateNotNull( processingQueue, "Processing queue" );
+        NullArgumentException.validateNotNull( processor, "Commands processor" );
 
         m_adapterRepository = adapterRepository;
-        m_processingQueue = processingQueue;
+        m_processor = processor;
     }
 
     /**
@@ -126,12 +128,12 @@ public class ConfigurerImpl
             LOG.trace( "Adapted configuration properties: " + adapted );
             if( adapted != null )
             {
-                final AdminCommand adminCommand = strategy.createConfigurationCommand(
+                final Command<ConfigurationAdmin> adminCommand = strategy.createConfigurationCommand(
                     new ConfigurationTarget( source.getServiceIdentity(), new PropertiesTarget( adapted ) )
                 );
                 if( adminCommand != null )
                 {
-                    m_processingQueue.add( adminCommand );
+                    m_processor.add( adminCommand );
                 }
             }
         }

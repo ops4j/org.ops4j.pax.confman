@@ -15,18 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.service.internal;
-
-import org.ops4j.pax.cm.service.internal.AdminCommand;
+package org.ops4j.pax.cm.common.internal.processor;
 
 /**
- * TODO add JavaDoc
+ * Command to be executed agains a target service.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 12, 2008
+ * @since 0.3.0, January 12, 2008
  */
-public interface ProcessingQueue
+public interface Command<T>
 {
 
-    void add( AdminCommand adminCommand );
+    /**
+     * Executes the command.
+     *
+     * @param target targeted service
+     *
+     * @throws Exception execution exception
+     */
+    void execute( T target )
+        throws Exception;
+
 }

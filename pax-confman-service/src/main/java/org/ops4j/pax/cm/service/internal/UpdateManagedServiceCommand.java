@@ -9,6 +9,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 
 /**
@@ -18,7 +19,7 @@ import org.ops4j.pax.cm.domain.ConfigurationTarget;
  * @since 0.3.0, February 12, 2008
  */
 class UpdateManagedServiceCommand
-    implements AdminCommand
+    implements Command<ConfigurationAdmin>
 {
 
     /**

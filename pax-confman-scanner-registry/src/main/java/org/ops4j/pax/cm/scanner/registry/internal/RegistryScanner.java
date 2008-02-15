@@ -27,11 +27,12 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.ServiceIdentity;
-import org.ops4j.pax.cm.scanner.core.internal.ConfigurerCommandProcessor;
 import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
@@ -56,24 +57,24 @@ public class RegistryScanner
     /**
      * Configuration buffer.
      */
-    private final ConfigurerCommandProcessor m_configurerCommandProcessor;
+    private final CommandProcessor<Configurer> m_processor;
 
     /**
      * Creates a new registry scanner.
      *
-     * @param bundleContext              bundle context; cannot be null
-     * @param configurerCommandProcessor configurations buffer; canot be null
+     * @param bundleContext bundle context; cannot be null
+     * @param processor     configurations buffer; canot be null
      *
      * @throws NullArgumentException - If bundle context is null
      *                               - If configurations buffer is null
      */
     public RegistryScanner( final BundleContext bundleContext,
-                            final ConfigurerCommandProcessor configurerCommandProcessor )
+                            final CommandProcessor<Configurer> processor )
     {
         NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
-        NullArgumentException.validateNotNull( configurerCommandProcessor, "Configurations buffer" );
+        NullArgumentException.validateNotNull( processor, "Command processor" );
 
-        m_configurerCommandProcessor = configurerCommandProcessor;
+        m_processor = processor;
         m_registryTracker = new ServiceTracker( bundleContext, createFilter( bundleContext ), null )
         {
             @Override
@@ -94,7 +95,7 @@ public class RegistryScanner
                         getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
                     if( factoryPid == null )
                     {
-                        m_configurerCommandProcessor.add(
+                        m_processor.add(
                             new UpdateCommand(
                                 new ConfigurationSource(
                                     new ServiceIdentity( pid, location ),

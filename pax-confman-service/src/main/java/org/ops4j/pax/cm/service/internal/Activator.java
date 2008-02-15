@@ -25,6 +25,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.DictionaryAdapter;
 import org.ops4j.pax.cm.api.DictionaryAdapterRepository;
+import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 
 /**
  * Bundle Activator.
@@ -44,17 +45,23 @@ public class Activator
      * Dictionary Admin Service Tracker.
      */
     private ServiceTracker m_dictionaryAdaptorTracker;
+    /**
+     * Configuration Admin commands processor.
+     */
+    private CommandProcessor<ConfigurationAdmin> m_processor;
 
     /**
      * @see BundleActivator#start(BundleContext)
      */
     public void start( final BundleContext bundleContext )
     {
-        final DictionaryAdapterRepository dictionaryAdapterRepository = new DictionaryAdapterRepositoryImpl();
-        final ProcessingQueueImpl processingQueue = new ProcessingQueueImpl();
-        final ConfigurerImpl configurer = new ConfigurerImpl( dictionaryAdapterRepository, processingQueue );
+        m_processor = new CommandProcessor<ConfigurationAdmin>();
+        m_processor.start();
 
-        m_configAdminTracker = createConfigAdminTracker( bundleContext, processingQueue );
+        final DictionaryAdapterRepository dictionaryAdapterRepository = new DictionaryAdapterRepositoryImpl();
+        final ConfigurerImpl configurer = new ConfigurerImpl( dictionaryAdapterRepository, m_processor );
+
+        m_configAdminTracker = createConfigAdminTracker( bundleContext, m_processor );
         m_configAdminTracker.open();
 
         m_dictionaryAdaptorTracker = createDictionaryAdaptorTracker( bundleContext, dictionaryAdapterRepository );
@@ -79,10 +86,15 @@ public class Activator
             m_dictionaryAdaptorTracker.close();
             m_dictionaryAdaptorTracker = null;
         }
+        if( m_processor != null )
+        {
+            m_processor.stop();
+            m_processor = null;
+        }
     }
 
     private static ServiceTracker createConfigAdminTracker( final BundleContext bundleContext,
-                                                            final ProcessingQueueImpl processingQueue )
+                                                            final CommandProcessor<ConfigurationAdmin> processor )
     {
         return new ServiceTracker( bundleContext, ConfigurationAdmin.class.getName(), null )
         {
@@ -90,7 +102,7 @@ public class Activator
             public Object addingService( ServiceReference serviceReference )
             {
                 final Object service = super.addingService( serviceReference );
-                processingQueue.setConfigurationAdmin( (ConfigurationAdmin) service );
+                processor.setTargetService( (ConfigurationAdmin) service );
                 return service;
             }
 
@@ -98,7 +110,7 @@ public class Activator
             public void removedService( ServiceReference serviceReference, Object service )
             {
                 super.removedService( serviceReference, service );
-                processingQueue.setConfigurationAdmin( null );
+                processor.setTargetService( null );
             }
 
         };

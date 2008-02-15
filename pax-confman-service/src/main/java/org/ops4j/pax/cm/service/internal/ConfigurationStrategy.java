@@ -17,10 +17,11 @@
  */
 package org.ops4j.pax.cm.service.internal;
 
+import org.osgi.service.cm.ConfigurationAdmin;
+import org.ops4j.pax.cm.common.internal.processor.Command;
+import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.ServiceIdentity;
-import org.ops4j.pax.cm.domain.ConfigurationSource;
-import org.ops4j.pax.cm.service.internal.AdminCommand;
 
 /**
  * Configuration strategy applied during configuration processing. Basically there are two configuration startegies:br/>
@@ -45,6 +46,7 @@ public interface ConfigurationStrategy
     ServiceIdentity createServiceIdentity( String pid,
                                            String factoryPid,
                                            String location );
+
     /**
      * Callback before finding an adaptor & adaptation process.
      * The strategy can do customisation of for example metadata.
@@ -60,6 +62,6 @@ public interface ConfigurationStrategy
      *
      * @return created configuration command
      */
-    AdminCommand createConfigurationCommand( ConfigurationTarget configurationTarget );
+    Command<ConfigurationAdmin> createConfigurationCommand( ConfigurationTarget configurationTarget );
 
 }

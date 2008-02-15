@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.scanner.core.internal;
+package org.ops4j.pax.cm.common.internal.processor;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,45 +24,41 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
- * Buffer between scanners and configurator. The purpose is to isolate scanners from Configurator availability. The
- * buffer mimics the interface of configurator and is included into the scanner (so is always available).
- * Any operation on the configurer is stored in a blocking queue. As soon as configurer becomes available the queued
- * operations are performed agains the available configurer.
+ * Waiting queue for commands to be processed. As soon as a target service becomes available the commands are proceesed.
+ * If targeted service becomes unavailable processing stops till it will become available again.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 13, 2008
  */
-public class ConfigurerCommandProcessor
+public class CommandProcessor<T>
     extends AbstractLifecycle
-    implements ConfigurerSetter
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( ConfigurerCommandProcessor.class );
+    private static final Log LOG = LogFactory.getLog( CommandProcessor.class );
 
     /**
-     * Configuration queue.
+     * Commands queue.
      */
-    private BlockingQueue<ConfigurerCommand> m_queue;
+    private BlockingQueue<Command<T>> m_queue;
     /**
-     * Configurer in use.
+     * Targeted service.
      */
-    private Configurer m_configurer;
+    private T m_targetService;
     /**
-     * Configurer lock.
+     * Target service lock.
      */
-    private final Lock m_configurerLock;
-
+    private final Lock m_targetLock;
     /**
-     * Configurer availability condition.
+     * Target service availability condition.
      */
-    private final Condition m_configurerAvailable;
+    private final Condition m_targetAvailable;
     /**
      * Processing thread.
      */
@@ -73,56 +69,59 @@ public class ConfigurerCommandProcessor
     private boolean m_stopProcessorSignal;
 
     /**
-     * Creates a new configurations queue.
+     * Constructor.
      */
-    public ConfigurerCommandProcessor()
+    public CommandProcessor()
     {
-        m_queue = new LinkedBlockingQueue<ConfigurerCommand>();
-        m_configurerLock = new ReentrantLock();
-        m_configurerAvailable = m_configurerLock.newCondition();
+        m_queue = new LinkedBlockingQueue<Command<T>>();
+        m_targetLock = new ReentrantLock();
+        m_targetAvailable = m_targetLock.newCondition();
     }
 
     /**
-     * Adds configurer commands to be processed.
+     * Adds commands to be processed.
      *
-     * @param command configurer command to be processed as soon as configurer service becomes available
+     * @param command command to be executed agains the target service when service is available
      */
-    public void add( final ConfigurerCommand command )
+    public void add( final Command<T> command )
     {
+        LOG.trace( "Adding command to be processed: " + command );
+        NullArgumentException.validateNotNull( command, "Command" );
+
         m_queue.add( command );
     }
 
     /**
      * Setter.
      *
-     * @param configurer to be set
+     * @param targetService to be set
      */
-    public void setConfigurer( final Configurer configurer )
+    public void setTargetService( final T targetService )
     {
-        m_configurerLock.lock();
+        m_targetLock.lock();
         try
         {
-            m_configurer = configurer;
-            m_configurerAvailable.signal();
+            m_targetService = targetService;
+            m_targetAvailable.signal();
         }
         finally
         {
-            m_configurerLock.unlock();
+            m_targetLock.unlock();
         }
     }
 
     /**
-     * Start queue processing.
+     * Start command processing.
      */
     protected void onStart()
     {
         m_stopProcessorSignal = false;
-        m_processor = new Thread( new CommandProcessor() );
+        m_processor = new Thread( new RunnableCommandProcessor() );
         m_processor.start();
     }
 
     /**
-     * Stop queue processing.
+     * Stop command processing.
      */
     protected void onStop()
     {
@@ -131,9 +130,9 @@ public class ConfigurerCommandProcessor
     }
 
     /**
-     * Queue processor.
+     * Actual command processor.
      */
-    private class CommandProcessor
+    private class RunnableCommandProcessor
         implements Runnable
     {
 
@@ -142,8 +141,8 @@ public class ConfigurerCommandProcessor
          */
         public void run()
         {
-            LOG.trace( "Started processing of configuration queue" );
-            ConfigurerCommand command = null;
+            LOG.trace( "Started commands processing" );
+            Command<T> command = null;
             while( !m_stopProcessorSignal )
             {
                 try
@@ -154,20 +153,20 @@ public class ConfigurerCommandProcessor
                     }
                     if( command != null )
                     {
-                        m_configurerLock.lock();
+                        m_targetLock.lock();
                         try
                         {
-                            while( m_configurer == null )
+                            while( m_targetService == null )
                             {
-                                LOG.trace( "Configurer not available. Await..." );
-                                m_configurerAvailable.await();
+                                LOG.trace( "Target service not available. Await..." );
+                                m_targetAvailable.await();
                             }
-                            LOG.trace( "Configurer available. Executing " + command );
+                            LOG.trace( "Target service available. Executing " + command );
                             // ! we use run directly as for the moment we do not create a new thread for
                             // running the command
                             try
                             {
-                                command.execute( m_configurer );
+                                command.execute( m_targetService );
                             }
                             catch( Throwable ignore )
                             {
@@ -177,17 +176,17 @@ public class ConfigurerCommandProcessor
                         }
                         finally
                         {
-                            m_configurerLock.unlock();
+                            m_targetLock.unlock();
                         }
                     }
                 }
                 catch( Throwable ignore )
                 {
-                    // this could be due to an interruption or an exception during configuration
-                    LOG.trace( "Unexpected stop of processing queue", ignore );
+                    // this could be due to an interruption
+                    LOG.trace( "Unexpected stop of processing", ignore );
                 }
             }
-            LOG.trace( "Stopped processing of configuration queue" );
+            LOG.trace( "Stopped commands processing" );
         }
 
     }
