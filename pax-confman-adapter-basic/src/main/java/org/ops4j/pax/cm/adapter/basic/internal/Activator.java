@@ -27,6 +27,9 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
+import org.ops4j.pax.cm.adapter.basic.internal.spec.AndSpecification;
+import org.ops4j.pax.cm.adapter.basic.internal.spec.FilterBasedSpecification;
+import org.ops4j.pax.cm.adapter.basic.internal.spec.InstanceOfSpecification;
 import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.MetadataConstants;
 

@@ -15,55 +15,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.adapter.basic.internal;
+package org.ops4j.pax.cm.adapter.basic.internal.spec;
 
 import java.util.Dictionary;
+import org.osgi.framework.Filter;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Specification;
 
 /**
- * Specification that is statisfied if the class of the source object is instance of a certain type.
+ * Specification that is statisfied by matching metadata agains an OSGi filter.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 15, 2008
+ * @since 0.3.0, February 11, 2008
  */
-public class InstanceOfSpecification
+public class FilterBasedSpecification
     implements Specification
 {
 
     /**
      * Specification OSGi filter to match metadata against.
      */
-    private final Class m_class;
+    private final Filter m_filter;
 
     /**
-     * Constructor
+     * Creates a new specification.
      *
-     * @param clazz class of the source object
+     * @param filter OSGi filter to match metadata against
      *
-     * @throws NullArgumentException - If clazz is null
+     * @throws NullArgumentException - If filter is null
      */
-    public InstanceOfSpecification( final Class clazz )
+    public FilterBasedSpecification( final Filter filter )
     {
-        NullArgumentException.validateNotNull( clazz, "Class" );
+        NullArgumentException.validateNotNull( filter, "Filter" );
 
-        m_class = clazz;
+        m_filter = filter;
     }
 
     /**
-     * Returns true if source object is instance of expected class.
+     * Matches metadata aginst the provided filter. Returns true if filter is matching metadata.
      *
-     * @see Specification#isSatisfiedBy(java.util.Dictionary, Object)
+     * @param metadata metadata to be matched
      */
     public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
-        return m_class.isInstance( sourceObject );
+        return m_filter.match( metadata );
     }
 
     @Override
     public String toString()
     {
-        return "instanceOf " + m_class.getName();
+        return m_filter.toString();
     }
 
 }

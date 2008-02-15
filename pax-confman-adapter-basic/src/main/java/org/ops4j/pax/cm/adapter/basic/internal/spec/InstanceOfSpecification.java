@@ -15,56 +15,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.adapter.basic.internal;
+package org.ops4j.pax.cm.adapter.basic.internal.spec;
 
 import java.util.Dictionary;
-import org.osgi.framework.Filter;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Specification;
 
 /**
- * Specification that is statisfied by matching metadata agains an OSGi filter.
+ * Specification that is statisfied if the class of the source object is instance of a certain type.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 11, 2008
+ * @since 0.3.0, February 15, 2008
  */
-public class FilterBasedSpecification
+public class InstanceOfSpecification
     implements Specification
 {
 
     /**
      * Specification OSGi filter to match metadata against.
      */
-    private final Filter m_filter;
+    private final Class m_class;
 
     /**
-     * Creates a new specification.
+     * Constructor
      *
-     * @param filter OSGi filter to match metadata against
+     * @param clazz class of the source object
      *
-     * @throws NullArgumentException - If filter is null
+     * @throws NullArgumentException - If clazz is null
      */
-    public FilterBasedSpecification( final Filter filter )
+    public InstanceOfSpecification( final Class clazz )
     {
-        NullArgumentException.validateNotNull( filter, "Filter" );
+        NullArgumentException.validateNotNull( clazz, "Class" );
 
-        m_filter = filter;
+        m_class = clazz;
     }
 
     /**
-     * Matches metadata aginst the provided filter. Returns true if filter is matching metadata.
+     * Returns true if source object is instance of expected class.
      *
-     * @param metadata metadata to be matched
+     * @see Specification#isSatisfiedBy(java.util.Dictionary, Object)
      */
     public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
-        return m_filter.match( metadata );
+        return m_class.isInstance( sourceObject );
     }
 
     @Override
     public String toString()
     {
-        return m_filter.toString();
+        return "instanceOf " + m_class.getName();
     }
 
 }

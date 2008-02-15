@@ -15,35 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.adapter.basic.internal;
+package org.ops4j.pax.cm.adapter.basic.internal.spec;
 
 import java.util.Dictionary;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Specification;
 
 /**
- * Specification that acts as a logical OR between specifications.
+ * Specification that acts as a logical AND between specifications.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 15, 2008
  */
-public class OrSpecification
+public class AndSpecification
     implements Specification
 {
 
     /**
-     * OR-ed specifications.
+     * AND-ed specifications.
      */
     private final Specification[] m_specifications;
 
     /**
      * Constructor.
      *
-     * @param specifications OR-ed specifications
+     * @param specifications AND-ed specifications
      *
-     * @throws NullArgumentException - If specifications array is null or empty
+     * @throws org.ops4j.lang.NullArgumentException
+     *          - If specifications array is null or empty
      */
-    public OrSpecification( final Specification... specifications )
+    public AndSpecification( final Specification... specifications )
     {
         NullArgumentException.validateNotEmpty( specifications, "Specifications" );
 
@@ -53,18 +54,18 @@ public class OrSpecification
     /**
      * Applys a logical OR between specifications.
      *
-     * @see Specification#isSatisfiedBy(java.util.Dictionary, Object)
+     * @see org.ops4j.pax.cm.api.Specification#isSatisfiedBy(java.util.Dictionary, Object)
      */
     public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
         for( Specification spec : m_specifications )
         {
-            if( spec.isSatisfiedBy( metadata, sourceObject ) )
+            if( !spec.isSatisfiedBy( metadata, sourceObject ) )
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -75,7 +76,7 @@ public class OrSpecification
         {
             if( !( builder.length() == 0 ) )
             {
-                builder.append( " OR " );
+                builder.append( " AND " );
             }
             builder.append( spec );
         }

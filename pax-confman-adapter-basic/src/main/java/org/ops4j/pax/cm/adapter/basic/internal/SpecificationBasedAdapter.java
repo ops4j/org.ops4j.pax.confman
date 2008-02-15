@@ -17,12 +17,7 @@
  */
 package org.ops4j.pax.cm.adapter.basic.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Dictionary;
-import java.util.Properties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.Specification;
@@ -46,6 +41,7 @@ public abstract class SpecificationBasedAdapter
      * Constructor.
      *
      * @param specification delegate specification
+     *
      * @throws NullArgumentException - If specification is null
      */
     public SpecificationBasedAdapter( final Specification specification )
