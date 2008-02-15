@@ -54,9 +54,7 @@ public class Activator
 
         bundleContext.registerService(
             Adapter.class.getName(),
-            new DictionaryToDictionaryAdapter(
-                new FilterBasedSpecification( createFilterSpecification( bundleContext, Dictionary.class.getName() ) )
-            ),
+            new DictionaryToDictionaryAdapter(),
             null // no properties
         );
     }

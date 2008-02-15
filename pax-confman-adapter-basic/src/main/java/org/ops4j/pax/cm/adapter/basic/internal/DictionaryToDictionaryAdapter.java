@@ -18,15 +18,10 @@
 package org.ops4j.pax.cm.adapter.basic.internal;
 
 import java.util.Dictionary;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.api.Specification;
 
 /**
- * Adapts a dictionary to a dictionary (quite easy).
- * TODO shall we strip out dictionary values that are not osgi compatible?
+ * Adapts a dictionary to a dictionary (quite easy isn't it).
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, January 11, 2008
@@ -36,43 +31,17 @@ public class DictionaryToDictionaryAdapter
 {
 
     /**
-     * Logger.
-     */
-    private static final Log LOG = LogFactory.getLog( DictionaryToDictionaryAdapter.class );
-
-    /**
-     * Specification in use. Cannot be null.
-     */
-    private final Specification m_specification;
-
-    /**
-     * Creates a new adapter.
-     *
-     * @param specification specification to be used; cannot be null.
-     *
-     * @throws NullArgumentException - If specification is null
-     */
-    public DictionaryToDictionaryAdapter( final Specification specification )
-    {
-        NullArgumentException.validateNotNull( specification, "Specification" );
-
-        m_specification = specification;
-
-        LOG.debug( "Started " + toString() );
-    }
-
-    /**
      * Adapts the received object (expected to be a dictionary) to a dictionary.
      *
-     * @param object to be adapted
+     * @param sourceObject to be adapted
      *
-     * @return adapted dictionary or null if source object is not a dictionary
+     * @return adapted dictionary or original object if source object is not a dictionary
      */
-    public Object adapt( final Object object )
+    public Object adapt( final Object sourceObject )
     {
-        if( object instanceof Dictionary )
+        if( sourceObject instanceof Dictionary )
         {
-            return object;
+            return sourceObject;
         }
         return null;
     }
@@ -84,7 +53,7 @@ public class DictionaryToDictionaryAdapter
      */
     public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
-        return m_specification.isSatisfiedBy( metadata, sourceObject );
+        return sourceObject instanceof Dictionary;
     }
 
     @Override
@@ -92,8 +61,8 @@ public class DictionaryToDictionaryAdapter
     {
         return new StringBuilder( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "spec=" ).append( m_specification.toString() )
             .append( "}" )
             .toString();
     }
+
 }
