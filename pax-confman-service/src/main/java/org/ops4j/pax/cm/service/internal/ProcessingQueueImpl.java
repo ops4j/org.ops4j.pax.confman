@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.service.internal.AdminCommand;
 
 /**
  * TODO add JavaDoc
@@ -44,13 +45,13 @@ class ProcessingQueueImpl
     /**
      * Queue of items to be processed.
      */
-    private final List<Processable> m_processables;
+    private final List<AdminCommand> m_adminCommands;
     /**
      * In use configuration admin. Can be null when no configuration admin service is present.
      */
     private ConfigurationAdmin m_configurationAdmin;
     /**
-     * Processable items processor thread.
+     * AdminCommand items processor thread.
      */
     private Runnable m_processor;
     /**
@@ -63,7 +64,7 @@ class ProcessingQueueImpl
      */
     ProcessingQueueImpl()
     {
-        m_processables = Collections.synchronizedList( new ArrayList<Processable>() );
+        m_adminCommands = Collections.synchronizedList( new ArrayList<AdminCommand>() );
         m_lock = new ReentrantLock();
     }
 
@@ -95,16 +96,16 @@ class ProcessingQueueImpl
     /**
      * Adds a processing tem to the queue.
      *
-     * @param processable to be added. Cannot be null.
+     * @param adminCommand to be added. Cannot be null.
      *
-     * @throws NullArgumentException if processable item is null
+     * @throws NullArgumentException if adminCommand item is null
      */
-    public void add( final Processable processable )
+    public void add( final AdminCommand adminCommand )
     {
-        LOG.trace( "Added processable item to the queue: " + processable );
-        NullArgumentException.validateNotNull( processable, "Processable item" );
+        LOG.trace( "Added adminCommand item to the queue: " + adminCommand );
+        NullArgumentException.validateNotNull( adminCommand, "AdminCommand item" );
 
-        m_processables.add( processable );
+        m_adminCommands.add( adminCommand );
         maybeStartProcessor();
     }
 
@@ -128,20 +129,20 @@ class ProcessingQueueImpl
                         try
                         {
                             ConfigurationAdmin configurationAdmin;
-                            Processable processable;
+                            AdminCommand adminCommand;
                             while( ( configurationAdmin = getConfigurationAdmin() ) != null
-                                   && ( processable = m_processables.get( 0 ) ) != null )
+                                   && ( adminCommand = m_adminCommands.get( 0 ) ) != null )
                             {
-                                LOG.debug( "Processing: " + processable );
+                                LOG.debug( "Processing: " + adminCommand );
                                 try
                                 {
-                                    processable.process( configurationAdmin );
+                                    adminCommand.execute( configurationAdmin );
                                 }
                                 catch( Throwable ignore )
                                 {
                                     LOG.error( "Ignored exception during processing", ignore );
                                 }
-                                m_processables.remove( processable );
+                                m_adminCommands.remove( adminCommand );
                             }
                         }
                         catch( IndexOutOfBoundsException ignore )

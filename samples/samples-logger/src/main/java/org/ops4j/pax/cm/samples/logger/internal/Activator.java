@@ -111,6 +111,7 @@ public class Activator
      */
     private static void logConfiguration( final Dictionary dictionary )
     {
+        LOG.info( "Configured properties:" );
         if( dictionary == null )
         {
             LOG.info( "There are no configuration properties to be listed" );

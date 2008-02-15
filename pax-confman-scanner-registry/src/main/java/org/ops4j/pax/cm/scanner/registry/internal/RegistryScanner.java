@@ -17,8 +17,6 @@
  */
 package org.ops4j.pax.cm.scanner.registry.internal;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.apache.commons.logging.Log;
@@ -31,9 +29,10 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
-import org.ops4j.pax.cm.domain.Pid;
 import org.ops4j.pax.cm.domain.PropertiesSource;
-import org.ops4j.pax.cm.scanner.core.internal.ConfigurationQueue;
+import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.scanner.core.internal.ConfigurerCommandProcessor;
+import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
@@ -57,24 +56,24 @@ public class RegistryScanner
     /**
      * Configuration buffer.
      */
-    private final ConfigurationQueue m_configurationQueue;
+    private final ConfigurerCommandProcessor m_configurerCommandProcessor;
 
     /**
      * Creates a new registry scanner.
      *
-     * @param bundleContext      bundle context; cannot be null
-     * @param configurationQueue configurations buffer; canot be null
+     * @param bundleContext              bundle context; cannot be null
+     * @param configurerCommandProcessor configurations buffer; canot be null
      *
      * @throws NullArgumentException - If bundle context is null
      *                               - If configurations buffer is null
      */
     public RegistryScanner( final BundleContext bundleContext,
-                            final ConfigurationQueue configurationQueue )
+                            final ConfigurerCommandProcessor configurerCommandProcessor )
     {
         NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
-        NullArgumentException.validateNotNull( configurationQueue, "Configurations buffer" );
+        NullArgumentException.validateNotNull( configurerCommandProcessor, "Configurations buffer" );
 
-        m_configurationQueue = configurationQueue;
+        m_configurerCommandProcessor = configurerCommandProcessor;
         m_registryTracker = new ServiceTracker( bundleContext, createFilter( bundleContext ), null )
         {
             @Override
@@ -86,17 +85,21 @@ public class RegistryScanner
                 final Dictionary metadata = createMetdata( serviceReference );
                 LOG.trace( "Configuration metadata: " + metadata );
                 // find out the pid and configure
-                final String pid = getMetdataProperty( metadata, MetadataConstants.CONFIG_PID );
+                final String pid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_PID );
                 if( pid != null )
                 {
-                    final String factoryPid = getMetdataProperty( metadata, MetadataConstants.CONFIG_FACTORY_PID );
-                    final String location = getMetdataProperty( metadata, MetadataConstants.CONFIG_BUNDLELOCATION );
+                    final String factoryPid =
+                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
+                    final String location =
+                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
                     if( factoryPid == null )
                     {
-                        m_configurationQueue.configure(
-                            new ConfigurationSource(
-                                new Pid( pid, location ),
-                                new PropertiesSource( service, metadata )
+                        m_configurerCommandProcessor.add(
+                            new UpdateCommand(
+                                new ConfigurationSource(
+                                    new ServiceIdentity( pid, location ),
+                                    new PropertiesSource( service, metadata )
+                                )
                             )
                         );
                     }
@@ -149,7 +152,7 @@ public class RegistryScanner
         }
         // add extra information
         metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.registry" );
-         return metadata;
+        return metadata;
     }
 
     /**
@@ -164,7 +167,7 @@ public class RegistryScanner
     {
         final StringBuilder filterBuilder = new StringBuilder()
             .append( "(" )
-            .append( MetadataConstants.CONFIG_PID ).append( "=*" )
+            .append( MetadataConstants.TARGET_SERVICE_PID ).append( "=*" )
             .append( ")" );
         try
         {

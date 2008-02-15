@@ -15,30 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.service.internal;
+package org.ops4j.pax.cm.scanner.core.internal;
 
-import java.io.IOException;
-import org.osgi.service.cm.ConfigurationAdmin;
-import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.api.Configurer;
 
 /**
- * TODO add JavaDoc
+ * Command to be executed agains a configurer.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 12, 2008
+ * @since 0.3.0, January 12, 2008
  */
-public interface Processable
+public interface ConfigurerCommand
 {
 
     /**
-     * Processes the configuration.
+     * Executes the command.
      *
-     * @param configurationAdmin configuration admin service to be used
-     *
-     * @throws IOException           - re-thrown if the configurations can not be persisted
-     * @throws NullArgumentException - if configuration admin service is null
+     * @param configurer configurer service to be used
      */
-    void process( ConfigurationAdmin configurationAdmin )
-        throws IOException;
+    void execute( Configurer configurer );
 
 }

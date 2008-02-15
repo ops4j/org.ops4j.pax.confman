@@ -33,26 +33,26 @@ public class PropertiesSource
     /**
      * Properties source object
      */
-    private final Object m_source;
+    private final Object m_sourceObject;
     /**
      * Properties source related metadata.
      */
     private final Dictionary m_metadata;
 
     /**
-     * Create a new configuration properties source model.
+     * Create a new configuration properties sourceObject model.
      *
-     * @param source   properties source object
-     * @param metadata properties source related metadata; optional
+     * @param sourceObject   properties sourceObject object
+     * @param metadata properties sourceObject related metadata; optional
      *
      * @throws org.ops4j.lang.NullArgumentException
-     *          - If source is null
+     *          - If sourceObject is null
      */
-    public PropertiesSource( final Object source, final Dictionary metadata )
+    public PropertiesSource( final Object sourceObject, final Dictionary metadata )
     {
-        NullArgumentException.validateNotNull( source, "Properties source" );
+        NullArgumentException.validateNotNull( sourceObject, "Properties sourceObject" );
 
-        this.m_source = source;
+        this.m_sourceObject = sourceObject;
         if( metadata == null )
         {
             m_metadata = new Hashtable();
@@ -78,9 +78,9 @@ public class PropertiesSource
      *
      * @return configuration properties source
      */
-    public Object getSource()
+    public Object getSourceObject()
     {
-        return m_source;
+        return m_sourceObject;
     }
     
 }

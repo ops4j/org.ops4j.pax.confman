@@ -50,7 +50,7 @@ public class Activator
         // registration properties
         final Dictionary<String, String> msProps = new Hashtable<String, String>();
         // we target pax confman logger sample
-        msProps.put( "config.service.pid", "org.ops4j.pax.cm.samples.logger" );
+        msProps.put( "target.service.pid", "org.ops4j.pax.cm.samples.logger" );
 
         Dictionary<String, Object> cfgAsDict;
 

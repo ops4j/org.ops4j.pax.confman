@@ -25,7 +25,7 @@ import org.ops4j.lang.NullArgumentException;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 14, 2008
  */
-public class Pid
+public class ServiceIdentity
 {
 
     /**
@@ -33,24 +33,49 @@ public class Pid
      */
     private final String m_pid;
     /**
+     * Factory persistent identifier. Cannot be null.
+     */
+    private final String m_factoryPid;
+    /**
      * Bundle location.
      */
     private final String m_location;
 
     /**
-     * Create a new persistent identifier model.
+     * Create a new persistent identifier model for a managed service.
      *
      * @param pid      persistent identifier
      * @param location bundle location; optional
      *
      * @throws NullArgumentException - If pid is null or empty
      */
-    public Pid( final String pid, final String location )
+    public ServiceIdentity( final String pid, final String location )
     {
         NullArgumentException.validateNotEmpty( pid, true, "Persistent identifier" );
 
-        this.m_pid = pid;
-        this.m_location = location;
+        m_pid = pid;
+        m_factoryPid = null;
+        m_location = location;
+    }
+
+    /**
+     * Create a new persistent identifier model for a managed service factory.
+     *
+     * @param pid        persistent identifier
+     * @param factoryPid factory persistent identifier
+     * @param location   bundle location; optional
+     *
+     * @throws NullArgumentException - If pid is null or empty
+     *                               - If factory pid is null or empty
+     */
+    public ServiceIdentity( final String pid, final String factoryPid, final String location )
+    {
+        NullArgumentException.validateNotEmpty( pid, true, "Persistent identifier" );
+        NullArgumentException.validateNotEmpty( factoryPid, true, "Factory persistent identifier" );
+
+        m_pid = pid;
+        m_factoryPid = factoryPid;
+        m_location = location;
     }
 
     /**
@@ -66,6 +91,16 @@ public class Pid
     /**
      * Getter.
      *
+     * @return factory persistent pid
+     */
+    public String getFactoryPid()
+    {
+        return m_factoryPid;
+    }
+
+    /**
+     * Getter.
+     *
      * @return bundle location
      */
     public String getLocation()
@@ -76,13 +111,21 @@ public class Pid
     @Override
     public String toString()
     {
-        return new StringBuilder( )
+        final StringBuilder builder = new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "pid=" ).append( m_pid )
+            .append( "pid=" ).append( m_pid );
+
+        if( m_factoryPid != null )
+        {
+            builder.append( ",factoryPid=" ).append( m_factoryPid );
+        }
+
+        builder
             .append( ",location=" ).append( m_location )
-            .append( "}" )
-            .toString();
-    }    
+            .append( "}" );
+
+        return builder.toString();
+    }
 
 }

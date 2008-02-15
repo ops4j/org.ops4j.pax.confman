@@ -17,16 +17,28 @@
  */
 package org.ops4j.pax.cm.service.internal;
 
-import org.ops4j.pax.cm.service.internal.AdminCommand;
+import java.io.IOException;
+import org.osgi.service.cm.ConfigurationAdmin;
+import org.ops4j.lang.NullArgumentException;
 
 /**
- * TODO add JavaDoc
+ * Command to be executed agains configuration admin/
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public interface ProcessingQueue
+public interface AdminCommand
 {
 
-    void add( AdminCommand adminCommand );
+    /**
+     * Executes the command.
+     *
+     * @param configurationAdmin configuration admin service to be used
+     *
+     * @throws IOException           - re-thrown if the configurations can not be persisted
+     * @throws NullArgumentException - if configuration admin service is null
+     */
+    void execute( ConfigurationAdmin configurationAdmin )
+        throws IOException;
+
 }

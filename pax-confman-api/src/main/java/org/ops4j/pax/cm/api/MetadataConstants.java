@@ -29,28 +29,58 @@ import org.osgi.service.cm.ConfigurationAdmin;
 public interface MetadataConstants
 {
 
+    /**
+     * Copy of osgi objectclass property key.
+     */
     String OBJECTCLASS = Constants.OBJECTCLASS;
-    String CONFIG_PID = "config." + Constants.SERVICE_PID;
-    String CONFIG_FACTORY_PID = "config." + ConfigurationAdmin.SERVICE_FACTORYPID;
-    String CONFIG_BUNDLELOCATION = "config." + ConfigurationAdmin.SERVICE_BUNDLELOCATION;
+
+    /**
+     * Copy of osgi service pid.
+     */
+    String SERVICE_PID = Constants.SERVICE_PID;
+    /**
+     * Copy of osgi service factory pid.
+     */
+    String SERVICE_FACTORYPID = ConfigurationAdmin.SERVICE_FACTORYPID;
+    /**
+     * Copy of service bundle location.
+     */
+    String SERVICE_BUNDLELOCATION = ConfigurationAdmin.SERVICE_BUNDLELOCATION;
 
     /**
      * Service PID (service.pid) as regular expression.
      */
-    String SERVICE_PID_AS_REGEX = Constants.SERVICE_PID.replaceAll( "\\.", "\\\\." ) + ".*";
+    String SERVICE_PID_AS_REGEX = Constants.SERVICE_PID.replaceAll( "\\.", "\\." ) + ".*";
     /**
      * Service factory PID (service.facpid) as regular expression.
      */
-    String SERVICE_FACTORYPID_AS_REGEX = ConfigurationAdmin.SERVICE_FACTORYPID.replaceAll( "\\.", "\\\\." ) + ".*";
+    String SERVICE_FACTORYPID_AS_REGEX = ConfigurationAdmin.SERVICE_FACTORYPID.replaceAll( "\\.", "\\." ) + ".*";
+
+    /**
+     * Prefix for all target properties.
+     */
+    String TARGET_PREFIX = "target";
+    /**
+     * Targeted service pid.
+     */
+    String TARGET_SERVICE_PID = TARGET_PREFIX + "." + SERVICE_PID;
+    /**
+     * Targeted service factory pid.
+     */
+    String TARGET_SERVICE_FACTORYPID = TARGET_PREFIX + "." + SERVICE_FACTORYPID;
+    /**
+     * Targeted service bundle location.
+     */
+    String TARGET_SERVICE_BUNDLELOCATION = TARGET_PREFIX + "." + SERVICE_BUNDLELOCATION;
 
     /**
      * Prefix for information properties.
      */
-    String INFO_PREFIX = "org.ops4j.pax.cm.info";
+    String INFO_PREFIX = "info";
     /**
      * Prefix for information properties as a regular expression.
      */
-    String INFO_PREFIX_AS_REGEX = INFO_PREFIX.replaceAll( "\\.", "\\\\." ) + ".*";
+    String INFO_PREFIX_AS_REGEX = INFO_PREFIX.replaceAll( "\\.", "\\." ) + ".*";
     /**
      * OPS4j Pax Configuration Manager Agent name.
      * Optional, provided as information.

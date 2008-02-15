@@ -24,9 +24,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
-import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
@@ -38,7 +36,7 @@ import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 13, 2008
  */
-public class ConfigurationQueue
+public class ConfigurerCommandProcessor
     extends AbstractLifecycle
     implements ConfigurerSetter
 {
@@ -46,12 +44,12 @@ public class ConfigurationQueue
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( ConfigurationQueue.class );
+    private static final Log LOG = LogFactory.getLog( ConfigurerCommandProcessor.class );
 
     /**
      * Configuration queue.
      */
-    private BlockingQueue<Runnable> m_queue;
+    private BlockingQueue<ConfigurerCommand> m_queue;
     /**
      * Configurer in use.
      */
@@ -77,30 +75,21 @@ public class ConfigurationQueue
     /**
      * Creates a new configurations queue.
      */
-    public ConfigurationQueue()
+    public ConfigurerCommandProcessor()
     {
-        m_queue = new LinkedBlockingQueue<Runnable>();
+        m_queue = new LinkedBlockingQueue<ConfigurerCommand>();
         m_configurerLock = new ReentrantLock();
         m_configurerAvailable = m_configurerLock.newCondition();
     }
 
     /**
-     * Start queue processing.
+     * Adds configurer commands to be processed.
+     *
+     * @param command configurer command to be processed as soon as configurer service becomes available
      */
-    protected void onStart()
+    public void add( final ConfigurerCommand command )
     {
-        m_stopProcessorSignal = false;
-        m_processor = new Thread( new CommandProcessor() );
-        m_processor.start();
-    }
-
-    /**
-     * Stop queue processing.
-     */
-    protected void onStop()
-    {
-        m_stopProcessorSignal = true;
-        m_processor.interrupt();
+        m_queue.add( command );
     }
 
     /**
@@ -123,13 +112,22 @@ public class ConfigurationQueue
     }
 
     /**
-     * @param configurationSource configuration source
-     *
-     * @see Configurer#configure(String, String, java.util.Dictionary, Object)
+     * Start queue processing.
      */
-    public void configure( final ConfigurationSource configurationSource )
+    protected void onStart()
     {
-        m_queue.add( new ConfigureCommand( configurationSource ) );
+        m_stopProcessorSignal = false;
+        m_processor = new Thread( new CommandProcessor() );
+        m_processor.start();
+    }
+
+    /**
+     * Stop queue processing.
+     */
+    protected void onStop()
+    {
+        m_stopProcessorSignal = true;
+        m_processor.interrupt();
     }
 
     /**
@@ -145,7 +143,7 @@ public class ConfigurationQueue
         public void run()
         {
             LOG.trace( "Started processing of configuration queue" );
-            Runnable command = null;
+            ConfigurerCommand command = null;
             while( !m_stopProcessorSignal )
             {
                 try
@@ -167,7 +165,14 @@ public class ConfigurationQueue
                             LOG.trace( "Configurer available. Executing " + command );
                             // ! we use run directly as for the moment we do not create a new thread for
                             // running the command
-                            command.run();
+                            try
+                            {
+                                command.execute( m_configurer );
+                            }
+                            catch( Throwable ignore )
+                            {
+                                LOG.error( "Exception while executing command " + command, ignore );
+                            }
                             command = null;
                         }
                         finally
@@ -179,58 +184,10 @@ public class ConfigurationQueue
                 catch( Throwable ignore )
                 {
                     // this could be due to an interruption or an exception during configuration
+                    LOG.trace( "Unexpected stop of processing queue", ignore );
                 }
             }
             LOG.trace( "Stopped processing of configuration queue" );
-        }
-
-    }
-
-    /**
-     * Process configuration source.
-     */
-    private class ConfigureCommand
-        implements Runnable
-    {
-
-        /**
-         * Configuration source.
-         */
-        private final ConfigurationSource m_configurationSource;
-
-        /**
-         * Create a new configuration command.
-         *
-         * @param configurationSource configuration source
-         */
-        ConfigureCommand( final ConfigurationSource configurationSource )
-        {
-            NullArgumentException.validateNotNull( configurationSource, "Configuration source" );
-            m_configurationSource = configurationSource;
-        }
-
-        /**
-         * Process configuration source.
-         */
-        public void run()
-        {
-            m_configurer.configure(
-                m_configurationSource.getPid().getPid(),
-                m_configurationSource.getPid().getLocation(),
-                m_configurationSource.getSource().getMetadata(),
-                m_configurationSource.getSource().getSource()
-            );
-        }
-
-        @Override
-        public String toString()
-        {
-            return new StringBuilder()
-                .append( this.getClass().getSimpleName() )
-                .append( "{" )
-                .append( m_configurationSource )
-                .append( "}" )
-                .toString();
         }
 
     }

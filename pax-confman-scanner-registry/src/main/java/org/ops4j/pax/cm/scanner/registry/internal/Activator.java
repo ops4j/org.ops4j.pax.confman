@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.cm.scanner.core.internal.ConfigurerTracker;
-import org.ops4j.pax.cm.scanner.core.internal.ConfigurationQueue;
+import org.ops4j.pax.cm.scanner.core.internal.ConfigurerCommandProcessor;
 
 /**
  * Activator for RegistryScanner.
@@ -45,7 +45,7 @@ public class Activator
     /**
      * Configuration Queue.
      */
-    private ConfigurationQueue m_queue;
+    private ConfigurerCommandProcessor m_queue;
     /**
      * Registry scanner.
      */
@@ -58,7 +58,7 @@ public class Activator
     {
         LOG.debug( "Starting OPS4J Pax ConfMan service registry tracker" );
 
-        m_queue = new ConfigurationQueue();
+        m_queue = new ConfigurerCommandProcessor();
         m_configurerTracker = new ConfigurerTracker( bundleContext, m_queue );
         m_registryScanner = new RegistryScanner( bundleContext, m_queue );
 

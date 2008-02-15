@@ -9,6 +9,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.domain.ConfigurationTarget;
 
 /**
  * TODO add JavaDoc
@@ -16,14 +17,14 @@ import org.ops4j.pax.cm.api.MetadataConstants;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-class ProcessableConfiguration
-    implements Processable
+class UpdateManagedServiceCommand
+    implements AdminCommand
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( ProcessableConfiguration.class );
+    private static final Log LOG = LogFactory.getLog( UpdateManagedServiceCommand.class );
     /**
      * Key specification that eliminates INFO keys.
      */
@@ -33,36 +34,22 @@ class ProcessableConfiguration
         );
 
     /**
-     * Process identifier. Cannot be null.
+     * Update configuration target.
      */
-    private final String m_pid;
-    /**
-     * Bound location. Can be null meaning an unbound location.
-     */
-    private final String m_location;
-    /**
-     * Dictionary of configuration properties.
-     */
-    private final Dictionary m_properties;
+    private final ConfigurationTarget m_target;
 
     /**
-     * Creates a new configuration to be processed.
+     * Constructor.
      *
-     * @param pid        persistent identifier; cannot be null
-     * @param location   the bundle location string; can be null
-     * @param properties the new set of properties; can be null
+     * @param target configuration target
      *
-     * @throws NullArgumentException - If pid is null
+     * @throws NullArgumentException - If target is null
      */
-    ProcessableConfiguration( final String pid,
-                              final String location,
-                              final Dictionary properties )
+    UpdateManagedServiceCommand( ConfigurationTarget target )
     {
-        NullArgumentException.validateNotEmpty( pid, true, "Persistent identifier" );
+        NullArgumentException.validateNotNull( target, "Configuration target" );
 
-        m_pid = pid;
-        m_location = location;
-        m_properties = properties;
+        m_target = target;
     }
 
     /**
@@ -73,20 +60,25 @@ class ProcessableConfiguration
      * @throws IOException           - re-thrown if the configurations can not be persisted
      * @throws NullArgumentException - if configuration admin service is null
      */
-    public void process( final ConfigurationAdmin configurationAdmin )
+    public void execute( final ConfigurationAdmin configurationAdmin )
         throws IOException
     {
         NullArgumentException.validateNotNull( configurationAdmin, "Configuration Admin service" );
 
-        LOG.trace( "Looking for a configuration for " + m_pid );
-        final Configuration configuration = configurationAdmin.getConfiguration( m_pid, m_location );
+        LOG.trace( "Looking for a configuration for " + m_target.getServiceIdentity() );
+        final Configuration configuration = configurationAdmin.getConfiguration(
+            m_target.getServiceIdentity().getPid(),
+            m_target.getServiceIdentity().getLocation()
+        );
         if( configuration != null )
         {
             LOG.trace( "Found configuration with properties: " + configuration.getProperties() );
-            if( configurationsAreNotEqual( configuration.getProperties(), m_properties ) )
+            if( configurationsAreNotEqual( configuration.getProperties(),
+                                           m_target.getPropertiesTarget().getProperties()
+            ) )
             {
-                configuration.setBundleLocation( m_location );
-                configuration.update( m_properties );
+                configuration.setBundleLocation( m_target.getServiceIdentity().getLocation() );
+                configuration.update( m_target.getPropertiesTarget().getProperties() );
             }
             else
             {
@@ -117,7 +109,7 @@ class ProcessableConfiguration
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "pid=" ).append( m_pid )
+            .append( "identity=" ).append( m_target.getServiceIdentity() )
             .append( "}" )
             .toString();
     }

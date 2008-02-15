@@ -3,12 +3,12 @@ package org.ops4j.pax.cm.domain;
 import org.ops4j.lang.NullArgumentException;
 
 /**
- * Configuration source model.
+ * Configuration target model.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 14, 2008
  */
-public class ConfigurationSource
+public class ConfigurationTarget
 {
 
     /**
@@ -16,27 +16,27 @@ public class ConfigurationSource
      */
     private final ServiceIdentity m_serviceIdentity;
     /**
-     * Properties source model.
+     * Properties target model.
      */
-    private final PropertiesSource m_source;
+    private final PropertiesTarget m_target;
 
     /**
-     * Creates a new configuration source model.
+     * Creates a new configuration target model.
      *
-     * @param serviceIdentity service identity
-     * @param source          properties source
+     * @param serviceIdentity service identity model
+     * @param target          properties target
      *
-     * @throws NullArgumentException - If service identity is null
-     *                               - If source is null
+     * @throws NullArgumentException - If serviceIdentity is null
+     *                               - If target is null
      */
-    public ConfigurationSource( final ServiceIdentity serviceIdentity,
-                                final PropertiesSource source )
+    public ConfigurationTarget( final ServiceIdentity serviceIdentity,
+                                final PropertiesTarget target )
     {
         NullArgumentException.validateNotNull( serviceIdentity, "Service identity" );
-        NullArgumentException.validateNotNull( source, "Pproperties source" );
+        NullArgumentException.validateNotNull( target, "Properties target" );
 
         m_serviceIdentity = serviceIdentity;
-        m_source = source;
+        m_target = target;
     }
 
     /**
@@ -52,11 +52,11 @@ public class ConfigurationSource
     /**
      * Getter.
      *
-     * @return Properties source model
+     * @return Properties target model
      */
-    public PropertiesSource getPropertiesSource()
+    public PropertiesTarget getPropertiesTarget()
     {
-        return m_source;
+        return m_target;
     }
 
     @Override
@@ -65,8 +65,8 @@ public class ConfigurationSource
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "pid=" ).append( m_serviceIdentity )
-            .append( ",source=" ).append( m_source )
+            .append( "identity=" ).append( m_serviceIdentity )
+            .append( ",target=" ).append( m_target )
             .append( "}" )
             .toString();
     }
