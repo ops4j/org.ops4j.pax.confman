@@ -17,7 +17,10 @@
  */
 package org.ops4j.pax.cm.adapter.basic.internal;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Dictionary;
+import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
@@ -51,10 +54,70 @@ public class Activator
     public void start( final BundleContext bundleContext )
     {
         LOG.debug( "Starting OPS4J Pax ConfMan basic adapters" );
+        registerDictionaryToDictionaryAdapter( bundleContext );
+        registerPropertiesInputStreamToDictionaryAdapter( bundleContext );
+        registerFileToInputStreamAdapter( bundleContext );
+    }
 
+    /**
+     * Register properties input stream -> Properties (implements Dictionary) adapter.
+     *
+     * @param bundleContext bundle context
+     */
+    private void registerPropertiesInputStreamToDictionaryAdapter( BundleContext bundleContext )
+    {
+        try
+        {
+            bundleContext.registerService(
+                Adapter.class.getName(),
+                new PropertiesInputStreamToDictionaryAdapter(
+                    new AndSpecification(
+                        new InstanceOfSpecification( InputStream.class ),
+                        new FilterBasedSpecification(
+                            bundleContext.createFilter( "(contentTypeClass=" + Properties.class.getName() + ")" )
+                        )
+                    )
+                ),
+                null // no properties
+            );
+        }
+        catch( InvalidSyntaxException ignore )
+        {
+            // not expected
+            LOG.trace( "Internal error: " + ignore.getMessage() );
+        }
+    }
+
+    /**
+     * Register Properties file -> Properties Input Stream adapter.
+     *
+     * @param bundleContext bundle context
+     */
+    private void registerFileToInputStreamAdapter( BundleContext bundleContext )
+    {
         bundleContext.registerService(
             Adapter.class.getName(),
-            new DictionaryToDictionaryAdapter(),
+            new FileToInputStreamAdapter(
+                new AndSpecification(
+                    new InstanceOfSpecification( File.class )
+                )
+            ),
+            null // no properties
+        );
+    }
+
+    /**
+     * Register Dictionary -> Dictionary adapter.
+     *
+     * @param bundleContext bundle context
+     */
+    private void registerDictionaryToDictionaryAdapter( final BundleContext bundleContext )
+    {
+        bundleContext.registerService(
+            Adapter.class.getName(),
+            new DictionaryToDictionaryAdapter(
+                new InstanceOfSpecification( Dictionary.class )
+            ),
             null // no properties
         );
     }

@@ -20,6 +20,7 @@ package org.ops4j.pax.cm.samples.registry.internal;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
@@ -69,12 +70,14 @@ public class Activator
         cfgAsDict.put( "this.should.never.be.picked.by.registry.scanner", "foo" );
         bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, null );
 
-        // registere a dictionary that has a property with a value that changes at each registration so it should be
-        // updated every time
-        cfgAsDict = new Hashtable<String, Object>();
-        cfgAsDict.put( "a.changing.property", System.currentTimeMillis() );
-        //bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, msProps );
+        Properties cfgAsProps;
 
+        // registers Properties where the keys / values are always the same so it should be sent to config admin only
+        // once
+        cfgAsProps = new Properties();
+        cfgAsProps.setProperty( "foo.from.a.properties", "bar" );
+        bundleContext.registerService( Properties.class.getName(), cfgAsProps, msProps );
+        
     }
 
     /**

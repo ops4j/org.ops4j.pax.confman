@@ -17,41 +17,58 @@
  */
 package org.ops4j.pax.cm.adapter.basic.internal;
 
-import java.util.Dictionary;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.api.Specification;
 
 /**
- * Adapts a dictionary to a dictionary (quite easy isn't it).
+ * Adapts an input stream containing Properties.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, January 11, 2008
+ * @since 0.3.0, January 15, 2008
  */
-public class DictionaryToDictionaryAdapter
+public class FileToInputStreamAdapter
     extends SpecificationBasedAdapter
 {
+
+    /**
+     * Logger.
+     */
+    private static final Log LOG = LogFactory.getLog( Activator.class );
 
     /**
      * Constructor.
      *
      * @param specification delegate specification
      */
-    public DictionaryToDictionaryAdapter( final Specification specification )
+    public FileToInputStreamAdapter( final Specification specification )
     {
         super( specification );
     }
 
     /**
-     * Adapts the received object (expected to be a dictionary) to a dictionary.
+     * Adapts the received object (expected to be File) to an input stream.
      *
      * @param sourceObject to be adapted
      *
-     * @return adapted dictionary or original object if source object is not a dictionary
+     * @return input stream  or original object if source object is not an file.
      */
     public Object adapt( final Object sourceObject )
     {
-        if( sourceObject instanceof Dictionary )
+        if( sourceObject instanceof File )
         {
-            return sourceObject;
+            try
+            {
+                return new FileInputStream( (File) sourceObject );
+            }
+            catch( FileNotFoundException ignore )
+            {
+                LOG.error( "Could not adapt file", ignore );
+                return null;
+            }
         }
         return sourceObject;
     }
