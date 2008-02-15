@@ -17,7 +17,9 @@
  */
 package org.ops4j.pax.cm.samples.registry.internal;
 
-import java.util.Date;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -53,31 +55,65 @@ public class Activator
         // we target pax confman logger sample
         msProps.put( "target.service.pid", "org.ops4j.pax.cm.samples.logger" );
 
-        Dictionary<String, Object> cfgAsDict;
-
-        // register a dictionary where the keys / values are always the same so it should be sent to config admin only
-        // once
-        cfgAsDict = new Hashtable<String, Object>();
-        cfgAsDict.put( "foo.from.a.dictionary", "bar" );
-        cfgAsDict.put( "bar.from.a.dictionary", "foo" );
-        // we configure also a property that should be removed while processing as is not supported by config admin
-        cfgAsDict.put( "a.property.that.should.be.ignored", new Date() );
-        bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, msProps );
-
-        // register a dictionary service properties that do not contain the pid property so this config should not be
-        // picked by registry scanner
-        cfgAsDict = new Hashtable<String, Object>();
-        cfgAsDict.put( "this.should.never.be.picked.by.registry.scanner", "foo" );
-        bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, null );
-
+//        Dictionary<String, Object> cfgAsDict;
+//
+//        // register a dictionary where the keys / values are always the same so it should be sent to config admin only
+//        // once
+//        cfgAsDict = new Hashtable<String, Object>();
+//        cfgAsDict.put( "foo.from.a.dictionary", "bar" );
+//        cfgAsDict.put( "bar.from.a.dictionary", "foo" );
+//        // we configure also a property that should be removed while processing as is not supported by config admin
+//        cfgAsDict.put( "a.property.that.should.be.ignored", new Date() );
+//        bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, msProps );
+//
+//        // register a dictionary service properties that do not contain the pid property so this config should not be
+//        // picked by registry scanner
+//        cfgAsDict = new Hashtable<String, Object>();
+//        cfgAsDict.put( "this.should.never.be.picked.by.registry.scanner", "foo" );
+//        bundleContext.registerService( Dictionary.class.getName(), cfgAsDict, null );
+//
         Properties cfgAsProps;
+//
+//        // registers Properties where the keys / values are always the same so it should be sent to config admin only
+//        // once
+//        cfgAsProps = new Properties();
+//        cfgAsProps.setProperty( "sample.configuration.generated.from", "Properties" );
+//        bundleContext.registerService( Properties.class.getName(), cfgAsProps, msProps );
+//
+//        // registers an input stream pointing to Properties.
+//        // Properties are first saved into a byte stream
+//        cfgAsProps = new Properties();
+//        cfgAsProps.setProperty( "sample.configuration.generated.from", "Input Stream of properties" );
+//        try
+//        {
+//            ByteArrayOutputStream os = new ByteArrayOutputStream();
+//            cfgAsProps.store( os, null );
+//            InputStream is = new ByteArrayInputStream( os.toByteArray() );
+//            msProps.put( "contentTypeClass", Properties.class.getName() );
+//            bundleContext.registerService( InputStream.class.getName(), is, msProps );
+//        }
+//        catch( IOException ignore )
+//        {
+//            // ignore
+//        }
 
-        // registers Properties where the keys / values are always the same so it should be sent to config admin only
-        // once
+        // registers an file pointing to Properties.
+        // Properties are first saved into a file on a temporary location
         cfgAsProps = new Properties();
-        cfgAsProps.setProperty( "foo.from.a.properties", "bar" );
-        bundleContext.registerService( Properties.class.getName(), cfgAsProps, msProps );
-        
+        cfgAsProps.setProperty( "sample.configuration.generated.from", "Properties File" );
+        try
+        {
+            File propsFile = File.createTempFile( "confman", ".properties" );
+            propsFile.deleteOnExit();
+            cfgAsProps.store( new FileOutputStream( propsFile ), null );
+            msProps.put( "contentTypeClass", Properties.class.getName() );
+            bundleContext.registerService( File.class.getName(), propsFile, msProps );
+        }
+        catch( IOException ignore )
+        {
+            // ignore
+        }
+
     }
 
     /**
