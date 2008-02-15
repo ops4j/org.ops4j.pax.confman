@@ -17,10 +17,8 @@
  */
 package org.ops4j.pax.cm.api;
 
-import java.util.Dictionary;
-
 /**
- * TODO add JavaDoc
+ * Adapts an opbject to another object.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
@@ -29,6 +27,6 @@ public interface DictionaryAdapter
     extends Specification
 {
 
-    Dictionary adapt( Object object );
+    Object adapt( Object object );
 
 }

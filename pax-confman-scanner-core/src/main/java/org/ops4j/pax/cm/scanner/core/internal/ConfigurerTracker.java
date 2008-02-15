@@ -21,8 +21,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
  * Tracks configurer service.
@@ -94,5 +94,5 @@ public class ConfigurerTracker
     {
         m_configurerTracker.close();
     }
-    
+
 }

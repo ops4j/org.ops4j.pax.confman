@@ -66,27 +66,25 @@ public class DictionaryToDictionaryAdapter
      *
      * @param object to be adapted
      *
-     * @return adapted dictionary
-     *
-     * @throws IllegalArgumentException - If object to be adapted is not a dictionary
+     * @return adapted dictionary or null if source object is not a dictionary
      */
-    public Dictionary adapt( final Object object )
+    public Object adapt( final Object object )
     {
         if( object instanceof Dictionary )
         {
-            return (Dictionary) object;
+            return object;
         }
-        throw new IllegalArgumentException( "Cannot adapt objects of class " + object.getClass() );
+        return null;
     }
 
     /**
      * Delegates to specification.
      *
-     * @see org.ops4j.pax.cm.api.DictionaryAdapter#isSatisfiedBy(Dictionary)
+     * @see org.ops4j.pax.cm.api.DictionaryAdapter#isSatisfiedBy(Dictionary,Object)
      */
-    public boolean isSatisfiedBy( final Dictionary metadata )
+    public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
-        return m_specification.isSatisfiedBy( metadata );
+        return m_specification.isSatisfiedBy( metadata, sourceObject );
     }
 
     @Override

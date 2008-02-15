@@ -68,13 +68,13 @@ class DictionaryAdapterRepositoryImpl
         m_adapters.remove( adapter );
     }
 
-    public DictionaryAdapter find( final Dictionary metadata )
+    public DictionaryAdapter find( final Dictionary metadata, final Object sourceObject )
     {
         synchronized( m_adapters )
         {
             for( DictionaryAdapter adapter : m_adapters )
             {
-                if( adapter.isSatisfiedBy( metadata ) )
+                if( adapter.isSatisfiedBy( metadata, sourceObject ) )
                 {
                     return adapter;
                 }

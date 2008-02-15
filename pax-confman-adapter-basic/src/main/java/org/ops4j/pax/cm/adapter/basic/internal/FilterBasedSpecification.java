@@ -56,7 +56,7 @@ public class FilterBasedSpecification
      *
      * @param metadata metadata to be matched
      */
-    public boolean isSatisfiedBy( final Dictionary metadata )
+    public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
         return m_filter.match( metadata );
     }

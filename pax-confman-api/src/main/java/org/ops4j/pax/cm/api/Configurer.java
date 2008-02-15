@@ -29,5 +29,5 @@ public interface Configurer
 {
 
     void configure( String pid, String location, Dictionary metadata, Object configuration );
-    
+
 }

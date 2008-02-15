@@ -79,10 +79,16 @@ class CleanupDictionaryAdapterWrapper
      *
      * @see DictionaryAdapter#adapt(Object)
      */
-    public Dictionary adapt( final Object object )
+    public Object adapt( final Object object )
     {
+        final Object adaptedObject = m_delegate.adapt( object );
+        if( !( adaptedObject instanceof Dictionary ) )
+        {
+            // do not work on adapted objects that are not dictionaries
+            return adaptedObject;
+        }
         final Dictionary adapted = new Hashtable();
-        DictionaryUtils.copy( m_delegate.adapt( object ), adapted );
+        DictionaryUtils.copy( (Dictionary) adaptedObject, adapted );
         if( !adapted.isEmpty() )
         {
             final Enumeration keys = adapted.keys();

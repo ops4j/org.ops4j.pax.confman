@@ -55,13 +55,19 @@ class AdaptorTypeInfoDictionaryAdapterWrapper
      * @see org.ops4j.pax.cm.api.DictionaryAdapter#adapt(Object)
      */
     @SuppressWarnings( "unchecked" )
-    public Dictionary adapt( final Object object )
+    public Object adapt( final Object object )
     {
-        final Dictionary wrapped = new Hashtable();
+        final Object adaptedObject = m_delegate.adapt( object );
+        if( !( adaptedObject instanceof Dictionary ) )
+        {
+            // do not work on adapted objects that are not dictionaries
+            return adaptedObject;
+        }
+        final Dictionary adapted = new Hashtable();
         // first we add the properties in order to allow adaptors to overide them
-        wrapped.put( MetadataConstants.INFO_ADAPTOR, m_adaptorType );
+        adapted.put( MetadataConstants.INFO_ADAPTOR, m_adaptorType );
         // and do the adaptation
-        DictionaryUtils.copy( m_delegate.adapt( object ), wrapped );
-        return wrapped;
+        DictionaryUtils.copy( (Dictionary) adaptedObject, adapted );
+        return adapted;
     }
 }

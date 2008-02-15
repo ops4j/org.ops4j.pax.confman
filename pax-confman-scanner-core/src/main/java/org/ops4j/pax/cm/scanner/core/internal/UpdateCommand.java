@@ -17,10 +17,10 @@
  */
 package org.ops4j.pax.cm.scanner.core.internal;
 
-import org.ops4j.pax.cm.api.Configurer;
-import org.ops4j.pax.cm.domain.ConfigurationSource;
-import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.common.internal.processor.Command;
+import org.ops4j.pax.cm.domain.ConfigurationSource;
 
 /**
  * Command to be executed agains a configurer.
@@ -32,45 +32,45 @@ public class UpdateCommand
     implements Command<Configurer>
 {
 
-        /**
-         * Configuration source.
-         */
-        private final ConfigurationSource m_configurationSource;
+    /**
+     * Configuration source.
+     */
+    private final ConfigurationSource m_configurationSource;
 
-        /**
-         * Create a new configuration command.
-         *
-         * @param configurationSource configuration source
-         */
-        public UpdateCommand( final ConfigurationSource configurationSource )
-        {
-            NullArgumentException.validateNotNull( configurationSource, "Configuration source" );
-            
-            m_configurationSource = configurationSource;
-        }
+    /**
+     * Create a new configuration command.
+     *
+     * @param configurationSource configuration source
+     */
+    public UpdateCommand( final ConfigurationSource configurationSource )
+    {
+        NullArgumentException.validateNotNull( configurationSource, "Configuration source" );
 
-        /**
-         * Process configuration source.
-         */
-        public void execute( final Configurer configurer )
-        {
-            configurer.configure(
-                m_configurationSource.getServiceIdentity().getPid(),
-                m_configurationSource.getServiceIdentity().getLocation(),
-                m_configurationSource.getPropertiesSource().getMetadata(),
-                m_configurationSource.getPropertiesSource().getSourceObject()
-            );
-        }
+        m_configurationSource = configurationSource;
+    }
 
-        @Override
-        public String toString()
-        {
-            return new StringBuilder()
-                .append( this.getClass().getSimpleName() )
-                .append( "{" )
-                .append( m_configurationSource )
-                .append( "}" )
-                .toString();
-        }
+    /**
+     * Process configuration source.
+     */
+    public void execute( final Configurer configurer )
+    {
+        configurer.configure(
+            m_configurationSource.getServiceIdentity().getPid(),
+            m_configurationSource.getServiceIdentity().getLocation(),
+            m_configurationSource.getPropertiesSource().getMetadata(),
+            m_configurationSource.getPropertiesSource().getSourceObject()
+        );
+    }
+
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append( this.getClass().getSimpleName() )
+            .append( "{" )
+            .append( m_configurationSource )
+            .append( "}" )
+            .toString();
+    }
 
 }

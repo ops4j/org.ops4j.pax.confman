@@ -108,7 +108,7 @@
         <groupId>org.ops4j.pax.swissbox</groupId>
         <artifactId>pax-swissbox-tracker</artifactId>
         <version>${dependency.swissbox.version}</version>
-      </dependency>      
+      </dependency>
       <!-- OSGi Alliance -->
       <dependency>
         <groupId>org.osgi</groupId>

@@ -1,10 +1,10 @@
 package org.ops4j.pax.configmanager.internal;
 
-import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.configmanager.IConfigurationFileHandler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
+import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.configmanager.IConfigurationFileHandler;
 
 /**
  * {@code ConfigurationFileHandlerServiceTracker} tracks {@code IConfigurationFileHandler} services.

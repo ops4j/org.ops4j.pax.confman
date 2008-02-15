@@ -115,16 +115,46 @@ public class ConfigurerImpl
                                        final ConfigurationStrategy strategy )
     {
         strategy.prepareSource( source );
-        final DictionaryAdapter adapter = m_adapterRepository.find( source.getPropertiesSource().getMetadata() );
-        if( adapter != null )
+        // try to adapt the source object to a dictionary
+        Dictionary adapted = null;
+        Object sourceObject = source.getPropertiesSource().getSourceObject();
+        // loop adaptors till we have an adapted dictionary or sourceObject becomes null
+        while( adapted == null )
         {
-            LOG.trace( "Configuration adapter: " + adapter );
-            final Dictionary adapted = copyPropertiesFromMetadata(
+            final DictionaryAdapter adapter = m_adapterRepository.find(
                 source.getPropertiesSource().getMetadata(),
-                adapter.adapt(
-                    source.getPropertiesSource().getSourceObject()
-                )
+                sourceObject
             );
+            if( adapter == null )
+            {
+                // no adaptor found, so let's just get out
+                break;
+            }
+            LOG.trace( "Using adapter " + adapter );
+            final Class previousSourceClass = sourceObject.getClass();
+            sourceObject = adapter.adapt( sourceObject );
+            LOG.trace( "Source object adapted to: " + sourceObject );
+            if( sourceObject == null )
+            {
+                // less probably but if a source object becomes null there is no reason to look further
+                break;
+            }
+            if( sourceObject instanceof Dictionary )
+            {
+                adapted = (Dictionary) sourceObject;
+            }
+            LOG.trace( "Source object converted from a " + previousSourceClass + " to " + sourceObject.getClass() );
+            if( previousSourceClass.equals( sourceObject.getClass() ) )
+            {
+                // if still the same class get out to avoid an infinite loop as tere is no reason to believe
+                // that on a next cycle anotehr adapter will be found.
+                // TODO handle situation when an adaptor is added or removed during a cycle 
+                break;
+            }
+        }
+        if( adapted != null )
+        {
+            adapted = copyPropertiesFromMetadata( source.getPropertiesSource().getMetadata(), adapted );
             LOG.trace( "Adapted configuration properties: " + adapted );
             if( adapted != null )
             {
@@ -139,7 +169,7 @@ public class ConfigurerImpl
         }
         else
         {
-            LOG.trace( "Configuration adapter not found. Skipping." );
+            LOG.info( "Configuration source object cannot be adapted to a dictionary" );
         }
     }
 

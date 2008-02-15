@@ -45,20 +45,26 @@ class InfoDictionaryAdapterWrapper
     }
 
     /**
-     * Delegates to wrapped DictionaryAdapter ands information entries.
+     * Delegates to wrapped DictionaryAdapter and add information entries.
      *
      * @see org.ops4j.pax.cm.api.DictionaryAdapter#adapt(Object)
      */
     @SuppressWarnings( "unchecked" )
-    public Dictionary adapt( final Object object )
+    public Object adapt( final Object object )
     {
-        final Dictionary wrapped = new Hashtable();
+        final Object adaptedObject = m_delegate.adapt( object );
+        if( !( adaptedObject instanceof Dictionary ) )
+        {
+            // do not work on adapted objects that are not dictionaries
+            return adaptedObject;
+        }
+        final Dictionary adapted = new Hashtable();
         // first we add the properties in order to allow adaptors to overide them
         final Date currentTime = new Date();
-        wrapped.put( MetadataConstants.INFO_TIMESTAMP, DateFormat.getDateInstance().format( currentTime ) );
-        wrapped.put( MetadataConstants.INFO_TIMESTAMP_MILLIS, currentTime.getTime() );
+        adapted.put( MetadataConstants.INFO_TIMESTAMP, DateFormat.getDateInstance().format( currentTime ) );
+        adapted.put( MetadataConstants.INFO_TIMESTAMP_MILLIS, currentTime.getTime() );
         // and do the adaptation
-        DictionaryUtils.copy( m_delegate.adapt( object ), wrapped );
-        return wrapped;
+        DictionaryUtils.copy( (Dictionary) adaptedObject, adapted );
+        return adapted;
     }
 }

@@ -18,11 +18,6 @@
 package org.ops4j.pax.cm.service.internal;
 
 import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.DictionaryAdapter;
 
@@ -58,7 +53,7 @@ class DictionaryAdapterWrapper
      *
      * @see org.ops4j.pax.cm.api.DictionaryAdapter#adapt(Object)
      */
-    public Dictionary adapt( final Object object )
+    public Object adapt( final Object object )
     {
         return m_delegate.adapt( object );
     }
@@ -66,13 +61,11 @@ class DictionaryAdapterWrapper
     /**
      * Delegates to wrapped DictionaryAdapter.
      *
-     * @see org.ops4j.pax.cm.api.DictionaryAdapter#isSatisfiedBy(java.util.Dictionary)
+     * @see org.ops4j.pax.cm.api.DictionaryAdapter#isSatisfiedBy(java.util.Dictionary,Object)
      */
-    public boolean isSatisfiedBy
-        (
-            final Dictionary metadata )
+    public boolean isSatisfiedBy( final Dictionary metadata, final Object sourceObject )
     {
-        return m_delegate.isSatisfiedBy( metadata );
+        return m_delegate.isSatisfiedBy( metadata, sourceObject );
     }
 
     @Override

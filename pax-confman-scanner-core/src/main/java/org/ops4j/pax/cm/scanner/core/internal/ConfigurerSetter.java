@@ -34,5 +34,5 @@ public interface ConfigurerSetter
      * @param configurer configurer; null if no configurer is available.
      */
     void setConfigurer( Configurer configurer );
-    
+
 }

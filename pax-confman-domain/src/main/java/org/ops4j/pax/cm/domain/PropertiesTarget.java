@@ -36,11 +36,11 @@ public class PropertiesTarget
     /**
      * Create a new configuration properties target model.
      *
-     * @param properties  configuration properties
+     * @param properties configuration properties
      */
     public PropertiesTarget( final Dictionary properties )
     {
-            m_properties = properties;
+        m_properties = properties;
     }
 
     /**

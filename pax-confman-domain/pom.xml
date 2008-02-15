@@ -37,7 +37,7 @@
   </build>
 
   <dependencies>
-    
+
     <!-- Compile dependencies (transitive) -->
     <dependency>
       <groupId>org.ops4j.base</groupId>

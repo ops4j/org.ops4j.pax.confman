@@ -42,8 +42,8 @@ public class PropertiesSource
     /**
      * Create a new configuration properties sourceObject model.
      *
-     * @param sourceObject   properties sourceObject object
-     * @param metadata properties sourceObject related metadata; optional
+     * @param sourceObject properties sourceObject object
+     * @param metadata     properties sourceObject related metadata; optional
      *
      * @throws org.ops4j.lang.NullArgumentException
      *          - If sourceObject is null
@@ -82,5 +82,5 @@ public class PropertiesSource
     {
         return m_sourceObject;
     }
-    
+
 }

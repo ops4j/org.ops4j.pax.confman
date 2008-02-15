@@ -20,10 +20,10 @@ package org.ops4j.pax.cm.service.internal;
 import java.util.Dictionary;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.ServiceIdentity;
-import org.ops4j.pax.cm.common.internal.processor.Command;
 
 /**
  * Configuration strategy for a ManagedService.

@@ -27,5 +27,7 @@ import java.util.Dictionary;
  */
 public interface Specification
 {
-    boolean isSatisfiedBy( Dictionary metadata );
+
+    boolean isSatisfiedBy( Dictionary metadata, Object object );
+    
 }

@@ -32,6 +32,6 @@ public interface DictionaryAdapterRepository
 
     void unregister( DictionaryAdapter adapter );
 
-    DictionaryAdapter find( Dictionary metadata );
+    DictionaryAdapter find( Dictionary metadata, Object sourceObject );
 
 }
