@@ -63,7 +63,11 @@ class DirectoryScannerManagedServiceFactory
     /**
      * Mapping between pids and active directory scaners.
      */
-    private final Map<String, DirectoryScanner> m_scanners;
+    private final Map<String, DirectoryScanner> m_pidsToScanners;
+    /**
+     * Mapping between absolet firectory path and directory scaners.
+     */
+    private final Map<String, DirectoryScanner> m_pathsToScanners;
     /**
      * True if default scanners are started.
      */
@@ -85,7 +89,8 @@ class DirectoryScannerManagedServiceFactory
     DirectoryScannerManagedServiceFactory( final CommandProcessor<Configurer> processor )
     {
         m_processor = processor;
-        m_scanners = Collections.synchronizedMap( new HashMap<String, DirectoryScanner>() );
+        m_pidsToScanners = Collections.synchronizedMap( new HashMap<String, DirectoryScanner>() );
+        m_pathsToScanners = Collections.synchronizedMap( new HashMap<String, DirectoryScanner>() );
         m_defaultScanners = Collections.synchronizedList( new ArrayList<DirectoryScanner>() );
         m_defaultScannersStarted = false;
     }
@@ -95,9 +100,9 @@ class DirectoryScannerManagedServiceFactory
      */
     protected void onStart()
     {
-        synchronized( m_scanners )
+        synchronized( m_pidsToScanners )
         {
-            for( DirectoryScanner scanner : m_scanners.values() )
+            for( DirectoryScanner scanner : m_pidsToScanners.values() )
             {
                 try
                 {
@@ -118,9 +123,9 @@ class DirectoryScannerManagedServiceFactory
      */
     protected void onStop()
     {
-        synchronized( m_scanners )
+        synchronized( m_pidsToScanners )
         {
-            for( DirectoryScanner scanner : m_scanners.values() )
+            for( DirectoryScanner scanner : m_pidsToScanners.values() )
             {
                 try
                 {
@@ -190,16 +195,23 @@ class DirectoryScannerManagedServiceFactory
         {
             interval = m_defaultInterval;
         }
-        final DirectoryScanner scanner = new DirectoryScanner(
-            m_processor,
-            new File( (String) directoryName ),
-            (Long) interval
-        );
-        synchronized( m_scanners )
+        final File directory = new File( (String) directoryName );
+        DirectoryScanner scanner;
+        synchronized( m_pidsToScanners )
         {
+            scanner = m_pathsToScanners.get( directory.getAbsolutePath() );
+            if( scanner == null )
+            {
+                scanner = new DirectoryScanner(
+                    m_processor,
+                    directory,
+                    (Long) interval
+                );
+            }
             // do delete again as in the mean time a lot can happen
             deleted( pid, false );
-            m_scanners.put( pid, scanner );
+            m_pidsToScanners.put( pid, scanner );
+            m_pathsToScanners.put( directory.getAbsolutePath(), scanner );
             if( isStarted() )
             {
                 scanner.start();
@@ -227,15 +239,16 @@ class DirectoryScannerManagedServiceFactory
     public void deleted( final String pid,
                          final boolean startDefaultScanners )
     {
-        synchronized( m_scanners )
+        synchronized( m_pidsToScanners )
         {
-            final DirectoryScanner scanner = m_scanners.get( pid );
+            final DirectoryScanner scanner = m_pidsToScanners.get( pid );
             if( scanner != null )
             {
                 scanner.stop();
-                m_scanners.remove( pid );
+                m_pidsToScanners.remove( pid );
+                m_pathsToScanners.remove( scanner.getDirectory().getAbsolutePath() );
             }
-            if( startDefaultScanners && m_scanners.size() == 0 )
+            if( startDefaultScanners && m_pidsToScanners.size() == 0 )
             {
                 startDefaultScanners();
             }

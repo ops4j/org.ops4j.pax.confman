@@ -229,6 +229,16 @@ class DirectoryScanner
     }
 
     /**
+     * Getter.
+     *
+     * @return scanned directory
+     */
+    public File getDirectory()
+    {
+        return m_directory;
+    }
+
+    /**
      * Scanning thread.
      */
     private class Scanner
