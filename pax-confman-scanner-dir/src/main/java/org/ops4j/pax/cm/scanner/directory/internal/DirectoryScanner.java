@@ -130,7 +130,7 @@ class DirectoryScanner
     private void scan( final File directory,
                        final String factoryPid )
     {
-        LOG.debug( "Scanning " + m_directory.getAbsoluteFile() );
+        //LOG.debug( "Scanning " + m_directory.getAbsoluteFile() );
         if( directory != null && directory.isDirectory() && directory.canRead() )
         {
             final File[] contents = directory.listFiles();
