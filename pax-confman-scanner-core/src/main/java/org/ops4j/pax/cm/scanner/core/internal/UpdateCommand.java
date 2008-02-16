@@ -54,7 +54,7 @@ public class UpdateCommand
      */
     public void execute( final Configurer configurer )
     {
-        configurer.configure(
+        configurer.update(
             m_configurationSource.getServiceIdentity().getPid(),
             m_configurationSource.getServiceIdentity().getLocation(),
             m_configurationSource.getPropertiesSource().getMetadata(),

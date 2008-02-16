@@ -81,9 +81,9 @@ public class ConfigurerImpl
     }
 
     /**
-     * @see Configurer#configure(String, String, Dictionary, Object)
+     * @see Configurer#update(String, String, Dictionary, Object)
      */
-    public void configure( final String pid,
+    public void update( final String pid,
                            final String location,
                            final Dictionary metadata,
                            final Object propertiesSource

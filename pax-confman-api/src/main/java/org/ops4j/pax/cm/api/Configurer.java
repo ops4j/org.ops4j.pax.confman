@@ -28,6 +28,6 @@ import java.util.Dictionary;
 public interface Configurer
 {
 
-    void configure( String pid, String location, Dictionary metadata, Object configuration );
+    void update( String pid, String location, Dictionary metadata, Object configuration );
 
 }
