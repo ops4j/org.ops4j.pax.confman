@@ -65,7 +65,7 @@ public class ConfigurationSource
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "pid=" ).append( m_serviceIdentity )
+            .append( "identity=" ).append( m_serviceIdentity )
             .append( ",source=" ).append( m_source )
             .append( "}" )
             .toString();
