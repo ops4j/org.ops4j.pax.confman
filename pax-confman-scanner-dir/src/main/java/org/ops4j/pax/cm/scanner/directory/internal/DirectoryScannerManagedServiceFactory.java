@@ -173,7 +173,7 @@ class DirectoryScannerManagedServiceFactory
             throw new ConfigurationException( ServiceConstants.PROPERY_DIRECTORY, "Must be a String" );
         }
         Object interval = properties.get( ServiceConstants.PROPERY_INTERVAL );
-        if( !( interval instanceof Long ) )
+        if( interval != null && !( interval instanceof Long ) )
         {
             try
             {

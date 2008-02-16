@@ -23,9 +23,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.AdapterRepository;
+import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
@@ -52,6 +52,10 @@ public class ConfigurerImpl
      * Managed service strategy. Strategies should be stateless so are safe to be reused.
      */
     private static final ConfigurationStrategy MANAGED_SERVICE_STRATEGY = new ManagedServiceStrategy();
+    /**
+     * Managed service factory strategy. Strategies should be stateless so are safe to be reused.
+     */
+    private static final ConfigurationStrategy MANAGED_SERVICE_FACTORY_STRATEGY = new ManagedServiceFactoryStrategy();
     /**
      * Repository of dictionary adapters. Cannot be null.
      */
@@ -84,12 +88,12 @@ public class ConfigurerImpl
      * @see Configurer#update(String, String, Dictionary, Object)
      */
     public void update( final String pid,
-                           final String location,
-                           final Dictionary metadata,
-                           final Object propertiesSource
+                        final String location,
+                        final Dictionary metadata,
+                        final Object propertiesSource
     )
     {
-        LOG.trace( "Configuring pid: " + pid );
+        LOG.trace( "Pid: " + pid );
         LOG.trace( "Metadata: " + metadata );
         LOG.trace( "Properties source: " + propertiesSource );
 
@@ -102,6 +106,33 @@ public class ConfigurerImpl
                 )
             ),
             MANAGED_SERVICE_STRATEGY
+        );
+    }
+
+    /**
+     * @see Configurer#updateFactory(String, String, String, Dictionary, Object)
+     */
+    public void updateFactory( final String factoryPid,
+                               final String pid,
+                               final String location,
+                               final Dictionary metadata,
+                               final Object propertiesSource
+    )
+    {
+        LOG.trace( "FactoryPid: " + factoryPid );
+        LOG.trace( "Pid: " + pid );
+        LOG.trace( "Metadata: " + metadata );
+        LOG.trace( "Properties source: " + propertiesSource );
+
+        processConfiguration(
+            new ConfigurationSource(
+                MANAGED_SERVICE_FACTORY_STRATEGY.createServiceIdentity( pid, factoryPid, location ),
+                new PropertiesSource(
+                    propertiesSource,
+                    DictionaryUtils.copy( metadata, new Hashtable() )
+                )
+            ),
+            MANAGED_SERVICE_FACTORY_STRATEGY
         );
     }
 

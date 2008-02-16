@@ -29,7 +29,7 @@ class UpdateManagedServiceCommand
     /**
      * Key specification that eliminates INFO keys.
      */
-    private final static DictionaryUtils.KeySpecification NOT_INFO_KEY_SPEC =
+    protected final static DictionaryUtils.KeySpecification NOT_INFO_KEY_SPEC =
         new DictionaryUtils.NotSpecification(
             new DictionaryUtils.RegexSpecification( MetadataConstants.INFO_PREFIX_AS_REGEX )
         );
@@ -37,7 +37,7 @@ class UpdateManagedServiceCommand
     /**
      * Update configuration target.
      */
-    private final ConfigurationTarget m_target;
+    protected final ConfigurationTarget m_target;
 
     /**
      * Constructor.
@@ -96,7 +96,7 @@ class UpdateManagedServiceCommand
      *
      * @return true if configurations are not equal
      */
-    private boolean configurationsAreNotEqual( final Dictionary source, final Dictionary target )
+    protected boolean configurationsAreNotEqual( final Dictionary source, final Dictionary target )
     {
         return !DictionaryUtils.equal(
             DictionaryUtils.copy( NOT_INFO_KEY_SPEC, source, new Hashtable() ),
