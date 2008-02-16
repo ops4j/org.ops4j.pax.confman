@@ -17,20 +17,40 @@
  */
 package org.ops4j.pax.cm.scanner.directory.internal;
 
+import java.io.File;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
+import org.ops4j.pax.cm.domain.ConfigurationSource;
+import org.ops4j.pax.cm.domain.PropertiesSource;
+import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
- * Scans properties file producers.
+ * Scans directories for properties files.
+ * It lists the content of the scanned directory and each found properties file (files with .properties extension) will
+ * be considered as a configuration. The file name without extension will be used as pid.
+ * If the scanned directory contains directories then each directory will be considerd as containing factory
+ * configurations where directory name is the factory pid and each property file contained in that directory is
+ * considered a factory configuration with the pid equal ith file name without extension.
+ *
+ * The scanned directory can point to files that are not directories or do not exist or cannot be read. This fact is
+ * verified at each scan. If that's the case it will just not create any configuration. This way of working should be
+ * supported as the status of teh scaned directory can change over time (if can be created, removed, permission changed
+ * ,...)
+ *
+ * TODO add support for file name filters (e.g. *.properties)
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
@@ -44,54 +64,198 @@ public class DirectoryScanner
      */
     private static final Log LOG = LogFactory.getLog( DirectoryScanner.class );
     /**
+     * Known mime types (very limited).
+     */
+    private static final FileNameMap MIME_TYPES = URLConnection.getFileNameMap();
+
+    /**
      * Commands processor.
      */
     private final CommandProcessor<Configurer> m_processor;
+    /**
+     * Scanned file system directory. Cannot be null.
+     */
+    private final File m_directory;
+    /**
+     * Map between absolute file name and last modified.
+     */
+    private final Map<String, Long> m_lastModified;
+    /**
+     * Interval of time in milliseconds between scanning the target directory.
+     */
+    private final Long m_interval;
+    /**
+     * Scanning thread. Null if not active.
+     */
+    private Thread m_scanningThread;
+    /**
+     * Signal sent to scanning thread in order to stop it.
+     */
+    private boolean m_stopSignal;
 
     /**
      * Creates a new directory scanner.
      *
-     * @param bundleContext bundle context; cannot be null
-     * @param processor     configurations buffer; canot be null
+     * @param bundleContext bundle context
+     * @param processor     commands processor
+     * @param directory     file system directory to be scanned
+     * @param interval      interval of time in milliseconds between scanning the target directory.
+     *                      If null a default 2000 milliseconds will be used.
      *
      * @throws NullArgumentException - If bundle context is null
      *                               - If configurations buffer is null
+     *                               - If directory is null
      */
     public DirectoryScanner( final BundleContext bundleContext,
-                             final CommandProcessor<Configurer> processor )
+                             final CommandProcessor<Configurer> processor,
+                             final File directory,
+                             final Long interval )
     {
         NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
         NullArgumentException.validateNotNull( processor, "Command processor" );
+        NullArgumentException.validateNotNull( directory, "Scanned directory" );
 
         m_processor = processor;
+        m_directory = directory;
+        m_lastModified = new HashMap<String, Long>();
+        m_interval = interval == null ? 2000L : interval;
+        m_stopSignal = false;
     }
 
     /**
-     * Creates metadata out of service properties.
+     * Scans the specified directory. If the factory pid is null it will also scan subdirectories for factory
+     * configurations.
      *
-     * @param serviceReference service reference
-     *
-     * @return created metdata
+     * @param directory  directory to be scanned
+     * @param factoryPid factory pid. if null configurations files found into the directory will be considered managed
+     *                   service configurations, otherwise will be considered Managed Service Factories.
      */
-    @SuppressWarnings( "unchecked" )
-    private static Dictionary createMetdata( final ServiceReference serviceReference )
+    private void scan( final File directory,
+                       final String factoryPid )
     {
-        final Dictionary metadata = new Hashtable();
-        metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.directory" );
-        return metadata;
+        //LOG.debug( "Scanning " + m_directory.getAbsoluteFile() );
+        if( directory != null && directory.isDirectory() && directory.canRead() )
+        {
+            final File[] contents = directory.listFiles();
+            for( File file : contents )
+            {
+                if( file.isDirectory() )
+                {
+                    if( factoryPid == null )
+                    {
+                        scan( file, file.getName() );
+                    }
+                }
+                else if( file.canRead() )
+                {
+                    // check if did not already configured this file and the file was not modified
+                    Long lastModified = m_lastModified.get( file.getAbsolutePath() );
+                    if( lastModified != null && lastModified == file.lastModified()  )
+                    {
+                        continue;
+                    }
+                    String fileName = file.getName();
+                    if( fileName != null )
+                    {
+                        String mimeType = MIME_TYPES.getContentTypeFor( fileName );
+                        if( mimeType == null )
+                        {
+                            if( fileName.endsWith( ".properties" )
+                                || fileName.endsWith( ".cfg" ) )
+                            {
+                                mimeType = "text/properties";
+                            }
+                        }
+                        if( mimeType != null )
+                        {
+                            // find out the pid by removing extension
+                            String pid = fileName;
+                            if( pid.contains( "." ) )
+                            {
+                                pid = pid.substring( 0, pid.lastIndexOf( "." ) );
+                            }
+                            // create configuration metadata
+                            final Dictionary metadata = new Hashtable();
+                            metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.directory" );
+                            metadata.put( MetadataConstants.MIME_TYPE, mimeType );
+                            // create configuration source
+                            ServiceIdentity identity;
+                            if( factoryPid == null )
+                            {
+                                identity = new ServiceIdentity( pid, null );
+                            }
+                            else
+                            {
+                                identity = new ServiceIdentity( pid, factoryPid, null );
+                            }
+                            // and add it to be process
+                            m_processor.add(
+                                new UpdateCommand(
+                                    new ConfigurationSource( identity, new PropertiesSource( file, metadata ) )
+                                )
+                            );
+                            m_lastModified.put( file.getAbsolutePath(), file.lastModified() );
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Starts directory scanning.
      */
-    protected void onStart()
+    protected synchronized void onStart()
     {
+        if( m_scanningThread == null )
+        {
+            m_scanningThread = new Thread( new Scanner(), "DirectoryScanner - " + m_directory.getAbsolutePath() );
+            m_scanningThread.start();
+        }
     }
 
     /**
      * Stops directory scanning.
      */
-    protected void onStop()
+    protected synchronized void onStop()
     {
+        if( m_scanningThread != null )
+        {
+            m_stopSignal = true;
+            m_scanningThread.interrupt();
+            m_scanningThread = null;
+        }
     }
+
+    /**
+     * Scanning thread.
+     */
+    private class Scanner
+        implements Runnable
+    {
+
+        public void run()
+        {
+            while( !m_stopSignal )
+            {
+                try
+                {
+                    scan( m_directory, null );
+                    Thread.sleep( m_interval );
+                }
+                catch( InterruptedException ignore )
+                {
+                    // ignore
+                }
+                catch( Throwable ignore )
+                {
+                    // catch everuthing as we should not die if something goes wrong during scanning
+                    LOG.error( "Exception while scanning " + m_directory.getAbsolutePath(), ignore );
+                }
+            }
+            m_stopSignal = false;
+        }
+
+    }
+
 }

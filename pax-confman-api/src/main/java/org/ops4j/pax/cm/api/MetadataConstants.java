@@ -102,4 +102,9 @@ public interface MetadataConstants
      */
     String INFO_TIMESTAMP_MILLIS = INFO_PREFIX + ".timestamp.millis";
 
+    /**
+     * Mime type.
+     */
+    String MIME_TYPE = "mimeType";
+
 }
