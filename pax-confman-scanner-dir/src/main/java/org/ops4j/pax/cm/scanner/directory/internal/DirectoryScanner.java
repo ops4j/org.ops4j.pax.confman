@@ -148,54 +148,56 @@ public class DirectoryScanner
                 }
                 else if( file.canRead() )
                 {
+                    String fileName = file.getName();
+                    // find out the pid by removing extension
+                    String pid = fileName;
+                    if( pid.contains( "." ) )
+                    {
+                        pid = pid.substring( 0, pid.lastIndexOf( "." ) );
+                    }
+                    if( pid.trim().length() == 0 )
+                    {
+                        // we may have files that start with .
+                        continue;
+                    }
                     // check if did not already configured this file and the file was not modified
                     Long lastModified = m_lastModified.get( file.getAbsolutePath() );
-                    if( lastModified != null && lastModified == file.lastModified()  )
+                    if( lastModified != null && lastModified == file.lastModified() )
                     {
                         continue;
                     }
-                    String fileName = file.getName();
-                    if( fileName != null )
+                    String mimeType = MIME_TYPES.getContentTypeFor( fileName );
+                    if( mimeType == null )
                     {
-                        String mimeType = MIME_TYPES.getContentTypeFor( fileName );
-                        if( mimeType == null )
+                        if( fileName.endsWith( ".properties" )
+                            || fileName.endsWith( ".cfg" ) )
                         {
-                            if( fileName.endsWith( ".properties" )
-                                || fileName.endsWith( ".cfg" ) )
-                            {
-                                mimeType = "text/properties";
-                            }
+                            mimeType = "text/properties";
                         }
-                        if( mimeType != null )
+                    }
+                    if( mimeType != null )
+                    {
+                        // create configuration metadata
+                        final Dictionary<String, String> metadata = new Hashtable<String, String>();
+                        metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.directory" );
+                        metadata.put( MetadataConstants.MIME_TYPE, mimeType );
+                        // create configuration source
+                        ServiceIdentity identity;
+                        if( factoryPid == null )
                         {
-                            // find out the pid by removing extension
-                            String pid = fileName;
-                            if( pid.contains( "." ) )
-                            {
-                                pid = pid.substring( 0, pid.lastIndexOf( "." ) );
-                            }
-                            // create configuration metadata
-                            final Dictionary metadata = new Hashtable();
-                            metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.directory" );
-                            metadata.put( MetadataConstants.MIME_TYPE, mimeType );
-                            // create configuration source
-                            ServiceIdentity identity;
-                            if( factoryPid == null )
-                            {
-                                identity = new ServiceIdentity( pid, null );
-                            }
-                            else
-                            {
-                                identity = new ServiceIdentity( pid, factoryPid, null );
-                            }
-                            // and add it to be process
-                            m_processor.add(
-                                new UpdateCommand(
-                                    new ConfigurationSource( identity, new PropertiesSource( file, metadata ) )
-                                )
-                            );
-                            m_lastModified.put( file.getAbsolutePath(), file.lastModified() );
+                            identity = new ServiceIdentity( pid, null );
                         }
+                        else
+                        {
+                            identity = new ServiceIdentity( pid, factoryPid, null );
+                        }
+                        // and add it to be process
+                        m_processor.add(
+                            new UpdateCommand(
+                                new ConfigurationSource( identity, new PropertiesSource( file, metadata ) )
+                            )
+                        );
+                        m_lastModified.put( file.getAbsolutePath(), file.lastModified() );
                     }
                 }
             }
