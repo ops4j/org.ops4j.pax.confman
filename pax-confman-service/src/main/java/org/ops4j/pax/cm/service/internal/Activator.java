@@ -22,9 +22,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
-import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.api.AdapterRepository;
+import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 
 /**
@@ -55,7 +55,7 @@ public class Activator
      */
     public void start( final BundleContext bundleContext )
     {
-        m_processor = new CommandProcessor<ConfigurationAdmin>();
+        m_processor = new CommandProcessor<ConfigurationAdmin>( "Pax ConfMan - Configurer - Commands Processor" );
         m_processor.start();
 
         final AdapterRepository adapterRepository = new AdapterRepositoryImpl();

@@ -209,7 +209,9 @@ class DirectoryScanner
         if( m_scanningThread == null )
         {
             LOG.debug( "Starting " + this );
-            m_scanningThread = new Thread( new Scanner(), "DirectoryScanner - " + m_directory.getAbsolutePath() );
+            m_scanningThread = new Thread(
+                new Scanner(), "Pax ConfMan - DirectoryScanner - " + m_directory.getAbsolutePath()
+            );
             m_scanningThread.start();
         }
     }

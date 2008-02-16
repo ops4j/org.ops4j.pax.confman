@@ -60,7 +60,7 @@ public class Activator
     {
         LOG.debug( "Starting OPS4J Pax ConfMan service registry tracker" );
 
-        m_processor = new CommandProcessor<Configurer>();
+        m_processor = new CommandProcessor<Configurer>( "Pax ConfMan - Registry Scanner - Commands Processor" );
         m_configurerTracker = new ConfigurerTracker(
             bundleContext,
             new ConfigurerSetter()

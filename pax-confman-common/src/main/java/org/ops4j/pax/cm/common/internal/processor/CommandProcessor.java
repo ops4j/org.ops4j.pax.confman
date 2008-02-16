@@ -67,15 +67,22 @@ public class CommandProcessor<T>
      * Signal sent in order to stop the processor.
      */
     private boolean m_stopProcessorSignal;
+    /**
+     * Thread name to be used.
+     */
+    private final String m_threadName;
 
     /**
      * Constructor.
+     *
+     * @param name thread name
      */
-    public CommandProcessor()
+    public CommandProcessor( final String name )
     {
         m_queue = new LinkedBlockingQueue<Command<T>>();
         m_targetLock = new ReentrantLock();
         m_targetAvailable = m_targetLock.newCondition();
+        m_threadName = name;
     }
 
     /**
@@ -116,7 +123,7 @@ public class CommandProcessor<T>
     protected void onStart()
     {
         m_stopProcessorSignal = false;
-        m_processor = new Thread( new RunnableCommandProcessor() );
+        m_processor = new Thread( new RunnableCommandProcessor(), m_threadName );
         m_processor.start();
     }
 
