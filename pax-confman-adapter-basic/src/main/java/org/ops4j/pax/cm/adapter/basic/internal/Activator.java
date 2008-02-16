@@ -20,7 +20,6 @@ package org.ops4j.pax.cm.adapter.basic.internal;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Dictionary;
-import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
@@ -77,7 +76,7 @@ public class Activator
                     new AndSpecification(
                         new InstanceOfSpecification( InputStream.class ),
                         new FilterBasedSpecification(
-                            bundleContext.createFilter( "(contentTypeClass=" + Properties.class.getName() + ")" )
+                            bundleContext.createFilter( "(" + MetadataConstants.MIME_TYPE + "=text/properties)" )
                         )
                     )
                 ),

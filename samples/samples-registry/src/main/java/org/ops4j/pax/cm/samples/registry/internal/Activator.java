@@ -89,7 +89,7 @@ public class Activator
 //            ByteArrayOutputStream os = new ByteArrayOutputStream();
 //            cfgAsProps.store( os, null );
 //            InputStream is = new ByteArrayInputStream( os.toByteArray() );
-//            msProps.put( "contentTypeClass", Properties.class.getName() );
+//            msProps.put( "mimeType", "text/properties" );
 //            bundleContext.registerService( InputStream.class.getName(), is, msProps );
 //        }
 //        catch( IOException ignore )
@@ -106,7 +106,7 @@ public class Activator
             File propsFile = File.createTempFile( "confman", ".properties" );
             propsFile.deleteOnExit();
             cfgAsProps.store( new FileOutputStream( propsFile ), null );
-            msProps.put( "contentTypeClass", Properties.class.getName() );
+            msProps.put( "mimeType", "text/properties" );
             bundleContext.registerService( File.class.getName(), propsFile, msProps );
         }
         catch( IOException ignore )
