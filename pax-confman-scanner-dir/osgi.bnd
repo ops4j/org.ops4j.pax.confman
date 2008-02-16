@@ -11,9 +11,11 @@ Import-Package:\
   org.ops4j.pax.cm.api; version="${pom.version}",\
   org.apache.commons.logging; version="1.0.4"; resolution:=optional,\
   org.osgi.framework; version="[1.0.0,2.0.0)",\
+  org.osgi.service.cm; version="[1.0.0,2.0.0)",\
   org.osgi.util.tracker;version="[1.0.0,2.0.0)"
 
-Export-Package:
+Export-Package:\
+  ${bundle.namespace}; version="${pom.version}"
 
 Private-Package:\
   ${bundle.namespace}.internal.*
@@ -23,9 +25,7 @@ Embed-Dependency:\
 
 Embed-Transitive: true
 
-# TODO when maven bundle plugin > 1.2.0 is out remove Export-Package entry
 -removeheaders:\
-  Export-Package,\
   Include-Resource,\
   Private-Package,\
   Embed-Dependency,\

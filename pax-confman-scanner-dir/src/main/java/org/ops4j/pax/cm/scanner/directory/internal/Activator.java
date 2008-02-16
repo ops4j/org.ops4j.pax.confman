@@ -17,14 +17,20 @@
  */
 package org.ops4j.pax.cm.scanner.directory.internal;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.service.cm.ManagedServiceFactory;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.scanner.core.internal.ConfigurerSetter;
 import org.ops4j.pax.cm.scanner.core.internal.ConfigurerTracker;
+import org.ops4j.pax.cm.scanner.directory.ServiceConstants;
+import org.ops4j.pax.swissbox.property.BundleContextPropertyResolver;
 
 /**
  * Activator for DirectoryScanner.
@@ -49,9 +55,9 @@ public class Activator
      */
     private CommandProcessor<Configurer> m_processor;
     /**
-     * Registry scanner.
+     * Directory Scanner managed service factory.
      */
-    private DirectoryScanner m_directoryScanner;
+    private DirectoryScannerManagedServiceFactory m_managedServiceFactory;
 
     /**
      * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
@@ -76,11 +82,25 @@ public class Activator
 
             }
         );
-        m_directoryScanner = new DirectoryScanner( bundleContext, m_processor );
+        m_managedServiceFactory = new DirectoryScannerManagedServiceFactory( m_processor );
 
+        // handle configuration via system properties
+        final Configuration config = new ConfigurationImpl( new BundleContextPropertyResolver( bundleContext ) );
+        m_managedServiceFactory.setDefaults( config.getDirectories(), config.getInterval() );
+
+        // ready to start
         m_configurerTracker.start();
         m_processor.start();
-        m_directoryScanner.start();
+        m_managedServiceFactory.start();
+
+        // register the managed service
+        final Dictionary<String, String> msfProps = new Hashtable<String, String>();
+        msfProps.put( Constants.SERVICE_PID, ServiceConstants.FACTORY_PID );
+        bundleContext.registerService(
+            ManagedServiceFactory.class.getName(),
+            m_managedServiceFactory,
+            msfProps
+        );
     }
 
     /**
@@ -90,10 +110,10 @@ public class Activator
     {
         LOG.debug( "Stopping OPS4J Pax ConfMan directory scanner" );
 
-        if( m_directoryScanner != null )
+        if( m_managedServiceFactory != null )
         {
-            m_directoryScanner.stop();
-            m_directoryScanner = null;
+            m_managedServiceFactory.stop();
+            m_managedServiceFactory = null;
         }
         if( m_configurerTracker != null )
         {

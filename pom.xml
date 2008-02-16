@@ -94,6 +94,11 @@
         <artifactId>ops4j-base-lang</artifactId>
         <version>${dependency.base.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.ops4j.base</groupId>
+        <artifactId>ops4j-base-util-property</artifactId>
+        <version>${dependency.base.version}</version>
+      </dependency>
       <!-- OPS4J Pax Swissbox -->
       <dependency>
         <groupId>org.ops4j.pax.swissbox</groupId>
@@ -103,6 +108,11 @@
       <dependency>
         <groupId>org.ops4j.pax.swissbox</groupId>
         <artifactId>pax-swissbox-lifecycle</artifactId>
+        <version>${dependency.swissbox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.swissbox</groupId>
+        <artifactId>pax-swissbox-property</artifactId>
         <version>${dependency.swissbox.version}</version>
       </dependency>
       <dependency>

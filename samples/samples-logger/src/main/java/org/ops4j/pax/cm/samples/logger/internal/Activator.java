@@ -68,7 +68,7 @@ public class Activator
         );
         // register managed service factory
         final Dictionary<String, String> msfProps = new Hashtable<String, String>();
-        msProps.put( Constants.SERVICE_PID, "org.ops4j.pax.cm.samples.logger.factory" );
+        msfProps.put( Constants.SERVICE_PID, "org.ops4j.pax.cm.samples.logger.factory" );
         bundleContext.registerService(
             ManagedServiceFactory.class.getName(),
             new ManagedServiceFactory()

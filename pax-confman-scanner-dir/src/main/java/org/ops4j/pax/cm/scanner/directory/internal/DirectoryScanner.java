@@ -26,7 +26,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.MetadataConstants;
@@ -51,11 +50,12 @@ import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
  * ,...)
  *
  * TODO add support for file name filters (e.g. *.properties)
+ * TODO (nice to have) configured directory can contain a properties file that can contain configuration info as interval, fila name filters that override the configured ones. So a config file for he scanner itself.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public class DirectoryScanner
+class DirectoryScanner
     extends AbstractLifecycle
 {
 
@@ -96,22 +96,19 @@ public class DirectoryScanner
     /**
      * Creates a new directory scanner.
      *
-     * @param bundleContext bundle context
-     * @param processor     commands processor
-     * @param directory     file system directory to be scanned
-     * @param interval      interval of time in milliseconds between scanning the target directory.
-     *                      If null a default 2000 milliseconds will be used.
+     * @param processor commands processor
+     * @param directory file system directory to be scanned
+     * @param interval  interval of time in milliseconds between scanning the target directory.
+     *                  If null a default 2000 milliseconds will be used.
      *
      * @throws NullArgumentException - If bundle context is null
      *                               - If configurations buffer is null
      *                               - If directory is null
      */
-    public DirectoryScanner( final BundleContext bundleContext,
-                             final CommandProcessor<Configurer> processor,
-                             final File directory,
-                             final Long interval )
+    DirectoryScanner( final CommandProcessor<Configurer> processor,
+                      final File directory,
+                      final Long interval )
     {
-        NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
         NullArgumentException.validateNotNull( processor, "Command processor" );
         NullArgumentException.validateNotNull( directory, "Scanned directory" );
 
@@ -133,7 +130,7 @@ public class DirectoryScanner
     private void scan( final File directory,
                        final String factoryPid )
     {
-        //LOG.debug( "Scanning " + m_directory.getAbsoluteFile() );
+        LOG.debug( "Scanning " + m_directory.getAbsoluteFile() );
         if( directory != null && directory.isDirectory() && directory.canRead() )
         {
             final File[] contents = directory.listFiles();
@@ -211,6 +208,7 @@ public class DirectoryScanner
     {
         if( m_scanningThread == null )
         {
+            LOG.debug( "Starting " + this );
             m_scanningThread = new Thread( new Scanner(), "DirectoryScanner - " + m_directory.getAbsolutePath() );
             m_scanningThread.start();
         }
@@ -226,6 +224,7 @@ public class DirectoryScanner
             m_stopSignal = true;
             m_scanningThread.interrupt();
             m_scanningThread = null;
+            LOG.debug( "Stopped " + this );
         }
     }
 
@@ -251,7 +250,7 @@ public class DirectoryScanner
                 }
                 catch( Throwable ignore )
                 {
-                    // catch everuthing as we should not die if something goes wrong during scanning
+                    // catch everything as we should not die if something goes wrong during scanning
                     LOG.error( "Exception while scanning " + m_directory.getAbsolutePath(), ignore );
                 }
             }
@@ -260,4 +259,14 @@ public class DirectoryScanner
 
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append( this.getClass().getSimpleName() )
+            .append( "{" )
+            .append( m_directory.getAbsolutePath() )
+            .append( "}" )
+            .toString();
+    }
 }
