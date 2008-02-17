@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.common.internal.processor;
+package org.ops4j.pax.cm.commons.internal.processor;
 
 /**
  * Command to be executed agains a target service.

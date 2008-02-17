@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
+import org.ops4j.pax.cm.commons.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.scanner.commons.internal.ConfigurerSetter;
 import org.ops4j.pax.cm.scanner.commons.internal.ConfigurerTracker;
 

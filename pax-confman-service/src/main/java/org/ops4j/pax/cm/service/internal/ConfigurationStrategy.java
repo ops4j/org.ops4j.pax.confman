@@ -18,7 +18,7 @@
 package org.ops4j.pax.cm.service.internal;
 
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.ops4j.pax.cm.common.internal.processor.Command;
+import org.ops4j.pax.cm.commons.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.Identity;

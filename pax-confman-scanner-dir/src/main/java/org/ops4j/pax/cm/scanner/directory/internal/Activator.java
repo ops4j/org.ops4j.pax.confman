@@ -26,7 +26,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ManagedServiceFactory;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
+import org.ops4j.pax.cm.commons.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.scanner.commons.internal.ConfigurerSetter;
 import org.ops4j.pax.cm.scanner.commons.internal.ConfigurerTracker;
 import org.ops4j.pax.cm.scanner.directory.ServiceConstants;

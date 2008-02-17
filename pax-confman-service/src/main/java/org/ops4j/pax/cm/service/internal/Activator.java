@@ -25,7 +25,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.service.internal.AdapterRepository;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
+import org.ops4j.pax.cm.commons.internal.processor.CommandProcessor;
 
 /**
  * Bundle Activator.

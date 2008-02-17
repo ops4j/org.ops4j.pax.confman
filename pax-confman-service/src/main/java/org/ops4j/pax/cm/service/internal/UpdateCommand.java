@@ -9,7 +9,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.ServiceConstants;
-import org.ops4j.pax.cm.common.internal.processor.Command;
+import org.ops4j.pax.cm.commons.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 
 /**

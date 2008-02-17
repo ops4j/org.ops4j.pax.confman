@@ -19,7 +19,7 @@ package org.ops4j.pax.cm.scanner.commons.internal;
 
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.common.internal.processor.Command;
+import org.ops4j.pax.cm.commons.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 
 /**

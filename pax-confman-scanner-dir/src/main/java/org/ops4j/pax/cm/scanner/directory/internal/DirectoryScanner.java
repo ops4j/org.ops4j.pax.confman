@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.api.ServiceConstants;
-import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
+import org.ops4j.pax.cm.commons.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.Identity;
 import org.ops4j.pax.cm.domain.PropertiesSource;
