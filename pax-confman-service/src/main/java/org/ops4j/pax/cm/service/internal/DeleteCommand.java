@@ -7,7 +7,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.common.internal.processor.Command;
-import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.domain.Identity;
 
 /**
  * Deletes a configuration using Configuration Admin.
@@ -25,22 +25,22 @@ abstract class DeleteCommand
     private static final Log LOG = LogFactory.getLog( DeleteCommand.class );
 
     /**
-     * Targeted service identity.
+     * Targeted configuration identity.
      */
-    protected final ServiceIdentity m_serviceIdentity;
+    final Identity m_identity;
 
     /**
      * Constructor.
      *
-     * @param serviceIdentity targeted service identity
+     * @param identity targeted configuration identity
      *
-     * @throws NullArgumentException - If service identity is null
+     * @throws NullArgumentException - If configuration identity is null
      */
-    DeleteCommand( final ServiceIdentity serviceIdentity )
+    DeleteCommand( final Identity identity )
     {
-        NullArgumentException.validateNotNull( serviceIdentity, "Service identity" );
+        NullArgumentException.validateNotNull( identity, "configuration identity" );
 
-        m_serviceIdentity = serviceIdentity;
+        m_identity = identity;
     }
 
     /**
@@ -56,16 +56,16 @@ abstract class DeleteCommand
     {
         NullArgumentException.validateNotNull( configurationAdmin, "Configuration Admin service" );
 
-        LOG.trace( "Looking for a configuration for " + m_serviceIdentity );
+        LOG.trace( "Looking for a configuration for " + m_identity );
         final Configuration configuration = findConfiguration( configurationAdmin );
         if( configuration != null )
         {
             configuration.delete();
-            LOG.info( "Deleted configuration " + m_serviceIdentity );
+            LOG.info( "Deleted configuration " + m_identity );
         }
         else
         {
-            LOG.info( "Configuration " + m_serviceIdentity + " not found. Skipping delete." );
+            LOG.info( "Configuration " + m_identity + " not found. Skipping delete." );
         }
     }
 
@@ -87,7 +87,7 @@ abstract class DeleteCommand
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_serviceIdentity )
+            .append( "identity=" ).append( m_identity )
             .append( "}" )
             .toString();
     }

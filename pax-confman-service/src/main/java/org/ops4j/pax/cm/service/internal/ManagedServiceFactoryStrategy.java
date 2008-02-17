@@ -25,7 +25,7 @@ import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
-import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.domain.Identity;
 
 /**
  * Configuration strategy for a ManagedServiceFactory.
@@ -38,23 +38,12 @@ public class ManagedServiceFactoryStrategy
 {
 
     /**
-     * @see ConfigurationStrategy#createServiceIdentity(String, String, String)
-     */
-    public ServiceIdentity createServiceIdentity( final String pid,
-                                                  final String factoryPid,
-                                                  final String location )
-    {
-        return new ServiceIdentity( pid, factoryPid, location );
-    }
-
-    /**
      * @see ConfigurationStrategy#prepareSource(ConfigurationSource)
      */
     public void prepareSource( final ConfigurationSource source )
     {
         final Dictionary metadata = source.getPropertiesSource().getMetadata();
-        metadata.put( MetadataConstants.SERVICE_PID, source.getServiceIdentity().getPid() );
-        metadata.put( MetadataConstants.SERVICE_FACTORYPID, source.getServiceIdentity().getFactoryPid() );
+        metadata.put( MetadataConstants.SERVICE_FACTORYPID, source.getIdentity().getFactoryPid() );
     }
 
     /**
@@ -72,17 +61,17 @@ public class ManagedServiceFactoryStrategy
                 throws IOException
             {
                 return ManagedServiceFactoryStrategy
-                    .findConfiguration( configurationAdmin, m_target.getServiceIdentity() );
+                    .findConfiguration( configurationAdmin, m_target.getIdentity() );
             }
         };
     }
 
     /**
-     * @see ConfigurationStrategy#createDeleteCommand(ServiceIdentity)
+     * @see ConfigurationStrategy#createDeleteCommand(org.ops4j.pax.cm.domain.Identity)
      */
-    public Command<ConfigurationAdmin> createDeleteCommand( final ServiceIdentity serviceIdentity )
+    public Command<ConfigurationAdmin> createDeleteCommand( final Identity identity )
     {
-        return new DeleteCommand( serviceIdentity )
+        return new DeleteCommand( identity )
         {
             /**
              * @see DeleteCommand#findConfiguration(ConfigurationAdmin)
@@ -92,7 +81,7 @@ public class ManagedServiceFactoryStrategy
                 throws IOException
             {
                 return ManagedServiceFactoryStrategy
-                    .findConfiguration( configurationAdmin, m_serviceIdentity );
+                    .findConfiguration( configurationAdmin, m_identity );
             }
         };
     }
@@ -101,14 +90,14 @@ public class ManagedServiceFactoryStrategy
      * Search for a configuration.
      *
      * @param configurationAdmin configuration admin service to be used
-     * @param serviceIdentity    service identity
+     * @param identity           configuration identity
      *
      * @return found configuration or null if not found
      *
      * @throws IOException - re-thrown from configuration admin
      */
     private static Configuration findConfiguration( final ConfigurationAdmin configurationAdmin,
-                                                    final ServiceIdentity serviceIdentity )
+                                                    final Identity identity )
         throws IOException
     {
         return null;

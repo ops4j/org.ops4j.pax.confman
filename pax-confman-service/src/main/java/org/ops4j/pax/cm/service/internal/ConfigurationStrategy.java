@@ -21,7 +21,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
-import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.domain.Identity;
 
 /**
  * Configuration strategy applied during configuration processing. Basically there are two configuration startegies:br/>
@@ -33,19 +33,6 @@ import org.ops4j.pax.cm.domain.ServiceIdentity;
  */
 public interface ConfigurationStrategy
 {
-
-    /**
-     * Create service identity.
-     *
-     * @param pid        persistent identifier
-     * @param factoryPid persisten factory id
-     * @param location   bundle location
-     *
-     * @return created service identity
-     */
-    ServiceIdentity createServiceIdentity( String pid,
-                                           String factoryPid,
-                                           String location );
 
     /**
      * Callback before finding an adaptor & adaptation process.
@@ -65,11 +52,11 @@ public interface ConfigurationStrategy
     Command<ConfigurationAdmin> createUpdateCommand( ConfigurationTarget configurationTarget );
 
     /**
-     * Creates a Configuration Admin delete configuration command for specified service identity.
+     * Creates a Configuration Admin delete configuration command for specified configuration identity.
      *
-     * @param serviceIdentity service identity
+     * @param identity configuration identity
      *
      * @return created delete configuration command
      */
-    Command<ConfigurationAdmin> createDeleteCommand( ServiceIdentity serviceIdentity );
+    Command<ConfigurationAdmin> createDeleteCommand( Identity identity );
 }

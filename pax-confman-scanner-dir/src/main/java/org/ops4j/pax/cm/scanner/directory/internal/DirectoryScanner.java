@@ -34,7 +34,7 @@ import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.PropertiesSource;
-import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.domain.Identity;
 import org.ops4j.pax.cm.scanner.core.internal.DeleteCommand;
 import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
@@ -151,13 +151,13 @@ class DirectoryScanner
                 else if( file.canRead() )
                 {
                     String fileName = file.getName();
-                    // find out the pid by removing extension
-                    String pid = fileName;
-                    if( pid.contains( "." ) )
+                    // find out the id by removing extension
+                    String id = fileName;
+                    if( id.contains( "." ) )
                     {
-                        pid = pid.substring( 0, pid.lastIndexOf( "." ) );
+                        id = id.substring( 0, id.lastIndexOf( "." ) );
                     }
-                    if( pid.trim().length() == 0 )
+                    if( id.trim().length() == 0 )
                     {
                         // we may have files that start with .
                         continue;
@@ -185,14 +185,14 @@ class DirectoryScanner
                         metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.directory" );
                         metadata.put( MetadataConstants.MIME_TYPE, mimeType );
                         // create configuration source
-                        ServiceIdentity identity;
+                        final Identity identity;
                         if( factoryPid == null )
                         {
-                            identity = new ServiceIdentity( pid, null );
+                            identity = new Identity( id, null );
                         }
                         else
                         {
-                            identity = new ServiceIdentity( pid, factoryPid, null );
+                            identity = new Identity( factoryPid, id, null );
                         }
                         // and add it to be process
                         m_processor.add(
@@ -218,7 +218,7 @@ class DirectoryScanner
         removable.removeAll( retainFiles );
         for( String fileName : removable )
         {
-            m_processor.add( new DeleteCommand( m_processed.get( fileName ).serviceIdentity ) );
+            m_processor.add( new DeleteCommand( m_processed.get( fileName ).m_identity ) );
             m_processed.remove( fileName );
         }
     }
@@ -312,12 +312,12 @@ class DirectoryScanner
     private static class ProcessedFile
     {
 
-        final ServiceIdentity serviceIdentity;
+        final Identity m_identity;
         final Long lastModified;
 
-        ProcessedFile( final ServiceIdentity serviceIdentity, final Long lastModified )
+        ProcessedFile( final Identity identity, final Long lastModified )
         {
-            this.serviceIdentity = serviceIdentity;
+            this.m_identity = identity;
             this.lastModified = lastModified;
         }
 

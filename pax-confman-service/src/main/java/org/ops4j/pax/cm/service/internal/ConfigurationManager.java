@@ -31,12 +31,12 @@ import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
+import org.ops4j.pax.cm.domain.Identity;
 import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.PropertiesTarget;
-import org.ops4j.pax.cm.domain.ServiceIdentity;
 
 /**
- * TODO add JavaDoc
+ * Configurer implementation.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
@@ -69,14 +69,14 @@ public class ConfigurationManager
     /**
      * Constructor.
      *
-     * @param adapterRepository adaptor repository to use
-     * @param processor         processing queue to use
+     * @param adapterRepository adaptor repository
+     * @param processor         processing queue
      *
      * @throws NullArgumentException - If dictionaryAdapterRepository is null
      *                               - If processingQueue is null
      */
     public ConfigurationManager( final AdapterRepository adapterRepository,
-                           final CommandProcessor<ConfigurationAdmin> processor )
+                                 final CommandProcessor<ConfigurationAdmin> processor )
     {
         NullArgumentException.validateNotNull( adapterRepository, "Dictionary adapters repository" );
         NullArgumentException.validateNotNull( processor, "Commands processor" );
@@ -86,20 +86,16 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#update(String, String, Object,java.util.Dictionary)
+     * @see Configurer#update(String, String, Object, Dictionary)
      */
     public void update( final String pid,
                         final String location,
-                        final Object propertiesSource, final Dictionary metadata
-    )
+                        final Object propertiesSource,
+                        final Dictionary metadata )
     {
-        LOG.trace( "Pid: " + pid );
-        LOG.trace( "Metadata: " + metadata );
-        LOG.trace( "Properties source: " + propertiesSource );
-
         updateConfiguration(
             new ConfigurationSource(
-                MANAGED_SERVICE_STRATEGY.createServiceIdentity( pid, null, location ),
+                new Identity( pid, location ),
                 new PropertiesSource(
                     propertiesSource,
                     DictionaryUtils.copy( metadata, new Hashtable() )
@@ -110,22 +106,17 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#updateFactory(String, String, String, Object,java.util.Dictionary)
+     * @see Configurer#update(String, String, String, Object, Dictionary)
      */
-    public void updateFactory( final String factoryPid,
-                               final String pid,
-                               final String location,
-                               final Object propertiesSource, final Dictionary metadata
-    )
+    public void update( final String factoryPid,
+                        final String factoryInstance,
+                        final String location,
+                        final Object propertiesSource,
+                        final Dictionary metadata )
     {
-        LOG.trace( "FactoryPid: " + factoryPid );
-        LOG.trace( "Pid: " + pid );
-        LOG.trace( "Metadata: " + metadata );
-        LOG.trace( "Properties source: " + propertiesSource );
-
         updateConfiguration(
             new ConfigurationSource(
-                MANAGED_SERVICE_FACTORY_STRATEGY.createServiceIdentity( pid, factoryPid, location ),
+                new Identity( factoryPid, factoryInstance, location ),
                 new PropertiesSource(
                     propertiesSource,
                     DictionaryUtils.copy( metadata, new Hashtable() )
@@ -140,25 +131,20 @@ public class ConfigurationManager
      */
     public void delete( final String pid )
     {
-        LOG.trace( "Pid: " + pid );
-
         deleteConfiguration(
-            MANAGED_SERVICE_STRATEGY.createServiceIdentity( pid, null, null ),
+            new Identity( pid, null ),
             MANAGED_SERVICE_STRATEGY
         );
     }
 
     /**
-     * @see Configurer#deleteFactory(String, String)
+     * @see Configurer#delete(String, String)
      */
-    public void deleteFactory( final String factoryPid,
-                               final String pid )
+    public void delete( final String factoryPid,
+                        final String factoryInstance )
     {
-        LOG.trace( "FactoryPid: " + pid );
-        LOG.trace( "Pid: " + pid );
-
         deleteConfiguration(
-            MANAGED_SERVICE_FACTORY_STRATEGY.createServiceIdentity( pid, factoryPid, null ),
+            new Identity( factoryPid, factoryInstance, null ),
             MANAGED_SERVICE_FACTORY_STRATEGY
         );
     }
@@ -216,7 +202,7 @@ public class ConfigurationManager
             if( adapted != null )
             {
                 final Command<ConfigurationAdmin> command = strategy.createUpdateCommand(
-                    new ConfigurationTarget( source.getServiceIdentity(), new PropertiesTarget( adapted ) )
+                    new ConfigurationTarget( source.getIdentity(), new PropertiesTarget( adapted ) )
                 );
                 if( command != null )
                 {
@@ -233,13 +219,13 @@ public class ConfigurationManager
     /**
      * Deletes configuration using the supplied strategy.
      *
-     * @param serviceIdentity service identity
-     * @param strategy        configuration strategy
+     * @param identity configuration identity
+     * @param strategy configuration strategy
      */
-    private void deleteConfiguration( final ServiceIdentity serviceIdentity,
+    private void deleteConfiguration( final Identity identity,
                                       final ConfigurationStrategy strategy )
     {
-        m_processor.add( strategy.createDeleteCommand( serviceIdentity ) );
+        m_processor.add( strategy.createDeleteCommand( identity ) );
     }
 
     /**

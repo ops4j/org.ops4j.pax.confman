@@ -54,20 +54,20 @@ public class UpdateCommand
      */
     public void execute( final Configurer configurer )
     {
-        if( m_configurationSource.getServiceIdentity().getFactoryPid() == null )
+        if( m_configurationSource.getIdentity().getFactoryPid() == null )
         {
             configurer.update(
-                m_configurationSource.getServiceIdentity().getPid(),
-                m_configurationSource.getServiceIdentity().getLocation(),
+                m_configurationSource.getIdentity().getPid(),
+                m_configurationSource.getIdentity().getLocation(),
                 m_configurationSource.getPropertiesSource().getSourceObject(), m_configurationSource.getPropertiesSource().getMetadata()
             );
         }
         else
         {
-            configurer.updateFactory(
-                m_configurationSource.getServiceIdentity().getFactoryPid(),
-                m_configurationSource.getServiceIdentity().getPid(),                
-                m_configurationSource.getServiceIdentity().getLocation(),
+            configurer.update(
+                m_configurationSource.getIdentity().getFactoryPid(),
+                m_configurationSource.getIdentity().getPid(),
+                m_configurationSource.getIdentity().getLocation(),
                 m_configurationSource.getPropertiesSource().getSourceObject(), m_configurationSource.getPropertiesSource().getMetadata()
             );
         }

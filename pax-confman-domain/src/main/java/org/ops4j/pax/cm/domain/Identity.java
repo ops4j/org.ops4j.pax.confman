@@ -25,7 +25,7 @@ import org.ops4j.lang.NullArgumentException;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 14, 2008
  */
-public class ServiceIdentity
+public class Identity
 {
 
     /**
@@ -33,48 +33,57 @@ public class ServiceIdentity
      */
     private final String m_pid;
     /**
-     * Factory persistent identifier. Cannot be null.
+     * Factory persistent identifier.
      */
     private final String m_factoryPid;
+    /**
+     * Factory instance.
+     */
+    private final String m_factoryInstance;
     /**
      * Bundle location.
      */
     private final String m_location;
 
     /**
-     * Create a new persistent identifier model for a managed service.
+     * Constructor.
      *
      * @param pid      persistent identifier
      * @param location bundle location; optional
      *
      * @throws NullArgumentException - If pid is null or empty
      */
-    public ServiceIdentity( final String pid, final String location )
+    public Identity( final String pid,
+                     final String location )
     {
         NullArgumentException.validateNotEmpty( pid, true, "Persistent identifier" );
 
         m_pid = pid;
         m_factoryPid = null;
+        m_factoryInstance = null;
         m_location = location;
     }
 
     /**
-     * Create a new persistent identifier model for a managed service factory.
+     * Constructor.
      *
-     * @param pid        persistent identifier
-     * @param factoryPid factory persistent identifier
-     * @param location   bundle location; optional
+     * @param factoryPid      factory persistent identifier
+     * @param factoryInstance factory instance
+     * @param location        bundle location; optional
      *
-     * @throws NullArgumentException - If pid is null or empty
-     *                               - If factory pid is null or empty
+     * @throws NullArgumentException - If factory pid is null or empty
+     *                               - If factory instance is null or empty
      */
-    public ServiceIdentity( final String pid, final String factoryPid, final String location )
+    public Identity( final String factoryPid,
+                     final String factoryInstance,
+                     final String location )
     {
-        NullArgumentException.validateNotEmpty( pid, true, "Persistent identifier" );
         NullArgumentException.validateNotEmpty( factoryPid, true, "Factory persistent identifier" );
+        NullArgumentException.validateNotEmpty( factoryInstance, true, "Factory instance" );
 
-        m_pid = pid;
+        m_pid = null;
         m_factoryPid = factoryPid;
+        m_factoryInstance = factoryInstance;
         m_location = location;
     }
 
@@ -91,11 +100,21 @@ public class ServiceIdentity
     /**
      * Getter.
      *
-     * @return factory persistent pid
+     * @return factory persistent identifier
      */
     public String getFactoryPid()
     {
         return m_factoryPid;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return factory instance
+     */
+    public String getFactoryInstance()
+    {
+        return m_factoryInstance;
     }
 
     /**
@@ -113,12 +132,17 @@ public class ServiceIdentity
     {
         final StringBuilder builder = new StringBuilder()
             .append( this.getClass().getSimpleName() )
-            .append( "{" )
-            .append( "pid=" ).append( m_pid );
+            .append( "{" );
 
-        if( m_factoryPid != null )
+        if( m_pid != null )
         {
-            builder.append( ",factoryPid=" ).append( m_factoryPid );
+            builder.append( "pid=" ).append( m_pid );
+        }
+        else
+        {
+            builder
+                .append( "factoryPid=" ).append( m_factoryPid )
+                .append( "factoryInstance=" ).append( m_factoryInstance );
         }
 
         builder

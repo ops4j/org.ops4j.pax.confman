@@ -43,6 +43,10 @@ public interface MetadataConstants
      */
     String SERVICE_FACTORYPID = ConfigurationAdmin.SERVICE_FACTORYPID;
     /**
+     * Service instance.
+     */
+    String SERVICE_FACTORYINSTANCE = "service.instance";
+    /**
      * Copy of service bundle location.
      */
     String SERVICE_BUNDLELOCATION = ConfigurationAdmin.SERVICE_BUNDLELOCATION;
@@ -68,6 +72,10 @@ public interface MetadataConstants
      * Targeted service factory pid.
      */
     String TARGET_SERVICE_FACTORYPID = TARGET_PREFIX + "." + SERVICE_FACTORYPID;
+    /**
+     * Targeted service factory identity.
+     */
+    String TARGET_SERVICE_FACTORYINSTANCE = TARGET_PREFIX + ".instance";
     /**
      * Targeted service bundle location.
      */

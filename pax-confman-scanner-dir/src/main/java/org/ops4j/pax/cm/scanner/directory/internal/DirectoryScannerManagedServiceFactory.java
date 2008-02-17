@@ -236,7 +236,7 @@ class DirectoryScannerManagedServiceFactory
      * @param pid                  persistent identifier
      * @param startDefaultScanners if default scanner should be started on empty list of configured scanners
      */
-    public void deleted( final String pid,
+    private void deleted( final String pid,
                          final boolean startDefaultScanners )
     {
         synchronized( m_pidsToScanners )

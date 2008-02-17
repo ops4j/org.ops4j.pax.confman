@@ -44,7 +44,7 @@ public abstract class SpecificationBasedAdapter
      *
      * @throws NullArgumentException - If specification is null
      */
-    public SpecificationBasedAdapter( final Specification specification )
+    SpecificationBasedAdapter( final Specification specification )
     {
         NullArgumentException.validateNotNull( specification, "Specification" );
 

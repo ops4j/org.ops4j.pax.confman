@@ -32,7 +32,7 @@ import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.PropertiesSource;
-import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.domain.Identity;
 import org.ops4j.pax.cm.scanner.core.internal.DeleteCommand;
 import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
@@ -43,7 +43,7 @@ import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public class RegistryScanner
+class RegistryScanner
     extends AbstractLifecycle
 {
 
@@ -94,14 +94,14 @@ public class RegistryScanner
                         getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
                     final String location =
                         getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
-                    final ServiceIdentity identity;
+                    final Identity identity;
                     if( factoryPid == null )
                     {
-                        identity = new ServiceIdentity( pid, location );
+                        identity = new Identity( pid, location );
                     }
                     else
                     {
-                        identity = new ServiceIdentity( pid, factoryPid, location );
+                        identity = new Identity( factoryPid, pid, location );
                     }
                     m_processor.add(
                         new UpdateCommand(
@@ -131,14 +131,14 @@ public class RegistryScanner
                         getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
                     final String location =
                         getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
-                    final ServiceIdentity identity;
+                    final Identity identity;
                     if( factoryPid == null )
                     {
-                        identity = new ServiceIdentity( pid, location );
+                        identity = new Identity( pid, location );
                     }
                     else
                     {
-                        identity = new ServiceIdentity( pid, factoryPid, location );
+                        identity = new Identity( factoryPid, pid, location );
                     }
                     m_processor.add( new DeleteCommand( identity ) );
                 }

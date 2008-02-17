@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.scanner.core.internal;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.common.internal.processor.Command;
-import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.domain.Identity;
 
 /**
  * Delete command to be executed against a configurer.
@@ -33,20 +33,20 @@ public class DeleteCommand
 {
 
     /**
-     * Service identity.
+     * configuration identity.
      */
-    private final ServiceIdentity m_serviceIdentity;
+    private final Identity m_identity;
 
     /**
      * Create a new delete command.
      *
-     * @param serviceIdentity service identity of the configuration to be removed
+     * @param identity configuration identity of the configuration to be removed
      */
-    public DeleteCommand( final ServiceIdentity serviceIdentity )
+    public DeleteCommand( final Identity identity )
     {
-        NullArgumentException.validateNotNull( serviceIdentity, "Service identity" );
+        NullArgumentException.validateNotNull( identity, "configuration identity" );
 
-        m_serviceIdentity = serviceIdentity;
+        m_identity = identity;
     }
 
     /**
@@ -54,13 +54,13 @@ public class DeleteCommand
      */
     public void execute( final Configurer configurer )
     {
-        if( m_serviceIdentity.getFactoryPid() == null )
+        if( m_identity.getFactoryPid() == null )
         {
-            configurer.delete( m_serviceIdentity.getPid() );
+            configurer.delete( m_identity.getPid() );
         }
         else
         {
-            configurer.deleteFactory( m_serviceIdentity.getFactoryPid(), m_serviceIdentity.getPid() );
+            configurer.delete( m_identity.getFactoryPid(), m_identity.getPid() );
         }
     }
 
@@ -70,7 +70,7 @@ public class DeleteCommand
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( m_serviceIdentity )
+            .append( m_identity )
             .append( "}" )
             .toString();
     }

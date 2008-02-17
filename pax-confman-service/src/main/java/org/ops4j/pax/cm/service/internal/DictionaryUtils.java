@@ -176,7 +176,7 @@ class DictionaryUtils
         /**
          * Regular expression pattern to be matched.
          */
-        private Pattern m_pattern;
+        private final Pattern m_pattern;
 
         /**
          * Constructor.
@@ -197,11 +197,7 @@ class DictionaryUtils
          */
         public boolean isSatisfiedBy( final Object key )
         {
-            if( key == null )
-            {
-                return false;
-            }
-            return m_pattern.matcher( key.toString() ).matches();
+            return key != null && m_pattern.matcher( key.toString() ).matches();
         }
     }
 
@@ -215,7 +211,7 @@ class DictionaryUtils
         /**
          * Specification to be negated.
          */
-        private KeySpecification m_specification;
+        private final KeySpecification m_specification;
 
         /**
          * Constructor.
@@ -250,7 +246,7 @@ class DictionaryUtils
         /**
          * Specification to be ANDed.
          */
-        private KeySpecification[] m_specifications;
+        private final KeySpecification[] m_specifications;
 
         /**
          * Constructor.
@@ -292,7 +288,7 @@ class DictionaryUtils
         /**
          * Specification to be ORed.
          */
-        private KeySpecification[] m_specifications;
+        private final KeySpecification[] m_specifications;
 
         /**
          * Constructor.

@@ -46,7 +46,7 @@ public class CommandProcessor<T>
     /**
      * Commands queue.
      */
-    private BlockingQueue<Command<T>> m_queue;
+    private final BlockingQueue<Command<T>> m_queue;
     /**
      * Targeted service.
      */

@@ -12,9 +12,9 @@ public class ConfigurationSource
 {
 
     /**
-     * Service identity model.
+     * Configuration identity model.
      */
-    private final ServiceIdentity m_serviceIdentity;
+    private final Identity m_identity;
     /**
      * Properties source model.
      */
@@ -23,30 +23,30 @@ public class ConfigurationSource
     /**
      * Creates a new configuration source model.
      *
-     * @param serviceIdentity service identity
-     * @param source          properties source
+     * @param identity configuration identity
+     * @param source   properties source
      *
-     * @throws NullArgumentException - If service identity is null
+     * @throws NullArgumentException - If configuration identity is null
      *                               - If source is null
      */
-    public ConfigurationSource( final ServiceIdentity serviceIdentity,
+    public ConfigurationSource( final Identity identity,
                                 final PropertiesSource source )
     {
-        NullArgumentException.validateNotNull( serviceIdentity, "Service identity" );
+        NullArgumentException.validateNotNull( identity, "configuration identity" );
         NullArgumentException.validateNotNull( source, "Pproperties source" );
 
-        m_serviceIdentity = serviceIdentity;
+        m_identity = identity;
         m_source = source;
     }
 
     /**
      * Getter.
      *
-     * @return service identity model
+     * @return configuration identity model
      */
-    public ServiceIdentity getServiceIdentity()
+    public Identity getIdentity()
     {
-        return m_serviceIdentity;
+        return m_identity;
     }
 
     /**
@@ -65,7 +65,7 @@ public class ConfigurationSource
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_serviceIdentity )
+            .append( "identity=" ).append( m_identity )
             .append( ",source=" ).append( m_source )
             .append( "}" )
             .toString();

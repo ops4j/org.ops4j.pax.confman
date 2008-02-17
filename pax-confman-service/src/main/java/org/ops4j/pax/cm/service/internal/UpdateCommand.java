@@ -37,7 +37,7 @@ abstract class UpdateCommand
     /**
      * Update configuration target.
      */
-    protected final ConfigurationTarget m_target;
+    final ConfigurationTarget m_target;
 
     /**
      * Constructor.
@@ -66,21 +66,21 @@ abstract class UpdateCommand
     {
         NullArgumentException.validateNotNull( configurationAdmin, "Configuration Admin service" );
 
-        LOG.trace( "Looking for a configuration for " + m_target.getServiceIdentity() );
+        LOG.trace( "Looking for a configuration for " + m_target.getIdentity() );
         final Configuration configuration = findConfiguration( configurationAdmin );
         if( configuration != null )
         {
             LOG.trace( "Found configuration with properties: " + configuration.getProperties() );
             if( !equal( configuration.getProperties(), m_target.getPropertiesTarget().getProperties() ) )
             {
-                configuration.setBundleLocation( m_target.getServiceIdentity().getLocation() );
+                configuration.setBundleLocation( m_target.getIdentity().getLocation() );
                 configuration.update( m_target.getPropertiesTarget().getProperties() );
-                LOG.info( "Updated configuration " + m_target.getServiceIdentity() );
+                LOG.info( "Updated configuration " + m_target.getIdentity() );
             }
             else
             {
                 LOG.info(
-                    "Configuration " + m_target.getServiceIdentity()
+                    "Configuration " + m_target.getIdentity()
                     + " is the same as the processing one. Not updating"
                 );
             }
@@ -121,7 +121,7 @@ abstract class UpdateCommand
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_target.getServiceIdentity() )
+            .append( "identity=" ).append( m_target.getIdentity() )
             .append( "}" )
             .toString();
     }

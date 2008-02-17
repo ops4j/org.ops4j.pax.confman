@@ -12,9 +12,9 @@ public class ConfigurationTarget
 {
 
     /**
-     * Service identity model.
+     * configuration identity model.
      */
-    private final ServiceIdentity m_serviceIdentity;
+    private final Identity m_identity;
     /**
      * Properties target model.
      */
@@ -23,30 +23,30 @@ public class ConfigurationTarget
     /**
      * Creates a new configuration target model.
      *
-     * @param serviceIdentity service identity model
+     * @param identity configuration identity model
      * @param target          properties target
      *
-     * @throws NullArgumentException - If serviceIdentity is null
+     * @throws NullArgumentException - If identity is null
      *                               - If target is null
      */
-    public ConfigurationTarget( final ServiceIdentity serviceIdentity,
+    public ConfigurationTarget( final Identity identity,
                                 final PropertiesTarget target )
     {
-        NullArgumentException.validateNotNull( serviceIdentity, "Service identity" );
+        NullArgumentException.validateNotNull( identity, "configuration identity" );
         NullArgumentException.validateNotNull( target, "Properties target" );
 
-        m_serviceIdentity = serviceIdentity;
+        m_identity = identity;
         m_target = target;
     }
 
     /**
      * Getter.
      *
-     * @return service identity model
+     * @return configuration identity model
      */
-    public ServiceIdentity getServiceIdentity()
+    public Identity getIdentity()
     {
-        return m_serviceIdentity;
+        return m_identity;
     }
 
     /**
@@ -65,7 +65,7 @@ public class ConfigurationTarget
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_serviceIdentity )
+            .append( "identity=" ).append( m_identity )
             .append( ",target=" ).append( m_target )
             .append( "}" )
             .toString();

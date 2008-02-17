@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.api;
 import java.util.Dictionary;
 
 /**
- * TODO add JavaDoc
+ * Configuration Manager facade.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
@@ -28,20 +28,58 @@ import java.util.Dictionary;
 public interface Configurer
 {
 
+    /**
+     * Updates a configuration. If the configuration does not exist the configuration will be created.
+     * The update is perfomed asyncronous as soon as the properties source object can be adapted and a configuration
+     * admin service is available. The targeted configuration can be managed service copnfiguration or a managed service
+     * factory configuration.
+     *
+     * @param pid              persistent identifier
+     * @param location         bundle location. Null for an unbounded configuration.
+     * @param propertiesSource configuration properties source object
+     * @param metadata         metadata related to properties source object
+     */
     void update( String pid,
                  String location,
-                 Object configuration, Dictionary metadata
+                 Object propertiesSource,
+                 Dictionary metadata
     );
 
-    void updateFactory( String factoryPid,
-                        String pid,
-                        String location,
-                        Object configuration, Dictionary metadata
+    /**
+     * Updates a managed service factory configuration. If the configuration does not exist the configuration will be
+     * created. The update is perfomed asyncronous as soon as the properties source object can be adapted and a
+     * configuration admin service is available.
+     *
+     * @param factoryPid       factory persistent identifier
+     * @param factoryInstance  configuration instance identifier
+     * @param location         bundle location. Null for an unbounded configuration.
+     * @param propertiesSource configuration properties source object
+     * @param metadata         metadata related to properties source object
+     */
+    void update( String factoryPid,
+                 String factoryInstance,
+                 String location,
+                 Object propertiesSource,
+                 Dictionary metadata
     );
 
+    /**
+     * Deletes a configuration if such a configuration exists. The update is perfomed asyncronous as soon as a
+     * configuration admin service is available. The targeted configuration can be managed service copnfiguration or
+     * a managed service factory configuration.
+     *
+     * @param pid persistent identifier.
+     */
     void delete( String pid );
 
-    void deleteFactory( String factoryPid,
-                        String pid );
-    
+    /**
+     * Deletes a factory configuration if such a configuration exists. The update is perfomed asyncronous as soon as a
+     * configuration admin service is available.
+     *
+     * @param factoryPid      factory persistent identifier
+     * @param factoryInstance configuration instance identifier
+     */
+    void delete( String factoryPid,
+                 String factoryInstance );
+
 }

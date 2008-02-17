@@ -34,7 +34,7 @@ class AdapterWrapper
     /**
      * Wrapped Adapter. Cannot be null.
      */
-    protected final Adapter m_delegate;
+    final Adapter m_delegate;
 
     /**
      * Constructor.
