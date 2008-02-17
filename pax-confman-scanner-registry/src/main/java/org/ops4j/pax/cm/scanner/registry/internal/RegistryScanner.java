@@ -33,6 +33,7 @@ import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.scanner.core.internal.DeleteCommand;
 import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
@@ -81,7 +82,7 @@ public class RegistryScanner
             public Object addingService( final ServiceReference serviceReference )
             {
                 Object service = super.addingService( serviceReference );
-                LOG.trace( "Found possible configuration: " + service );
+                LOG.trace( "Added service: " + service );
                 // create metadata
                 final Dictionary metadata = createMetdata( serviceReference );
                 LOG.trace( "Configuration metadata: " + metadata );
@@ -93,23 +94,54 @@ public class RegistryScanner
                         getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
                     final String location =
                         getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
+                    final ServiceIdentity identity;
                     if( factoryPid == null )
                     {
-                        m_processor.add(
-                            new UpdateCommand(
-                                new ConfigurationSource(
-                                    new ServiceIdentity( pid, location ),
-                                    new PropertiesSource( service, metadata )
-                                )
-                            )
-                        );
+                        identity = new ServiceIdentity( pid, location );
                     }
                     else
                     {
-                        //TODO factory configuration
+                        identity = new ServiceIdentity( pid, factoryPid, location );
                     }
+                    m_processor.add(
+                        new UpdateCommand(
+                            new ConfigurationSource(
+                                identity,
+                                new PropertiesSource( service, metadata )
+                            )
+                        )
+                    );
                 }
                 return service;
+            }
+
+            @Override
+            public void removedService( final ServiceReference serviceReference, final Object service )
+            {
+                super.removedService( serviceReference, service );
+                LOG.trace( "Removed service: " + service );
+                // create metadata
+                final Dictionary metadata = createMetdata( serviceReference );
+                LOG.trace( "Configuration metadata: " + metadata );
+                // find out the pid and configure
+                final String pid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_PID );
+                if( pid != null )
+                {
+                    final String factoryPid =
+                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
+                    final String location =
+                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
+                    final ServiceIdentity identity;
+                    if( factoryPid == null )
+                    {
+                        identity = new ServiceIdentity( pid, location );
+                    }
+                    else
+                    {
+                        identity = new ServiceIdentity( pid, factoryPid, location );
+                    }
+                    m_processor.add( new DeleteCommand( identity ) );
+                }
             }
         };
     }
