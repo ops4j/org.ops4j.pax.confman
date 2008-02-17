@@ -50,11 +50,11 @@ public class ConfigurationManager
      */
     private static final Log LOG = LogFactory.getLog( ConfigurationManager.class );
     /**
-     * Managed service strategy. Strategies should be stateless so are safe to be reused.
+     * Strategy based on pid. Strategies should be stateless so are safe to be reused.
      */
     private static final ConfigurationStrategy PID_STRATEGY = new PidStrategy();
     /**
-     * Managed service factory strategy. Strategies should be stateless so are safe to be reused.
+     * Strategy based on factory pid. Strategies should be stateless so are safe to be reused.
      */
     private static final ConfigurationStrategy FACTORY_PID_STRATEGY = new FactoryPidStrategy();
     /**

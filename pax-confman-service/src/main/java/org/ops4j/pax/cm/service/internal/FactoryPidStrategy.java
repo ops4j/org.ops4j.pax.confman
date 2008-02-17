@@ -28,7 +28,7 @@ import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.Identity;
 
 /**
- * Configuration strategy for a ManagedServiceFactory.
+ * Configuration strategy when dealing with pactory pid/instance.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 16, 2008

@@ -28,7 +28,8 @@ import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.Identity;
 
 /**
- * Configuration strategy for a ManagedService.
+ * Configuration strategy when dealing with a pid (the pid can be pid of a managed service or pid of a managed service
+ * factory).
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 15, 2008
