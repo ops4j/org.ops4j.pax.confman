@@ -21,12 +21,12 @@ import org.osgi.framework.Constants;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 /**
- * Constants related to configuration manager.
+ * Constants related to configuration manager service.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public interface MetadataConstants
+public interface ServiceConstants
 {
 
     /**

@@ -17,7 +17,6 @@
  */
 package org.ops4j.pax.cm.adapter.basic.internal;
 
-import java.util.Dictionary;
 import org.ops4j.pax.cm.api.Specification;
 
 /**

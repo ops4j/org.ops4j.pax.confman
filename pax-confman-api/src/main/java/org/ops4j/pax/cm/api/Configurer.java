@@ -20,7 +20,8 @@ package org.ops4j.pax.cm.api;
 import java.util.Dictionary;
 
 /**
- * Configuration Manager facade.
+ * Easy update / delete of configurations (both managed service and managed service factory). The updates are performed
+ * by first adapting the properties source object to an dictionary.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008

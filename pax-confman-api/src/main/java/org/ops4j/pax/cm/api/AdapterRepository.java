@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.api;
 import java.util.Dictionary;
 
 /**
- * TODO add JavaDoc
+ * Adapters repository.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
@@ -28,10 +28,28 @@ import java.util.Dictionary;
 public interface AdapterRepository
 {
 
+    /**
+     * Adds an adapter to repository.
+     *
+     * @param adapter to add
+     */
     void register( Adapter adapter );
 
+    /**
+     * Removes an adapter from repository.
+     *
+     * @param adapter to remove
+     */
     void unregister( Adapter adapter );
 
-    Adapter find( Dictionary metadata, Object sourceObject );
+    /**
+     * Search for adapter that has a specification that match (based on metadata or object to be adapted.
+     *
+     * @param metadata         properties source object related metadata
+     * @param propertiesSource properties source object
+     *
+     * @return matching adapter or null if no one matches
+     */
+    Adapter find( Dictionary metadata, Object propertiesSource );
 
 }

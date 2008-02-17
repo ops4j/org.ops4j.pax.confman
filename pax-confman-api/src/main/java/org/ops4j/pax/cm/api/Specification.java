@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.api;
 import java.util.Dictionary;
 
 /**
- * TODO add JavaDoc
+ * Matching specification for an adapter.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
@@ -28,6 +28,14 @@ import java.util.Dictionary;
 public interface Specification
 {
 
+    /**
+     * Checks if the specification is statisfied by the matadata and/or the object.
+     *
+     * @param metadata object related metadata
+     * @param object   object
+     *
+     * @return true if specification is satisfied
+     */
     boolean isSatisfiedBy( Dictionary metadata, Object object );
-    
+
 }
