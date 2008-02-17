@@ -185,10 +185,9 @@ public class CommandProcessor<T>
                         }
                     }
                 }
-                catch( Throwable ignore )
+                catch( InterruptedException ignore )
                 {
-                    // this could be due to an interruption
-                    LOG.trace( "Unexpected stop of processing", ignore );
+                    // ignore
                 }
             }
             LOG.trace( "Stopped commands processing" );
