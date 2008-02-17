@@ -52,11 +52,11 @@ public class ConfigurationManager
     /**
      * Managed service strategy. Strategies should be stateless so are safe to be reused.
      */
-    private static final ConfigurationStrategy MANAGED_SERVICE_STRATEGY = new ManagedServiceStrategy();
+    private static final ConfigurationStrategy MANAGED_SERVICE_STRATEGY = new IdentityStrategy();
     /**
      * Managed service factory strategy. Strategies should be stateless so are safe to be reused.
      */
-    private static final ConfigurationStrategy MANAGED_SERVICE_FACTORY_STRATEGY = new ManagedServiceFactoryStrategy();
+    private static final ConfigurationStrategy MANAGED_SERVICE_FACTORY_STRATEGY = new FactoryIndentityStrategy();
     /**
      * Repository of dictionary adapters. Cannot be null.
      */
