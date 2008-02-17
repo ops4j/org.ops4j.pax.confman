@@ -41,7 +41,7 @@ class AdapterRepositoryImpl
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( ConfigurerImpl.class );
+    private static final Log LOG = LogFactory.getLog( AdapterRepositoryImpl.class );
 
     /**
      * List of adaptors.

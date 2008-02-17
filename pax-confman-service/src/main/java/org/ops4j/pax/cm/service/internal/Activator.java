@@ -59,7 +59,7 @@ public class Activator
         m_processor.start();
 
         final AdapterRepository adapterRepository = new AdapterRepositoryImpl();
-        final ConfigurerImpl configurer = new ConfigurerImpl( adapterRepository, m_processor );
+        final ConfigurationManager configurer = new ConfigurationManager( adapterRepository, m_processor );
 
         m_configAdminTracker = createConfigAdminTracker( bundleContext, m_processor );
         m_configAdminTracker.open();

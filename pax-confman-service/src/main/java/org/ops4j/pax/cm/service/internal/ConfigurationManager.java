@@ -41,14 +41,14 @@ import org.ops4j.pax.cm.domain.ServiceIdentity;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public class ConfigurerImpl
+public class ConfigurationManager
     implements Configurer
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( ConfigurerImpl.class );
+    private static final Log LOG = LogFactory.getLog( ConfigurationManager.class );
     /**
      * Managed service strategy. Strategies should be stateless so are safe to be reused.
      */
@@ -75,7 +75,7 @@ public class ConfigurerImpl
      * @throws NullArgumentException - If dictionaryAdapterRepository is null
      *                               - If processingQueue is null
      */
-    public ConfigurerImpl( final AdapterRepository adapterRepository,
+    public ConfigurationManager( final AdapterRepository adapterRepository,
                            final CommandProcessor<ConfigurationAdmin> processor )
     {
         NullArgumentException.validateNotNull( adapterRepository, "Dictionary adapters repository" );
