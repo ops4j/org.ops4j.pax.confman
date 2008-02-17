@@ -21,7 +21,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
@@ -35,11 +35,11 @@ public class ConfigurerTracker
 {
 
     /**
-     * Configurer service tracker.
+     * ConfigurationManager service tracker.
      */
     private final ServiceTracker m_configurerTracker;
     /**
-     * Configurer setter. Canot be null.
+     * ConfigurationManager setter. Canot be null.
      */
     private final ConfigurerSetter m_configurerSetter;
 
@@ -56,17 +56,17 @@ public class ConfigurerTracker
                               final ConfigurerSetter configurerSetter )
     {
         NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
-        NullArgumentException.validateNotNull( configurerSetter, "Configurer setter" );
+        NullArgumentException.validateNotNull( configurerSetter, "ConfigurationManager setter" );
 
         m_configurerSetter = configurerSetter;
-        m_configurerTracker = new ServiceTracker( bundleContext, Configurer.class.getName(), null )
+        m_configurerTracker = new ServiceTracker( bundleContext, ConfigurationManager.class.getName(), null )
         {
             @Override
             public Object addingService( ServiceReference serviceReference )
             {
-                final Configurer configurer = (Configurer) super.addingService( serviceReference );
-                m_configurerSetter.setConfigurer( configurer );
-                return configurer;
+                final ConfigurationManager configurationManager = (ConfigurationManager) super.addingService( serviceReference );
+                m_configurerSetter.setConfigurer( configurationManager );
+                return configurationManager;
             }
 
             @Override
@@ -80,7 +80,7 @@ public class ConfigurerTracker
     }
 
     /**
-     * Starts tracking of Configurer service.
+     * Starts tracking of ConfigurationManager service.
      */
     protected void onStart()
     {
@@ -88,7 +88,7 @@ public class ConfigurerTracker
     }
 
     /**
-     * Stops tracking of Configurer service.
+     * Stops tracking of ConfigurationManager service.
      */
     protected void onStop()
     {

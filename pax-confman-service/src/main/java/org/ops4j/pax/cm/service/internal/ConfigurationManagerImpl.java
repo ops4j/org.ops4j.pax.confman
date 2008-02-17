@@ -24,8 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.api.AdapterRepository;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.service.internal.AdapterRepository;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
@@ -36,19 +36,19 @@ import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.PropertiesTarget;
 
 /**
- * Configurer implementation.
+ * ConfigurationManager implementation.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public class ConfigurationManager
-    implements Configurer
+public class ConfigurationManagerImpl
+    implements ConfigurationManager
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( ConfigurationManager.class );
+    private static final Log LOG = LogFactory.getLog( ConfigurationManagerImpl.class );
     /**
      * Strategy based on pid. Strategies should be stateless so are safe to be reused.
      */
@@ -75,7 +75,7 @@ public class ConfigurationManager
      * @throws NullArgumentException - If dictionaryAdapterRepository is null
      *                               - If processingQueue is null
      */
-    public ConfigurationManager( final AdapterRepository adapterRepository,
+    public ConfigurationManagerImpl( final AdapterRepository adapterRepository,
                                  final CommandProcessor<ConfigurationAdmin> processor )
     {
         NullArgumentException.validateNotNull( adapterRepository, "Dictionary adapters repository" );
@@ -86,7 +86,7 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#update(String, String, Object, Dictionary)
+     * @see org.ops4j.pax.cm.api.ConfigurationManager#update(String, String, Object, Dictionary)
      */
     public void update( final String pid,
                         final String location,
@@ -106,7 +106,7 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#update(String, String, String, Object, Dictionary)
+     * @see org.ops4j.pax.cm.api.ConfigurationManager#update(String, String, String, Object, Dictionary)
      */
     public void update( final String factoryPid,
                         final String factoryInstance,
@@ -127,7 +127,7 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#delete(String)
+     * @see org.ops4j.pax.cm.api.ConfigurationManager#delete(String)
      */
     public void delete( final String pid )
     {
@@ -138,7 +138,7 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#delete(String, String)
+     * @see org.ops4j.pax.cm.api.ConfigurationManager#delete(String, String)
      */
     public void delete( final String factoryPid,
                         final String factoryInstance )

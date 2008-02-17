@@ -18,7 +18,7 @@
 package org.ops4j.pax.cm.scanner.core.internal;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.Identity;
 
@@ -29,7 +29,7 @@ import org.ops4j.pax.cm.domain.Identity;
  * @since 0.3.0, January 12, 2008
  */
 public class DeleteCommand
-    implements Command<Configurer>
+    implements Command<ConfigurationManager>
 {
 
     /**
@@ -50,17 +50,17 @@ public class DeleteCommand
     }
 
     /**
-     * Execute remove against available configurer.
+     * Execute remove against available configurationManager.
      */
-    public void execute( final Configurer configurer )
+    public void execute( final ConfigurationManager configurationManager )
     {
         if( m_identity.getFactoryPid() == null )
         {
-            configurer.delete( m_identity.getPid() );
+            configurationManager.delete( m_identity.getPid() );
         }
         else
         {
-            configurer.delete( m_identity.getFactoryPid(), m_identity.getFactoryInstance() );
+            configurationManager.delete( m_identity.getFactoryPid(), m_identity.getFactoryInstance() );
         }
     }
 

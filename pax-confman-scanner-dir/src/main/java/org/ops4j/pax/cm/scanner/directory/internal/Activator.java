@@ -25,7 +25,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.ManagedServiceFactory;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.scanner.core.internal.ConfigurerSetter;
 import org.ops4j.pax.cm.scanner.core.internal.ConfigurerTracker;
@@ -47,13 +47,13 @@ public class Activator
      */
     private static final Log LOG = LogFactory.getLog( Activator.class );
     /**
-     * Configurer tracker.
+     * ConfigurationManager tracker.
      */
     private ConfigurerTracker m_configurerTracker;
     /**
      * Command processor.
      */
-    private CommandProcessor<Configurer> m_processor;
+    private CommandProcessor<ConfigurationManager> m_processor;
     /**
      * Directory Scanner managed service factory.
      */
@@ -66,18 +66,18 @@ public class Activator
     {
         LOG.debug( "Starting OPS4J Pax ConfMan directory scanner" );
 
-        m_processor = new CommandProcessor<Configurer>( "Pax ConfMan - Directory Scanner - Commands Processor" );
+        m_processor = new CommandProcessor<ConfigurationManager>( "Pax ConfMan - Directory Scanner - Commands Processor" );
         m_configurerTracker = new ConfigurerTracker(
             bundleContext,
             new ConfigurerSetter()
             {
                 /**
-                 * Pass configurer to commands processor.
-                 * @param configurer new configurer
+                 * Pass configurationManager to commands processor.
+                 * @param configurationManager new configurationManager
                  */
-                public void setConfigurer( final Configurer configurer )
+                public void setConfigurer( final ConfigurationManager configurationManager )
                 {
-                    m_processor.setTargetService( configurer );
+                    m_processor.setTargetService( configurationManager );
                 }
 
             }

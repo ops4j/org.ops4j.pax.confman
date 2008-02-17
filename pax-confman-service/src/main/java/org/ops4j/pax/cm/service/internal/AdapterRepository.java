@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.api;
+package org.ops4j.pax.cm.service.internal;
 
 import java.util.Dictionary;
+import org.ops4j.pax.cm.api.Adapter;
 
 /**
  * Adapters repository.

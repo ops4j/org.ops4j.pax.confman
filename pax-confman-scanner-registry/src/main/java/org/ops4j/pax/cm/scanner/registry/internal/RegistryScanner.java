@@ -27,7 +27,7 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
@@ -52,13 +52,13 @@ class RegistryScanner
      */
     private static final Log LOG = LogFactory.getLog( RegistryScanner.class );
     /**
-     * Configurer service tracker.
+     * ConfigurationManager service tracker.
      */
     private final ServiceTracker m_registryTracker;
     /**
      * Configuration buffer.
      */
-    private final CommandProcessor<Configurer> m_processor;
+    private final CommandProcessor<ConfigurationManager> m_processor;
 
     /**
      * Creates a new registry scanner.
@@ -70,7 +70,7 @@ class RegistryScanner
      *                               - If configurations buffer is null
      */
     public RegistryScanner( final BundleContext bundleContext,
-                            final CommandProcessor<Configurer> processor )
+                            final CommandProcessor<ConfigurationManager> processor )
     {
         NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
         NullArgumentException.validateNotNull( processor, "Command processor" );

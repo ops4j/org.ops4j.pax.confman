@@ -23,8 +23,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.api.AdapterRepository;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.service.internal.AdapterRepository;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 
 /**
@@ -55,11 +55,11 @@ public class Activator
      */
     public void start( final BundleContext bundleContext )
     {
-        m_processor = new CommandProcessor<ConfigurationAdmin>( "Pax ConfMan - Configurer - Commands Processor" );
+        m_processor = new CommandProcessor<ConfigurationAdmin>( "Pax ConfMan - ConfigurationManager - Commands Processor" );
         m_processor.start();
 
         final AdapterRepository adapterRepository = new AdapterRepositoryImpl();
-        final ConfigurationManager configurer = new ConfigurationManager( adapterRepository, m_processor );
+        final ConfigurationManagerImpl configurer = new ConfigurationManagerImpl( adapterRepository, m_processor );
 
         m_configAdminTracker = createConfigAdminTracker( bundleContext, m_processor );
         m_configAdminTracker.open();
@@ -67,7 +67,7 @@ public class Activator
         m_dictionaryAdaptorTracker = createDictionaryAdaptorTracker( bundleContext, adapterRepository );
         m_dictionaryAdaptorTracker.open();
 
-        bundleContext.registerService( Configurer.class.getName(), configurer, null );
+        bundleContext.registerService( ConfigurationManager.class.getName(), configurer, null );
         bundleContext.registerService( AdapterRepository.class.getName(), adapterRepository, null );
     }
 

@@ -18,7 +18,7 @@
 package org.ops4j.pax.cm.scanner.core.internal;
 
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 
@@ -29,7 +29,7 @@ import org.ops4j.pax.cm.domain.ConfigurationSource;
  * @since 0.3.0, January 12, 2008
  */
 public class UpdateCommand
-    implements Command<Configurer>
+    implements Command<ConfigurationManager>
 {
 
     /**
@@ -50,13 +50,13 @@ public class UpdateCommand
     }
 
     /**
-     * Execute update against available configurer.
+     * Execute update against available configurationManager.
      */
-    public void execute( final Configurer configurer )
+    public void execute( final ConfigurationManager configurationManager )
     {
         if( m_configurationSource.getIdentity().getFactoryPid() == null )
         {
-            configurer.update(
+            configurationManager.update(
                 m_configurationSource.getIdentity().getPid(),
                 m_configurationSource.getIdentity().getLocation(),
                 m_configurationSource.getPropertiesSource().getSourceObject(),
@@ -65,7 +65,7 @@ public class UpdateCommand
         }
         else
         {
-            configurer.update(
+            configurationManager.update(
                 m_configurationSource.getIdentity().getFactoryPid(),
                 m_configurationSource.getIdentity().getFactoryInstance(),
                 m_configurationSource.getIdentity().getLocation(),

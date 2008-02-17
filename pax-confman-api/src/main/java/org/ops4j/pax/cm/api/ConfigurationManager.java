@@ -26,7 +26,7 @@ import java.util.Dictionary;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public interface Configurer
+public interface ConfigurationManager
 {
 
     /**

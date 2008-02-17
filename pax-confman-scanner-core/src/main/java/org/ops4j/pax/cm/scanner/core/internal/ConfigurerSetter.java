@@ -17,10 +17,10 @@
  */
 package org.ops4j.pax.cm.scanner.core.internal;
 
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 
 /**
- * Configurer setter. Implemented by classes that need a configurer service.
+ * ConfigurationManager setter. Implemented by classes that need a configurer service.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, January 12, 2008
@@ -31,8 +31,8 @@ public interface ConfigurerSetter
     /**
      * Setter.
      *
-     * @param configurer configurer; null if no configurer is available.
+     * @param configurationManager configurationManager; null if no configurationManager is available.
      */
-    void setConfigurer( Configurer configurer );
+    void setConfigurer( ConfigurationManager configurationManager );
 
 }

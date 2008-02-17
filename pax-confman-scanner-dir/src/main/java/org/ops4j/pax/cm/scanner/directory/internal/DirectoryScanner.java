@@ -29,7 +29,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
@@ -74,7 +74,7 @@ class DirectoryScanner
     /**
      * Commands processor.
      */
-    private final CommandProcessor<Configurer> m_processor;
+    private final CommandProcessor<ConfigurationManager> m_processor;
     /**
      * Scanned file system directory. Cannot be null.
      */
@@ -108,7 +108,7 @@ class DirectoryScanner
      *                               - If configurations buffer is null
      *                               - If directory is null
      */
-    DirectoryScanner( final CommandProcessor<Configurer> processor,
+    DirectoryScanner( final CommandProcessor<ConfigurationManager> processor,
                       final File directory,
                       final Long interval )
     {

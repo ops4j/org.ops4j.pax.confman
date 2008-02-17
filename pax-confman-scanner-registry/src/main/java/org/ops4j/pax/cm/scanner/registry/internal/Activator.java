@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.scanner.core.internal.ConfigurerSetter;
 import org.ops4j.pax.cm.scanner.core.internal.ConfigurerTracker;
@@ -41,13 +41,13 @@ public class Activator
      */
     private static final Log LOG = LogFactory.getLog( Activator.class );
     /**
-     * Configurer tracker.
+     * ConfigurationManager tracker.
      */
     private ConfigurerTracker m_configurerTracker;
     /**
      * Configuration Queue.
      */
-    private CommandProcessor<Configurer> m_processor;
+    private CommandProcessor<ConfigurationManager> m_processor;
     /**
      * Registry scanner.
      */
@@ -60,18 +60,18 @@ public class Activator
     {
         LOG.debug( "Starting OPS4J Pax ConfMan service registry tracker" );
 
-        m_processor = new CommandProcessor<Configurer>( "Pax ConfMan - Registry Scanner - Commands Processor" );
+        m_processor = new CommandProcessor<ConfigurationManager>( "Pax ConfMan - Registry Scanner - Commands Processor" );
         m_configurerTracker = new ConfigurerTracker(
             bundleContext,
             new ConfigurerSetter()
             {
                 /**
-                 * Pass configurer to commands processor.
-                 * @param configurer new configurer
+                 * Pass configurationManager to commands processor.
+                 * @param configurationManager new configurationManager
                  */
-                public void setConfigurer( final Configurer configurer )
+                public void setConfigurer( final ConfigurationManager configurationManager )
                 {
-                    m_processor.setTargetService( configurer );
+                    m_processor.setTargetService( configurationManager );
                 }
 
             }

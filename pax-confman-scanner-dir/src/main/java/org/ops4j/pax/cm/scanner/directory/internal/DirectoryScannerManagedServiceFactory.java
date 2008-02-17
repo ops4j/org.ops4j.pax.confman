@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
-import org.ops4j.pax.cm.api.Configurer;
+import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.scanner.directory.ServiceConstants;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
@@ -59,7 +59,7 @@ class DirectoryScannerManagedServiceFactory
     /**
      * Commands processor.
      */
-    private final CommandProcessor<Configurer> m_processor;
+    private final CommandProcessor<ConfigurationManager> m_processor;
     /**
      * Mapping between pids and active directory scaners.
      */
@@ -86,7 +86,7 @@ class DirectoryScannerManagedServiceFactory
      *
      * @param processor commands processor (used to create scaners)
      */
-    DirectoryScannerManagedServiceFactory( final CommandProcessor<Configurer> processor )
+    DirectoryScannerManagedServiceFactory( final CommandProcessor<ConfigurationManager> processor )
     {
         m_processor = processor;
         m_pidsToScanners = Collections.synchronizedMap( new HashMap<String, DirectoryScanner>() );
