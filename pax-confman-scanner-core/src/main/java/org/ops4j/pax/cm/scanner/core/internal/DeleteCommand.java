@@ -60,7 +60,7 @@ public class DeleteCommand
         }
         else
         {
-            configurer.delete( m_identity.getFactoryPid(), m_identity.getPid() );
+            configurer.delete( m_identity.getFactoryPid(), m_identity.getFactoryInstance() );
         }
     }
 

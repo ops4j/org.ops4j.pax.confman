@@ -48,9 +48,10 @@ public class PropertiesSource
      * @throws org.ops4j.lang.NullArgumentException
      *          - If sourceObject is null
      */
-    public PropertiesSource( final Object sourceObject, final Dictionary metadata )
+    public PropertiesSource( final Object sourceObject,
+                             final Dictionary metadata )
     {
-        NullArgumentException.validateNotNull( sourceObject, "Properties sourceObject" );
+        NullArgumentException.validateNotNull( sourceObject, "Properties source object" );
 
         this.m_sourceObject = sourceObject;
         if( metadata == null )

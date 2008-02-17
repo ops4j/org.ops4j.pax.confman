@@ -199,15 +199,15 @@ public class ConfigurationManager
         {
             adapted = copyPropertiesFromMetadata( source.getPropertiesSource().getMetadata(), adapted );
             LOG.trace( "Adapted configuration properties: " + adapted );
-            if( adapted != null )
+
+            final ConfigurationTarget target =
+                new ConfigurationTarget( source.getIdentity(), new PropertiesTarget( adapted ) );
+
+            final Command<ConfigurationAdmin> command = strategy.createUpdateCommand( target );
+            if( command != null )
             {
-                final Command<ConfigurationAdmin> command = strategy.createUpdateCommand(
-                    new ConfigurationTarget( source.getIdentity(), new PropertiesTarget( adapted ) )
-                );
-                if( command != null )
-                {
-                    m_processor.add( command );
-                }
+                strategy.prepareTarget( target );
+                m_processor.add( command );
             }
         }
         else

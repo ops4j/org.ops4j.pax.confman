@@ -19,6 +19,9 @@ package org.ops4j.pax.cm.service.internal;
 
 import java.io.IOException;
 import java.util.Dictionary;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.cm.api.MetadataConstants;
@@ -38,12 +41,37 @@ public class FactoryPidStrategy
 {
 
     /**
+     * Logger.
+     */
+    private static final Log LOG = LogFactory.getLog( FactoryPidStrategy.class );
+
+    /**
+     * Adds SERVICE_FACTORYPID & SERVICE_FACTORYINSTANCE as properties to metadata. Adaptors may use this properties
+     * into their specification.
+     *
      * @see ConfigurationStrategy#prepareSource(ConfigurationSource)
      */
+    @SuppressWarnings( "unchecked" )
     public void prepareSource( final ConfigurationSource source )
     {
         final Dictionary metadata = source.getPropertiesSource().getMetadata();
         metadata.put( MetadataConstants.SERVICE_FACTORYPID, source.getIdentity().getFactoryPid() );
+        metadata.put( MetadataConstants.SERVICE_FACTORYINSTANCE, source.getIdentity().getFactoryInstance() );
+    }
+
+    /**
+     * Adds SERVICE_FACTORYINSTANCE as into configuration properties. This property is use for sequential updates or
+     * deletes for a specific instance (see find configuration).
+     *
+     * @see ConfigurationStrategy#prepareTarget(ConfigurationTarget)
+     */
+    @SuppressWarnings( "unchecked" )
+    public void prepareTarget( final ConfigurationTarget target )
+    {
+        target.getPropertiesTarget().getProperties().put(
+            MetadataConstants.SERVICE_FACTORYINSTANCE,
+            target.getIdentity().getFactoryInstance()
+        );
     }
 
     /**
@@ -60,8 +88,7 @@ public class FactoryPidStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return FactoryPidStrategy
-                    .findConfiguration( configurationAdmin, m_target.getIdentity() );
+                return FactoryPidStrategy.findConfiguration( configurationAdmin, m_target.getIdentity() );
             }
         };
     }
@@ -80,8 +107,7 @@ public class FactoryPidStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return FactoryPidStrategy
-                    .findConfiguration( configurationAdmin, m_identity );
+                return FactoryPidStrategy.findConfiguration( configurationAdmin, m_identity );
             }
         };
     }
@@ -100,6 +126,28 @@ public class FactoryPidStrategy
                                                     final Identity identity )
         throws IOException
     {
+        final StringBuilder filter = new StringBuilder()
+            .append( "(&(" )
+            .append( MetadataConstants.SERVICE_FACTORYPID ).append( "=" ).append( identity.getFactoryPid() )
+            .append( ")(" )
+            .append( MetadataConstants.SERVICE_FACTORYINSTANCE ).append( "=" ).append( identity.getFactoryInstance() )
+            .append( "))" );
+        try
+        {
+            final Configuration[] configurations = configurationAdmin.listConfigurations( filter.toString() );
+            if( configurations.length > 0 )
+            {
+                return configurations[ 0 ];
+            }
+            else
+            {
+                return configurationAdmin.createFactoryConfiguration( identity.getFactoryPid(), null );
+            }
+        }
+        catch( InvalidSyntaxException ignore )
+        {
+            LOG.error( "Unexpected exception", ignore );
+        }
         return null;
     }
 

@@ -39,14 +39,28 @@ public class PidStrategy
 {
 
     /**
+     * Adds SERVICE_PID as property to metadata. Adaptors may use this properties into their specification.
+     *
      * @see ConfigurationStrategy#prepareSource(ConfigurationSource)
      */
+    @SuppressWarnings( "unchecked" )
     public void prepareSource( final ConfigurationSource source )
     {
         final Dictionary metadata = source.getPropertiesSource().getMetadata();
         metadata.put( MetadataConstants.SERVICE_PID, source.getIdentity().getPid() );
         // be defensive and remove possible unwanted metadata
         metadata.remove( MetadataConstants.SERVICE_FACTORYPID );
+    }
+
+    /**
+     * Does nothing.
+     *
+     * @see ConfigurationStrategy#prepareTarget(ConfigurationTarget)
+     */
+    @SuppressWarnings( "unchecked" )
+    public void prepareTarget( final ConfigurationTarget target )
+    {
+        // do nothing
     }
 
     /**
@@ -63,8 +77,7 @@ public class PidStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return PidStrategy
-                    .findConfiguration( configurationAdmin, m_target.getIdentity() );
+                return PidStrategy.findConfiguration( configurationAdmin, m_target.getIdentity() );
             }
         };
     }
@@ -83,19 +96,18 @@ public class PidStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return PidStrategy
-                    .findConfiguration( configurationAdmin, m_identity );
+                return PidStrategy.findConfiguration( configurationAdmin, m_identity );
             }
         };
     }
 
     /**
-     * Search for a configuration.
+     * Search for a configuration by pid. If the configuration does not exist a new one is created.
      *
      * @param configurationAdmin configuration admin service to be used
      * @param identity           configuration identity
      *
-     * @return found configuration or null if not found
+     * @return found configuration or a new one if not found
      *
      * @throws IOException - re-thrown from configuration admin
      */

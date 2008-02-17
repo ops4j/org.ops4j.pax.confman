@@ -85,9 +85,9 @@ abstract class DeleteCommand
     public String toString()
     {
         return new StringBuilder()
-            .append( this.getClass().getSimpleName() )
+            .append( DeleteCommand.class.getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_identity )
+            .append( m_identity )
             .append( "}" )
             .toString();
     }

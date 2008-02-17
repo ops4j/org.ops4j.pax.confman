@@ -31,8 +31,8 @@ import org.ops4j.pax.cm.api.Configurer;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
-import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.Identity;
+import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.scanner.core.internal.DeleteCommand;
 import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
@@ -86,23 +86,25 @@ class RegistryScanner
                 // create metadata
                 final Dictionary metadata = createMetdata( serviceReference );
                 LOG.trace( "Configuration metadata: " + metadata );
-                // find out the pid and configure
+
+                // find out the configuration target
                 final String pid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_PID );
+                final String factoryPid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
+                final String factoryInstance =
+                    getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYINSTANCE );
+                final String location = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
+
+                Identity identity = null;
                 if( pid != null )
                 {
-                    final String factoryPid =
-                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
-                    final String location =
-                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
-                    final Identity identity;
-                    if( factoryPid == null )
-                    {
-                        identity = new Identity( pid, location );
-                    }
-                    else
-                    {
-                        identity = new Identity( factoryPid, pid, location );
-                    }
+                    identity = new Identity( pid, location );
+                }
+                else if( factoryPid != null && factoryInstance != null )
+                {
+                    identity = new Identity( factoryPid, factoryInstance, location );
+                }
+                if( identity != null )
+                {
                     m_processor.add(
                         new UpdateCommand(
                             new ConfigurationSource(
@@ -120,26 +122,28 @@ class RegistryScanner
             {
                 super.removedService( serviceReference, service );
                 LOG.trace( "Removed service: " + service );
+
                 // create metadata
                 final Dictionary metadata = createMetdata( serviceReference );
                 LOG.trace( "Configuration metadata: " + metadata );
-                // find out the pid and configure
+
+                // find out configuration target
                 final String pid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_PID );
+                final String factoryPid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
+                final String factoryInstance =
+                    getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYINSTANCE );
+
+                Identity identity = null;
                 if( pid != null )
                 {
-                    final String factoryPid =
-                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
-                    final String location =
-                        getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
-                    final Identity identity;
-                    if( factoryPid == null )
-                    {
-                        identity = new Identity( pid, location );
-                    }
-                    else
-                    {
-                        identity = new Identity( factoryPid, pid, location );
-                    }
+                    identity = new Identity( pid, null );
+                }
+                else if( factoryPid != null && factoryInstance != null )
+                {
+                    identity = new Identity( factoryPid, factoryInstance, null );
+                }
+                if( identity != null )
+                {
                     m_processor.add( new DeleteCommand( identity ) );
                 }
             }
@@ -199,9 +203,14 @@ class RegistryScanner
     private static Filter createFilter( final BundleContext bundleContext )
     {
         final StringBuilder filterBuilder = new StringBuilder()
-            .append( "(" )
+            .append( "|((" )
             .append( MetadataConstants.TARGET_SERVICE_PID ).append( "=*" )
-            .append( ")" );
+            .append( ")" )
+            .append( "(&(" )
+            .append( MetadataConstants.TARGET_SERVICE_FACTORYPID ).append( "=*" )
+            .append( ")(" )
+            .append( MetadataConstants.TARGET_SERVICE_FACTORYINSTANCE ).append( "=*" )
+            .append( ")))" );
         try
         {
             return bundleContext.createFilter( filterBuilder.toString() );

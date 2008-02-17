@@ -142,12 +142,10 @@ public class Identity
         {
             builder
                 .append( "factoryPid=" ).append( m_factoryPid )
-                .append( "factoryInstance=" ).append( m_factoryInstance );
+                .append( ",factoryInstance=" ).append( m_factoryInstance );
         }
 
-        builder
-            .append( ",location=" ).append( m_location )
-            .append( "}" );
+        builder.append( "}" );
 
         return builder.toString();
     }

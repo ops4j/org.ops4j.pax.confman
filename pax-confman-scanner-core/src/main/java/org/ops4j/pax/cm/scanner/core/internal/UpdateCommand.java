@@ -59,16 +59,18 @@ public class UpdateCommand
             configurer.update(
                 m_configurationSource.getIdentity().getPid(),
                 m_configurationSource.getIdentity().getLocation(),
-                m_configurationSource.getPropertiesSource().getSourceObject(), m_configurationSource.getPropertiesSource().getMetadata()
+                m_configurationSource.getPropertiesSource().getSourceObject(),
+                m_configurationSource.getPropertiesSource().getMetadata()
             );
         }
         else
         {
             configurer.update(
                 m_configurationSource.getIdentity().getFactoryPid(),
-                m_configurationSource.getIdentity().getPid(),
+                m_configurationSource.getIdentity().getFactoryInstance(),
                 m_configurationSource.getIdentity().getLocation(),
-                m_configurationSource.getPropertiesSource().getSourceObject(), m_configurationSource.getPropertiesSource().getMetadata()
+                m_configurationSource.getPropertiesSource().getSourceObject(),
+                m_configurationSource.getPropertiesSource().getMetadata()
             );
         }
     }

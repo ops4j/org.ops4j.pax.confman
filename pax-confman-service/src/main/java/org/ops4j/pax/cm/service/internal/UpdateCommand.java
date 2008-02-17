@@ -119,9 +119,9 @@ abstract class UpdateCommand
     public String toString()
     {
         return new StringBuilder()
-            .append( this.getClass().getSimpleName() )
+            .append( DeleteCommand.class.getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_target.getIdentity() )
+            .append( m_target.getIdentity() )
             .append( "}" )
             .toString();
     }
