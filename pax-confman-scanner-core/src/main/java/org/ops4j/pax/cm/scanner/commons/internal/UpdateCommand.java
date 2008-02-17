@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.scanner.core.internal;
+package org.ops4j.pax.cm.scanner.commons.internal;
 
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.ConfigurationManager;

@@ -23,8 +23,8 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
-import org.ops4j.pax.cm.scanner.core.internal.ConfigurerSetter;
-import org.ops4j.pax.cm.scanner.core.internal.ConfigurerTracker;
+import org.ops4j.pax.cm.scanner.commons.internal.ConfigurerSetter;
+import org.ops4j.pax.cm.scanner.commons.internal.ConfigurerTracker;
 
 /**
  * Activator for RegistryScanner.

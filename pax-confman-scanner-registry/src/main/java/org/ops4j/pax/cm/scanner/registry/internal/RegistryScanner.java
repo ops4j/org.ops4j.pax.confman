@@ -33,8 +33,8 @@ import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.Identity;
 import org.ops4j.pax.cm.domain.PropertiesSource;
-import org.ops4j.pax.cm.scanner.core.internal.DeleteCommand;
-import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
+import org.ops4j.pax.cm.scanner.commons.internal.DeleteCommand;
+import org.ops4j.pax.cm.scanner.commons.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
 /**
