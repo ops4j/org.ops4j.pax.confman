@@ -92,7 +92,7 @@ public class CommandProcessor<T>
      */
     public void add( final Command<T> command )
     {
-        LOG.trace( "Adding command to be processed: " + command );
+        LOG.trace( "Added " + command );
         NullArgumentException.validateNotNull( command, "Command" );
 
         m_queue.add( command );
@@ -165,12 +165,10 @@ public class CommandProcessor<T>
                         {
                             while( m_targetService == null )
                             {
-                                LOG.trace( "Target service not available. Await..." );
+                                LOG.debug( "Service not available. Await..." );
                                 m_targetAvailable.await();
                             }
-                            LOG.trace( "Target service available. Executing " + command );
-                            // ! we use run directly as for the moment we do not create a new thread for
-                            // running the command
+                            LOG.debug( "Executing " + command );
                             try
                             {
                                 command.execute( m_targetService );

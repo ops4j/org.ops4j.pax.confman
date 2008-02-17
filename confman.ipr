@@ -169,9 +169,7 @@
   </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0">
-      <entry_point TYPE="method" FQNAME="org.ops4j.pax.cm.adapter.basic.internal.Activator org.osgi.framework.Filter createFilterSpecification(org.osgi.framework.BundleContext bundleContext, java.lang.String objectClass)">
-        <entry_point TYPE="class" FQNAME="org.ops4j.pax.cm.adapter.basic.internal.Activator" />
-      </entry_point>
+      <entry_point TYPE="method" FQNAME="org.ops4j.pax.cm.adapter.basic.internal.Activator org.osgi.framework.Filter createFilterSpecification(org.osgi.framework.BundleContext bundleContext, java.lang.String objectClass)" />
       <entry_point TYPE="class" FQNAME="org.ops4j.pax.cm.adapter.basic.internal.Activator" />
       <entry_point TYPE="class" FQNAME="org.ops4j.pax.cm.samples.registry.internal.Activator" />
       <entry_point TYPE="class" FQNAME="org.ops4j.pax.cm.scanner.registry.internal.Activator" />

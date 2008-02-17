@@ -56,16 +56,16 @@ abstract class DeleteCommand
     {
         NullArgumentException.validateNotNull( configurationAdmin, "Configuration Admin service" );
 
-        LOG.trace( "Looking for a configuration for " + m_identity );
+        LOG.trace( "Looking for configuration with " + m_identity );
         final Configuration configuration = findConfiguration( configurationAdmin );
         if( configuration != null )
         {
             configuration.delete();
-            LOG.info( "Deleted configuration " + m_identity );
+            LOG.info( "Deleted configuration with " + m_identity );
         }
         else
         {
-            LOG.info( "Configuration " + m_identity + " not found. Skipping delete." );
+            LOG.info( "Configuration with " + m_identity + " not found. Skipping delete." );
         }
     }
 

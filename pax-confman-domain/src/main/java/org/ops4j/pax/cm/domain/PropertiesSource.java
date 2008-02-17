@@ -84,4 +84,16 @@ public class PropertiesSource
         return m_sourceObject;
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append( this.getClass().getSimpleName() )
+            .append( "{" )
+            .append("meta=").append( m_metadata )
+            .append( ",source" ).append( m_sourceObject )
+            .append( "}" )
+            .toString();
+    }
+
 }

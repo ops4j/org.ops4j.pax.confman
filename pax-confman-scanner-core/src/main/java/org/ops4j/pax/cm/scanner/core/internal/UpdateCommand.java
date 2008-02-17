@@ -81,7 +81,7 @@ public class UpdateCommand
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( m_configurationSource )
+            .append( m_configurationSource.getIdentity() )
             .append( "}" )
             .toString();
     }

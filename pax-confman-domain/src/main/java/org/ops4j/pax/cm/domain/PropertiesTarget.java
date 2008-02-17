@@ -53,4 +53,15 @@ public class PropertiesTarget
         return m_properties;
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append( this.getClass().getSimpleName() )
+            .append( "{" )
+            .append( m_properties )
+            .append( "}" )
+            .toString();
+    }
+
 }

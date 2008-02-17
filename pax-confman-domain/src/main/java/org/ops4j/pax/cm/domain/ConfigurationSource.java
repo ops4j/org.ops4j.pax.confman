@@ -65,8 +65,8 @@ public class ConfigurationSource
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_identity )
-            .append( ",source=" ).append( m_source )
+            .append( m_identity )
+            .append( "," ).append( m_source )
             .append( "}" )
             .toString();
     }

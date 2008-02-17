@@ -75,13 +75,13 @@ abstract class UpdateCommand
             {
                 configuration.setBundleLocation( m_target.getIdentity().getLocation() );
                 configuration.update( m_target.getPropertiesTarget().getProperties() );
-                LOG.info( "Updated configuration " + m_target.getIdentity() );
+                LOG.info( "Updated configuration with " + m_target.getIdentity() );
             }
             else
             {
                 LOG.info(
-                    "Configuration " + m_target.getIdentity()
-                    + " is the same as the processing one. Not updating"
+                    "Configuration with " + m_target.getIdentity()
+                    + " is the same as the processing one. Skipping update."
                 );
             }
         }
@@ -119,7 +119,7 @@ abstract class UpdateCommand
     public String toString()
     {
         return new StringBuilder()
-            .append( DeleteCommand.class.getSimpleName() )
+            .append( UpdateCommand.class.getSimpleName() )
             .append( "{" )
             .append( m_target.getIdentity() )
             .append( "}" )

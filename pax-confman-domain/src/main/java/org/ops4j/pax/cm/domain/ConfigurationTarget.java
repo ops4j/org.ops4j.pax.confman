@@ -65,8 +65,8 @@ public class ConfigurationTarget
         return new StringBuilder()
             .append( this.getClass().getSimpleName() )
             .append( "{" )
-            .append( "identity=" ).append( m_identity )
-            .append( ",target=" ).append( m_target )
+            .append( m_identity )
+            .append( "," ).append( m_target )
             .append( "}" )
             .toString();
     }
