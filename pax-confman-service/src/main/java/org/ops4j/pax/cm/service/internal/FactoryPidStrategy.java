@@ -33,7 +33,7 @@ import org.ops4j.pax.cm.domain.Identity;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 16, 2008
  */
-public class FactoryIndentityStrategy
+public class FactoryPidStrategy
     implements ConfigurationStrategy
 {
 
@@ -60,7 +60,7 @@ public class FactoryIndentityStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return FactoryIndentityStrategy
+                return FactoryPidStrategy
                     .findConfiguration( configurationAdmin, m_target.getIdentity() );
             }
         };
@@ -80,7 +80,7 @@ public class FactoryIndentityStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return FactoryIndentityStrategy
+                return FactoryPidStrategy
                     .findConfiguration( configurationAdmin, m_identity );
             }
         };

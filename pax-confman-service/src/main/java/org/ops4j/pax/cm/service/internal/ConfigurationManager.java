@@ -52,11 +52,11 @@ public class ConfigurationManager
     /**
      * Managed service strategy. Strategies should be stateless so are safe to be reused.
      */
-    private static final ConfigurationStrategy MANAGED_SERVICE_STRATEGY = new IdentityStrategy();
+    private static final ConfigurationStrategy PID_STRATEGY = new PidStrategy();
     /**
      * Managed service factory strategy. Strategies should be stateless so are safe to be reused.
      */
-    private static final ConfigurationStrategy MANAGED_SERVICE_FACTORY_STRATEGY = new FactoryIndentityStrategy();
+    private static final ConfigurationStrategy FACTORY_PID_STRATEGY = new FactoryPidStrategy();
     /**
      * Repository of dictionary adapters. Cannot be null.
      */
@@ -101,7 +101,7 @@ public class ConfigurationManager
                     DictionaryUtils.copy( metadata, new Hashtable() )
                 )
             ),
-            MANAGED_SERVICE_STRATEGY
+            PID_STRATEGY
         );
     }
 
@@ -122,7 +122,7 @@ public class ConfigurationManager
                     DictionaryUtils.copy( metadata, new Hashtable() )
                 )
             ),
-            MANAGED_SERVICE_FACTORY_STRATEGY
+            FACTORY_PID_STRATEGY
         );
     }
 
@@ -133,7 +133,7 @@ public class ConfigurationManager
     {
         deleteConfiguration(
             new Identity( pid, null ),
-            MANAGED_SERVICE_STRATEGY
+            PID_STRATEGY
         );
     }
 
@@ -145,7 +145,7 @@ public class ConfigurationManager
     {
         deleteConfiguration(
             new Identity( factoryPid, factoryInstance, null ),
-            MANAGED_SERVICE_FACTORY_STRATEGY
+            FACTORY_PID_STRATEGY
         );
     }
 
