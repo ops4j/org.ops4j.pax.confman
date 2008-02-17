@@ -86,12 +86,11 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#update(String, String, Dictionary, Object)
+     * @see Configurer#update(String, String, Object,java.util.Dictionary)
      */
     public void update( final String pid,
                         final String location,
-                        final Dictionary metadata,
-                        final Object propertiesSource
+                        final Object propertiesSource, final Dictionary metadata
     )
     {
         LOG.trace( "Pid: " + pid );
@@ -111,13 +110,12 @@ public class ConfigurationManager
     }
 
     /**
-     * @see Configurer#updateFactory(String, String, String, Dictionary, Object)
+     * @see Configurer#updateFactory(String, String, String, Object,java.util.Dictionary)
      */
     public void updateFactory( final String factoryPid,
                                final String pid,
                                final String location,
-                               final Dictionary metadata,
-                               final Object propertiesSource
+                               final Object propertiesSource, final Dictionary metadata
     )
     {
         LOG.trace( "FactoryPid: " + factoryPid );

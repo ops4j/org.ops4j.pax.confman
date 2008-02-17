@@ -59,8 +59,7 @@ public class UpdateCommand
             configurer.update(
                 m_configurationSource.getServiceIdentity().getPid(),
                 m_configurationSource.getServiceIdentity().getLocation(),
-                m_configurationSource.getPropertiesSource().getMetadata(),
-                m_configurationSource.getPropertiesSource().getSourceObject()
+                m_configurationSource.getPropertiesSource().getSourceObject(), m_configurationSource.getPropertiesSource().getMetadata()
             );
         }
         else
@@ -69,8 +68,7 @@ public class UpdateCommand
                 m_configurationSource.getServiceIdentity().getFactoryPid(),
                 m_configurationSource.getServiceIdentity().getPid(),                
                 m_configurationSource.getServiceIdentity().getLocation(),
-                m_configurationSource.getPropertiesSource().getMetadata(),
-                m_configurationSource.getPropertiesSource().getSourceObject()
+                m_configurationSource.getPropertiesSource().getSourceObject(), m_configurationSource.getPropertiesSource().getMetadata()
             );
         }
     }

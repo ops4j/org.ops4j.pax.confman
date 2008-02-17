@@ -30,14 +30,14 @@ public interface Configurer
 
     void update( String pid,
                  String location,
-                 Dictionary metadata,
-                 Object configuration );
+                 Object configuration, Dictionary metadata
+    );
 
     void updateFactory( String factoryPid,
                         String pid,
                         String location,
-                        Dictionary metadata,
-                        Object configuration );
+                        Object configuration, Dictionary metadata
+    );
 
     void delete( String pid );
 
