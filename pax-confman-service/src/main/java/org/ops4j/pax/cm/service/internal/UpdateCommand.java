@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 
@@ -31,7 +31,7 @@ abstract class UpdateCommand
      */
     private final static DictionaryUtils.KeySpecification NOT_INFO_KEY_SPEC =
         new DictionaryUtils.NotSpecification(
-            new DictionaryUtils.RegexSpecification( MetadataConstants.INFO_PREFIX_AS_REGEX )
+            new DictionaryUtils.RegexSpecification( ServiceConstants.INFO_PREFIX_AS_REGEX )
         );
 
     /**

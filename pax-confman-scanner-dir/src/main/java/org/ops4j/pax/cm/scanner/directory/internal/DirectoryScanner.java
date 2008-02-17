@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.Identity;
@@ -182,8 +182,8 @@ class DirectoryScanner
                     {
                         // create configuration metadata
                         final Dictionary<String, String> metadata = new Hashtable<String, String>();
-                        metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.directory" );
-                        metadata.put( MetadataConstants.MIME_TYPE, mimeType );
+                        metadata.put( ServiceConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.directory" );
+                        metadata.put( ServiceConstants.MIME_TYPE, mimeType );
                         // create configuration source
                         final Identity identity;
                         if( factoryPid == null )

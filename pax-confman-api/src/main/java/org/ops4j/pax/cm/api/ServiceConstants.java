@@ -26,7 +26,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 12, 2008
  */
-public interface MetadataConstants
+public interface ServiceConstants
 {
 
     /**

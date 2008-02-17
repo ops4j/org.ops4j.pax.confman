@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Dictionary;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
@@ -47,9 +47,9 @@ public class PidStrategy
     public void prepareSource( final ConfigurationSource source )
     {
         final Dictionary metadata = source.getPropertiesSource().getMetadata();
-        metadata.put( MetadataConstants.SERVICE_PID, source.getIdentity().getPid() );
+        metadata.put( ServiceConstants.SERVICE_PID, source.getIdentity().getPid() );
         // be defensive and remove possible unwanted metadata
-        metadata.remove( MetadataConstants.SERVICE_FACTORYPID );
+        metadata.remove( ServiceConstants.SERVICE_FACTORYPID );
     }
 
     /**

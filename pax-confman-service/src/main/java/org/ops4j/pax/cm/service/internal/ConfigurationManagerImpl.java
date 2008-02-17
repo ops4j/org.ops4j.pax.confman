@@ -26,7 +26,7 @@ import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.Adapter;
 import org.ops4j.pax.cm.service.internal.AdapterRepository;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
@@ -247,9 +247,9 @@ public class ConfigurationManagerImpl
         DictionaryUtils.copy( properties, result );
         DictionaryUtils.copy(
             new DictionaryUtils.OrSpecification(
-                new DictionaryUtils.RegexSpecification( MetadataConstants.INFO_PREFIX_AS_REGEX ),
-                new DictionaryUtils.RegexSpecification( MetadataConstants.SERVICE_PID_AS_REGEX ),
-                new DictionaryUtils.RegexSpecification( MetadataConstants.SERVICE_FACTORYPID_AS_REGEX )
+                new DictionaryUtils.RegexSpecification( ServiceConstants.INFO_PREFIX_AS_REGEX ),
+                new DictionaryUtils.RegexSpecification( ServiceConstants.SERVICE_PID_AS_REGEX ),
+                new DictionaryUtils.RegexSpecification( ServiceConstants.SERVICE_FACTORYPID_AS_REGEX )
             ),
             metadata,
             result

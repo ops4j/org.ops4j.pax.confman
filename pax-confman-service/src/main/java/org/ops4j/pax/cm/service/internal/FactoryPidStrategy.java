@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
@@ -55,8 +55,8 @@ public class FactoryPidStrategy
     public void prepareSource( final ConfigurationSource source )
     {
         final Dictionary metadata = source.getPropertiesSource().getMetadata();
-        metadata.put( MetadataConstants.SERVICE_FACTORYPID, source.getIdentity().getFactoryPid() );
-        metadata.put( MetadataConstants.SERVICE_FACTORYINSTANCE, source.getIdentity().getFactoryInstance() );
+        metadata.put( ServiceConstants.SERVICE_FACTORYPID, source.getIdentity().getFactoryPid() );
+        metadata.put( ServiceConstants.SERVICE_FACTORYINSTANCE, source.getIdentity().getFactoryInstance() );
     }
 
     /**
@@ -69,7 +69,7 @@ public class FactoryPidStrategy
     public void prepareTarget( final ConfigurationTarget target )
     {
         target.getPropertiesTarget().getProperties().put(
-            MetadataConstants.SERVICE_FACTORYINSTANCE,
+            ServiceConstants.SERVICE_FACTORYINSTANCE,
             target.getIdentity().getFactoryInstance()
         );
     }
@@ -128,9 +128,9 @@ public class FactoryPidStrategy
     {
         final StringBuilder filter = new StringBuilder()
             .append( "(&(" )
-            .append( MetadataConstants.SERVICE_FACTORYPID ).append( "=" ).append( identity.getFactoryPid() )
+            .append( ServiceConstants.SERVICE_FACTORYPID ).append( "=" ).append( identity.getFactoryPid() )
             .append( ")(" )
-            .append( MetadataConstants.SERVICE_FACTORYINSTANCE ).append( "=" ).append( identity.getFactoryInstance() )
+            .append( ServiceConstants.SERVICE_FACTORYINSTANCE ).append( "=" ).append( identity.getFactoryInstance() )
             .append( "))" );
         try
         {

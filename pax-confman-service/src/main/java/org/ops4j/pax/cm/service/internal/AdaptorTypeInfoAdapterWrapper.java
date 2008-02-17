@@ -20,7 +20,7 @@ package org.ops4j.pax.cm.service.internal;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 
 /**
  * A Adapter wrapper that adds information about the type of adaptor.
@@ -65,7 +65,7 @@ class AdaptorTypeInfoAdapterWrapper
         }
         final Dictionary adapted = new Hashtable();
         // first we add the properties in order to allow adaptors to overide them
-        adapted.put( MetadataConstants.INFO_ADAPTOR, m_adaptorType );
+        adapted.put( ServiceConstants.INFO_ADAPTOR, m_adaptorType );
         // and do the adaptation
         DictionaryUtils.copy( (Dictionary) adaptedObject, adapted );
         return adapted;

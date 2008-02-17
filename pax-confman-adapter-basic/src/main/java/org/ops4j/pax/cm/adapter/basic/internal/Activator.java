@@ -30,7 +30,7 @@ import org.ops4j.pax.cm.adapter.basic.internal.spec.AndSpecification;
 import org.ops4j.pax.cm.adapter.basic.internal.spec.FilterBasedSpecification;
 import org.ops4j.pax.cm.adapter.basic.internal.spec.InstanceOfSpecification;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 
 /**
  * Registers basic adapters services.
@@ -76,7 +76,7 @@ public class Activator
                     new AndSpecification(
                         new InstanceOfSpecification( InputStream.class ),
                         new FilterBasedSpecification(
-                            bundleContext.createFilter( "(" + MetadataConstants.MIME_TYPE + "=text/properties)" )
+                            bundleContext.createFilter( "(" + ServiceConstants.MIME_TYPE + "=text/properties)" )
                         )
                     )
                 ),
@@ -149,7 +149,7 @@ public class Activator
         {
             final StringBuilder builder = new StringBuilder()
                 .append( "(" )
-                .append( MetadataConstants.OBJECTCLASS ).append( "=" ).append( objectClass )
+                .append( ServiceConstants.OBJECTCLASS ).append( "=" ).append( objectClass )
                 .append( ")" );
 
             return bundleContext.createFilter( builder.toString() );

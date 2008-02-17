@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 
 /**
  * A Adapter wrapper that adds extra properties containing pax confman related info.
@@ -61,8 +61,8 @@ class InfoAdapterWrapper
         final Dictionary adapted = new Hashtable();
         // first we add the properties in order to allow adaptors to overide them
         final Date currentTime = new Date();
-        adapted.put( MetadataConstants.INFO_TIMESTAMP, DateFormat.getDateInstance().format( currentTime ) );
-        adapted.put( MetadataConstants.INFO_TIMESTAMP_MILLIS, currentTime.getTime() );
+        adapted.put( ServiceConstants.INFO_TIMESTAMP, DateFormat.getDateInstance().format( currentTime ) );
+        adapted.put( ServiceConstants.INFO_TIMESTAMP_MILLIS, currentTime.getTime() );
         // and do the adaptation
         DictionaryUtils.copy( (Dictionary) adaptedObject, adapted );
         return adapted;

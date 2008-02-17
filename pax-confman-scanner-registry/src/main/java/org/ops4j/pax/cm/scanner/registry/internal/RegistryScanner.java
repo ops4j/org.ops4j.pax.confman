@@ -28,7 +28,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.api.MetadataConstants;
+import org.ops4j.pax.cm.api.ServiceConstants;
 import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.Identity;
@@ -88,11 +88,11 @@ class RegistryScanner
                 LOG.trace( "Configuration metadata: " + metadata );
 
                 // find out the configuration target
-                final String pid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_PID );
-                final String factoryPid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
+                final String pid = getMetdataProperty( metadata, ServiceConstants.TARGET_SERVICE_PID );
+                final String factoryPid = getMetdataProperty( metadata, ServiceConstants.TARGET_SERVICE_FACTORYPID );
                 final String factoryInstance =
-                    getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYINSTANCE );
-                final String location = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_BUNDLELOCATION );
+                    getMetdataProperty( metadata, ServiceConstants.TARGET_SERVICE_FACTORYINSTANCE );
+                final String location = getMetdataProperty( metadata, ServiceConstants.TARGET_SERVICE_BUNDLELOCATION );
 
                 Identity identity = null;
                 if( pid != null )
@@ -128,10 +128,10 @@ class RegistryScanner
                 LOG.trace( "Configuration metadata: " + metadata );
 
                 // find out configuration target
-                final String pid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_PID );
-                final String factoryPid = getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYPID );
+                final String pid = getMetdataProperty( metadata, ServiceConstants.TARGET_SERVICE_PID );
+                final String factoryPid = getMetdataProperty( metadata, ServiceConstants.TARGET_SERVICE_FACTORYPID );
                 final String factoryInstance =
-                    getMetdataProperty( metadata, MetadataConstants.TARGET_SERVICE_FACTORYINSTANCE );
+                    getMetdataProperty( metadata, ServiceConstants.TARGET_SERVICE_FACTORYINSTANCE );
 
                 Identity identity = null;
                 if( pid != null )
@@ -188,7 +188,7 @@ class RegistryScanner
             metadata.put( key, serviceReference.getProperty( key ) );
         }
         // add extra information
-        metadata.put( MetadataConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.registry" );
+        metadata.put( ServiceConstants.INFO_AGENT, "org.ops4j.pax.cm.scanner.registry" );
         return metadata;
     }
 
@@ -204,12 +204,12 @@ class RegistryScanner
     {
         final StringBuilder filterBuilder = new StringBuilder()
             .append( "|((" )
-            .append( MetadataConstants.TARGET_SERVICE_PID ).append( "=*" )
+            .append( ServiceConstants.TARGET_SERVICE_PID ).append( "=*" )
             .append( ")" )
             .append( "(&(" )
-            .append( MetadataConstants.TARGET_SERVICE_FACTORYPID ).append( "=*" )
+            .append( ServiceConstants.TARGET_SERVICE_FACTORYPID ).append( "=*" )
             .append( ")(" )
-            .append( MetadataConstants.TARGET_SERVICE_FACTORYINSTANCE ).append( "=*" )
+            .append( ServiceConstants.TARGET_SERVICE_FACTORYINSTANCE ).append( "=*" )
             .append( ")))" );
         try
         {
