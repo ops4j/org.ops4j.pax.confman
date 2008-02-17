@@ -63,7 +63,19 @@ public class ManagedServiceStrategy
      */
     public Command<ConfigurationAdmin> createUpdateCommand( final ConfigurationTarget configurationTarget )
     {
-        return new UpdateManagedServiceCommand( configurationTarget );
+        return new UpdateCommand( configurationTarget )
+        {
+            /**
+             * @see DeleteCommand#findConfiguration(ConfigurationAdmin)
+             */
+            @Override
+            protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
+                throws IOException
+            {
+                return ManagedServiceStrategy
+                    .findConfiguration( configurationAdmin, m_target.getServiceIdentity() );
+            }
+        };
     }
 
     /**
@@ -80,12 +92,30 @@ public class ManagedServiceStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return configurationAdmin.getConfiguration(
-                    m_serviceIdentity.getPid(),
-                    m_serviceIdentity.getLocation()
-                );
+                return ManagedServiceStrategy
+                    .findConfiguration( configurationAdmin, m_serviceIdentity );
             }
         };
+    }
+
+    /**
+     * Search for a configuration.
+     *
+     * @param configurationAdmin configuration admin service to be used
+     * @param serviceIdentity    service identity
+     *
+     * @return found configuration or null if not found
+     *
+     * @throws IOException - re-thrown from configuration admin
+     */
+    private static Configuration findConfiguration( final ConfigurationAdmin configurationAdmin,
+                                                    final ServiceIdentity serviceIdentity )
+        throws IOException
+    {
+        return configurationAdmin.getConfiguration(
+            serviceIdentity.getPid(),
+            serviceIdentity.getLocation()
+        );
     }
 
 }

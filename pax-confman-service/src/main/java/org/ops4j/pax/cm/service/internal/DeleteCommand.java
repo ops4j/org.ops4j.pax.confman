@@ -10,7 +10,7 @@ import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ServiceIdentity;
 
 /**
- * Deletes a configuration related to a managed service.
+ * Deletes a configuration using Configuration Admin.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 17, 2008
