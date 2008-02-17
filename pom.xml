@@ -38,7 +38,7 @@
     <module>pax-confman-api</module>
     <module>pax-confman-service</module>
     <module>pax-confman-adapter-basic</module>
-    <module>pax-confman-scanner-core</module>
+    <module>pax-confman-scanner-commons</module>
     <module>pax-confman-scanner-dir</module>
     <module>pax-confman-scanner-registry</module>
     <module>propsloader</module>

@@ -75,7 +75,7 @@
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.confman</groupId>
-      <artifactId>pax-confman-scanner-core</artifactId>
+      <artifactId>pax-confman-scanner-commons</artifactId>
       <version>0.3.0-SNAPSHOT</version>
       <scope>compile</scope>
       <optional>true</optional>
