@@ -39,4 +39,9 @@ public interface Configurer
                         Dictionary metadata,
                         Object configuration );
 
+    void delete( String pid );
+
+    void deleteFactory( String factoryPid,
+                        String pid );
+    
 }

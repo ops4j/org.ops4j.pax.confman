@@ -33,6 +33,7 @@ import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.PropertiesTarget;
+import org.ops4j.pax.cm.domain.ServiceIdentity;
 
 /**
  * TODO add JavaDoc
@@ -97,7 +98,7 @@ public class ConfigurerImpl
         LOG.trace( "Metadata: " + metadata );
         LOG.trace( "Properties source: " + propertiesSource );
 
-        processConfiguration(
+        updateConfiguration(
             new ConfigurationSource(
                 MANAGED_SERVICE_STRATEGY.createServiceIdentity( pid, null, location ),
                 new PropertiesSource(
@@ -124,7 +125,7 @@ public class ConfigurerImpl
         LOG.trace( "Metadata: " + metadata );
         LOG.trace( "Properties source: " + propertiesSource );
 
-        processConfiguration(
+        updateConfiguration(
             new ConfigurationSource(
                 MANAGED_SERVICE_FACTORY_STRATEGY.createServiceIdentity( pid, factoryPid, location ),
                 new PropertiesSource(
@@ -137,13 +138,41 @@ public class ConfigurerImpl
     }
 
     /**
-     * Process configuration using the supplied strategy.
+     * @see Configurer#delete(String)
+     */
+    public void delete( final String pid )
+    {
+        LOG.trace( "Pid: " + pid );
+
+        deleteConfiguration(
+            MANAGED_SERVICE_STRATEGY.createServiceIdentity( pid, null, null ),
+            MANAGED_SERVICE_STRATEGY
+        );
+    }
+
+    /**
+     * @see Configurer#deleteFactory(String, String)
+     */
+    public void deleteFactory( final String factoryPid,
+                               final String pid )
+    {
+        LOG.trace( "FactoryPid: " + pid );
+        LOG.trace( "Pid: " + pid );
+
+        deleteConfiguration(
+            MANAGED_SERVICE_FACTORY_STRATEGY.createServiceIdentity( pid, factoryPid, null ),
+            MANAGED_SERVICE_FACTORY_STRATEGY
+        );
+    }
+
+    /**
+     * Updates configuration using the supplied strategy.
      *
      * @param source   configuration source
      * @param strategy configuration strategy
      */
-    private void processConfiguration( final ConfigurationSource source,
-                                       final ConfigurationStrategy strategy )
+    private void updateConfiguration( final ConfigurationSource source,
+                                      final ConfigurationStrategy strategy )
     {
         strategy.prepareSource( source );
         // try to adapt the source object to a dictionary
@@ -188,12 +217,12 @@ public class ConfigurerImpl
             LOG.trace( "Adapted configuration properties: " + adapted );
             if( adapted != null )
             {
-                final Command<ConfigurationAdmin> adminCommand = strategy.createConfigurationCommand(
+                final Command<ConfigurationAdmin> command = strategy.createUpdateCommand(
                     new ConfigurationTarget( source.getServiceIdentity(), new PropertiesTarget( adapted ) )
                 );
-                if( adminCommand != null )
+                if( command != null )
                 {
-                    m_processor.add( adminCommand );
+                    m_processor.add( command );
                 }
             }
         }
@@ -201,6 +230,18 @@ public class ConfigurerImpl
         {
             LOG.info( "Configuration source object cannot be adapted to a dictionary" );
         }
+    }
+
+    /**
+     * Deletes configuration using the supplied strategy.
+     *
+     * @param serviceIdentity service identity
+     * @param strategy        configuration strategy
+     */
+    private void deleteConfiguration( final ServiceIdentity serviceIdentity,
+                                      final ConfigurationStrategy strategy )
+    {
+        m_processor.add( strategy.createDeleteCommand( serviceIdentity ) );
     }
 
     /**

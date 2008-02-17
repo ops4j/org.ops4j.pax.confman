@@ -23,7 +23,7 @@ import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ServiceIdentity;
 
 /**
- * Delete command to be executed agains a configurer.
+ * Delete command to be executed against a configurer.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, January 12, 2008
@@ -56,11 +56,11 @@ public class DeleteCommand
     {
         if( m_serviceIdentity.getFactoryPid() == null )
         {
-            // TODO delete configuration for manage service
+            configurer.delete( m_serviceIdentity.getPid() );
         }
         else
         {
-            // TODO delete configuration for manage service factory
+            configurer.deleteFactory( m_serviceIdentity.getFactoryPid(), m_serviceIdentity.getPid() );
         }
     }
 

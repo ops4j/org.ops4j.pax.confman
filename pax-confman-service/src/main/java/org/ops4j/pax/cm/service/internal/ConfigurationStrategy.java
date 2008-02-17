@@ -56,12 +56,20 @@ public interface ConfigurationStrategy
     void prepareSource( ConfigurationSource source );
 
     /**
-     * Creates a configuration command for configuration target.
+     * Creates a Configuration Admin update configuration command for configuration target.
      *
      * @param configurationTarget configuration target model
      *
-     * @return created configuration command
+     * @return created update configuration command
      */
-    Command<ConfigurationAdmin> createConfigurationCommand( ConfigurationTarget configurationTarget );
+    Command<ConfigurationAdmin> createUpdateCommand( ConfigurationTarget configurationTarget );
 
+    /**
+     * Creates a Configuration Admin delete configuration command for specified service identity.
+     *
+     * @param serviceIdentity service identity
+     *
+     * @return created delete configuration command
+     */
+    Command<ConfigurationAdmin> createDeleteCommand( ServiceIdentity serviceIdentity );
 }

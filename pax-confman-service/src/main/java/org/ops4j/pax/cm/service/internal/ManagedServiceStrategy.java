@@ -57,10 +57,19 @@ public class ManagedServiceStrategy
     }
 
     /**
-     * @see ConfigurationStrategy#createConfigurationCommand(ConfigurationTarget)
+     * @see ConfigurationStrategy#createUpdateCommand(ConfigurationTarget)
      */
-    public Command<ConfigurationAdmin> createConfigurationCommand( final ConfigurationTarget configurationTarget )
+    public Command<ConfigurationAdmin> createUpdateCommand( final ConfigurationTarget configurationTarget )
     {
         return new UpdateManagedServiceCommand( configurationTarget );
     }
+
+    /**
+     * @see ConfigurationStrategy#createDeleteCommand(ServiceIdentity)
+     */
+    public Command<ConfigurationAdmin> createDeleteCommand( final ServiceIdentity serviceIdentity )
+    {
+        return new DeleteManagedServiceCommand( serviceIdentity );
+    }
+
 }

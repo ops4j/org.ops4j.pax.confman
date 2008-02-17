@@ -23,7 +23,7 @@ import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 
 /**
- * Update command to be executed agains a configurer.
+ * Update command to be executed against a configurer.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, January 12, 2008

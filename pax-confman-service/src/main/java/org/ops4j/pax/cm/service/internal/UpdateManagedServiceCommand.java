@@ -58,7 +58,7 @@ class UpdateManagedServiceCommand
      *
      * @param configurationAdmin configuration admin service to be used
      *
-     * @throws IOException           - re-thrown if the configurations can not be persisted
+     * @throws IOException           - re-thrown from configuration admin
      * @throws NullArgumentException - if configuration admin service is null
      */
     public void execute( final ConfigurationAdmin configurationAdmin )
