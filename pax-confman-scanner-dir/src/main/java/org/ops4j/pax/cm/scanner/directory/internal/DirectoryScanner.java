@@ -22,8 +22,10 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
@@ -33,6 +35,7 @@ import org.ops4j.pax.cm.common.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.PropertiesSource;
 import org.ops4j.pax.cm.domain.ServiceIdentity;
+import org.ops4j.pax.cm.scanner.core.internal.DeleteCommand;
 import org.ops4j.pax.cm.scanner.core.internal.UpdateCommand;
 import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
 
@@ -77,9 +80,9 @@ class DirectoryScanner
      */
     private final File m_directory;
     /**
-     * Map between absolute file name and last modified.
+     * Map between absolute file name and information about processed file.
      */
-    private final Map<String, Long> m_lastModified;
+    private final Map<String, ProcessedFile> m_processed;
     /**
      * Interval of time in milliseconds between scanning the target directory.
      */
@@ -114,7 +117,7 @@ class DirectoryScanner
 
         m_processor = processor;
         m_directory = directory;
-        m_lastModified = new HashMap<String, Long>();
+        m_processed = new HashMap<String, ProcessedFile>();
         m_interval = interval == null ? 2000L : interval;
         m_stopSignal = false;
     }
@@ -123,12 +126,14 @@ class DirectoryScanner
      * Scans the specified directory. If the factory pid is null it will also scan subdirectories for factory
      * configurations.
      *
-     * @param directory  directory to be scanned
-     * @param factoryPid factory pid. if null configurations files found into the directory will be considered managed
-     *                   service configurations, otherwise will be considered Managed Service Factories.
+     * @param directory    directory to be scanned
+     * @param factoryPid   factory pid. if null configurations files found into the directory will be considered managed
+     *                     service configurations, otherwise will be considered Managed Service Factories.
+     * @param scannedFiles set of absolute files names for files scanned on last run
      */
     private void scan( final File directory,
-                       final String factoryPid )
+                       final String factoryPid,
+                       final Set<String> scannedFiles )
     {
         //LOG.debug( "Scanning " + m_directory.getAbsoluteFile() );
         if( directory != null && directory.isDirectory() && directory.canRead() )
@@ -140,7 +145,7 @@ class DirectoryScanner
                 {
                     if( factoryPid == null )
                     {
-                        scan( file, file.getName() );
+                        scan( file, file.getName(), scannedFiles );
                     }
                 }
                 else if( file.canRead() )
@@ -158,8 +163,9 @@ class DirectoryScanner
                         continue;
                     }
                     // check if did not already configured this file and the file was not modified
-                    Long lastModified = m_lastModified.get( file.getAbsolutePath() );
-                    if( lastModified != null && lastModified == file.lastModified() )
+                    scannedFiles.add( file.getAbsolutePath() );
+                    ProcessedFile processed = m_processed.get( file.getAbsolutePath() );
+                    if( processed != null && processed.lastModified == file.lastModified() )
                     {
                         continue;
                     }
@@ -194,10 +200,26 @@ class DirectoryScanner
                                 new ConfigurationSource( identity, new PropertiesSource( file, metadata ) )
                             )
                         );
-                        m_lastModified.put( file.getAbsolutePath(), file.lastModified() );
+                        m_processed.put( file.getAbsolutePath(), new ProcessedFile( identity, file.lastModified() ) );
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Removes files that are not in the set of files to retain.
+     *
+     * @param retainFiles set of absolute file names of the files to be retained
+     */
+    private void removeDiff( final Set<String> retainFiles )
+    {
+        final Set<String> removable = new HashSet<String>( m_processed.keySet() );
+        removable.removeAll( retainFiles );
+        for( String fileName : removable )
+        {
+            m_processor.add( new DeleteCommand( m_processed.get( fileName ).serviceIdentity ) );
+            m_processed.remove( fileName );
         }
     }
 
@@ -253,7 +275,9 @@ class DirectoryScanner
             {
                 try
                 {
-                    scan( m_directory, null );
+                    final Set<String> scannedFiles = new HashSet<String>();
+                    scan( m_directory, null, scannedFiles );
+                    removeDiff( scannedFiles );
                     Thread.sleep( m_interval );
                 }
                 catch( InterruptedException ignore )
@@ -281,4 +305,22 @@ class DirectoryScanner
             .append( "}" )
             .toString();
     }
+
+    /**
+     * Information about processed file.
+     */
+    private static class ProcessedFile
+    {
+
+        final ServiceIdentity serviceIdentity;
+        final Long lastModified;
+
+        ProcessedFile( final ServiceIdentity serviceIdentity, final Long lastModified )
+        {
+            this.serviceIdentity = serviceIdentity;
+            this.lastModified = lastModified;
+        }
+
+    }
+
 }

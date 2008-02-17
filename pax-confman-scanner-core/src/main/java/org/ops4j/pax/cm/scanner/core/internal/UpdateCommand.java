@@ -23,7 +23,7 @@ import org.ops4j.pax.cm.common.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 
 /**
- * Command to be executed agains a configurer.
+ * Update command to be executed agains a configurer.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, January 12, 2008
@@ -38,7 +38,7 @@ public class UpdateCommand
     private final ConfigurationSource m_configurationSource;
 
     /**
-     * Create a new configuration command.
+     * Create a new update command.
      *
      * @param configurationSource configuration source
      */
@@ -50,7 +50,7 @@ public class UpdateCommand
     }
 
     /**
-     * Process configuration source.
+     * Execute update against available configurer.
      */
     public void execute( final Configurer configurer )
     {

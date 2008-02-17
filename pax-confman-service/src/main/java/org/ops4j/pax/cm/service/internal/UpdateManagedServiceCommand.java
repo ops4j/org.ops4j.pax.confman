@@ -80,10 +80,14 @@ class UpdateManagedServiceCommand
             {
                 configuration.setBundleLocation( m_target.getServiceIdentity().getLocation() );
                 configuration.update( m_target.getPropertiesTarget().getProperties() );
+                LOG.info( "Updated configuration " + m_target.getServiceIdentity() );
             }
             else
             {
-                LOG.trace( "Configuration is the same as the processing one. Not updating" );
+                LOG.info(
+                    "Configuration " + m_target.getServiceIdentity()
+                    + " is the same as the processing one. Not updating"
+                );
             }
         }
     }
