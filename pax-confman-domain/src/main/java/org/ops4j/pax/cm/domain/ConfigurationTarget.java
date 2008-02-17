@@ -24,7 +24,7 @@ public class ConfigurationTarget
      * Creates a new configuration target model.
      *
      * @param identity configuration identity model
-     * @param target          properties target
+     * @param target   properties target
      *
      * @throws NullArgumentException - If identity is null
      *                               - If target is null

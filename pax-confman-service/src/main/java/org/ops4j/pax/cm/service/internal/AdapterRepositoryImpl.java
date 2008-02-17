@@ -108,7 +108,7 @@ class AdapterRepositoryImpl
     }
 
     /**
-     * @see AdapterRepository#find(Dictionary, Object)  
+     * @see AdapterRepository#find(Dictionary, Object)
      */
     public Adapter find( final Dictionary metadata, final Object sourceObject )
     {

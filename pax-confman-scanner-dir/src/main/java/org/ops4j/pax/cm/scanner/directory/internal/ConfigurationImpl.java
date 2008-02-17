@@ -18,10 +18,8 @@
 package org.ops4j.pax.cm.scanner.directory.internal;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.pax.cm.scanner.directory.ServiceConstants;
 import org.ops4j.util.property.PropertyResolver;
@@ -67,7 +65,7 @@ public class ConfigurationImpl
             if( directoriesProp != null && directoriesProp.trim().length() > 0 )
             {
                 final String[] segments = directoriesProp.split( "," );
-                final Set<File> dirList = new HashSet<File>( );
+                final Set<File> dirList = new HashSet<File>();
                 for( String segment : segments )
                 {
                     dirList.add( new File( segment ) );
