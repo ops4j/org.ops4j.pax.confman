@@ -33,7 +33,7 @@ import org.ops4j.pax.cm.domain.Identity;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 15, 2008
  */
-public class ManagedServiceStrategy
+public class IdentityStrategy
     implements ConfigurationStrategy
 {
 
@@ -62,7 +62,7 @@ public class ManagedServiceStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return ManagedServiceStrategy
+                return IdentityStrategy
                     .findConfiguration( configurationAdmin, m_target.getIdentity() );
             }
         };
@@ -82,7 +82,7 @@ public class ManagedServiceStrategy
             protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
                 throws IOException
             {
-                return ManagedServiceStrategy
+                return IdentityStrategy
                     .findConfiguration( configurationAdmin, m_identity );
             }
         };
