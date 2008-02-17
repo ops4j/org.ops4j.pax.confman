@@ -17,7 +17,9 @@
  */
 package org.ops4j.pax.cm.service.internal;
 
+import java.io.IOException;
 import java.util.Dictionary;
+import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.cm.api.MetadataConstants;
 import org.ops4j.pax.cm.common.internal.processor.Command;
@@ -68,7 +70,18 @@ public class ManagedServiceFactoryStrategy
      */
     public Command<ConfigurationAdmin> createDeleteCommand( final ServiceIdentity serviceIdentity )
     {
-        return new DeleteManagedServiceFactoryCommand( serviceIdentity );
+        return new DeleteCommand( serviceIdentity )
+        {
+            /**
+             * @see DeleteCommand#findConfiguration(ConfigurationAdmin)
+             */
+            @Override
+            protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
+                throws IOException
+            {
+                return null;
+            }
+        };
     }
 
 }

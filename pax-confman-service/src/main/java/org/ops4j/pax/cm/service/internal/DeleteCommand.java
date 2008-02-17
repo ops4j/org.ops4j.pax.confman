@@ -15,14 +15,14 @@ import org.ops4j.pax.cm.domain.ServiceIdentity;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 17, 2008
  */
-class DeleteManagedServiceCommand
+abstract class DeleteCommand
     implements Command<ConfigurationAdmin>
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( DeleteManagedServiceCommand.class );
+    private static final Log LOG = LogFactory.getLog( DeleteCommand.class );
 
     /**
      * Targeted service identity.
@@ -36,7 +36,7 @@ class DeleteManagedServiceCommand
      *
      * @throws NullArgumentException - If service identity is null
      */
-    DeleteManagedServiceCommand( ServiceIdentity serviceIdentity )
+    DeleteCommand( final ServiceIdentity serviceIdentity )
     {
         NullArgumentException.validateNotNull( serviceIdentity, "Service identity" );
 
@@ -70,7 +70,7 @@ class DeleteManagedServiceCommand
     }
 
     /**
-     * Search for configuration.
+     * Search for a configuration.
      *
      * @param configurationAdmin configuration admin service to be used
      *
@@ -78,14 +78,8 @@ class DeleteManagedServiceCommand
      *
      * @throws IOException - re-thrown from configuration admin
      */
-    protected Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
-        throws IOException
-    {
-        return configurationAdmin.getConfiguration(
-            m_serviceIdentity.getPid(),
-            m_serviceIdentity.getLocation()
-        );
-    }
+    protected abstract Configuration findConfiguration( final ConfigurationAdmin configurationAdmin )
+        throws IOException;
 
     @Override
     public String toString()
