@@ -97,22 +97,21 @@ class DirectoryScanner
     private boolean m_stopSignal;
 
     /**
-     * Creates a new directory scanner.
+     * Constructor.
      *
      * @param processor commands processor
      * @param directory file system directory to be scanned
      * @param interval  interval of time in milliseconds between scanning the target directory.
      *                  If null a default 2000 milliseconds will be used.
      *
-     * @throws NullArgumentException - If bundle context is null
-     *                               - If configurations buffer is null
+     * @throws NullArgumentException - If commands processor is null
      *                               - If directory is null
      */
     DirectoryScanner( final CommandProcessor<ConfigurationManager> processor,
                       final File directory,
                       final Long interval )
     {
-        NullArgumentException.validateNotNull( processor, "Command processor" );
+        NullArgumentException.validateNotNull( processor, "Commands processor" );
         NullArgumentException.validateNotNull( directory, "Scanned directory" );
 
         m_processor = processor;
