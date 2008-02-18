@@ -64,7 +64,8 @@ public class ConfigurerTracker
             @Override
             public Object addingService( ServiceReference serviceReference )
             {
-                final ConfigurationManager configurationManager = (ConfigurationManager) super.addingService( serviceReference );
+                final ConfigurationManager configurationManager =
+                    (ConfigurationManager) super.addingService( serviceReference );
                 m_configurerSetter.setConfigurer( configurationManager );
                 return configurationManager;
             }
