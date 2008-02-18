@@ -40,10 +40,6 @@ public class ConfigurationManagerImpl
 {
 
     /**
-     * Logger.
-     */
-    private static final Log LOG = LogFactory.getLog( ConfigurationManagerImpl.class );
-    /**
      * Strategy based on pid. Strategies should be stateless so are safe to be reused.
      */
     private static final ConfigurationStrategy PID_STRATEGY = new PidStrategy();

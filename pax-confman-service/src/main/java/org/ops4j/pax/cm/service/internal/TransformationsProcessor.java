@@ -34,7 +34,7 @@ import org.ops4j.pax.swissbox.lifecycle.AbstractLifecycle;
  * @author Alin Dreghiciu
  * @since 0.3.0, February 17, 2008
  */
-public class TransformationsProcessor
+class TransformationsProcessor
     extends AbstractLifecycle
 {
 
@@ -71,7 +71,7 @@ public class TransformationsProcessor
      *
      * @throws NullArgumentException - If comand processor is null
      */
-    public TransformationsProcessor( final CommandProcessor<ConfigurationAdmin> commandsProcessor )
+    TransformationsProcessor( final CommandProcessor<ConfigurationAdmin> commandsProcessor )
     {
         NullArgumentException.validateNotNull( commandsProcessor, "Commands processor" );
 
