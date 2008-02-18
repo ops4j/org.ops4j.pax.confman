@@ -25,7 +25,7 @@
   <modules>
     <module>samples-logger</module>
     <module>samples-scanner-bundle</module>
-    <module>samples-registry</module>
+    <module>samples-scanner-registry</module>
     <module>provision</module>
   </modules>
 
