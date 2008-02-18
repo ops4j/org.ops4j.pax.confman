@@ -169,13 +169,9 @@ class DirectoryScanner
                         continue;
                     }
                     String mimeType = MIME_TYPES.getContentTypeFor( fileName );
-                    if( mimeType == null )
+                    if( mimeType == null && fileName.contains( "." ) )
                     {
-                        if( fileName.endsWith( ".properties" )
-                            || fileName.endsWith( ".cfg" ) )
-                        {
-                            mimeType = "text/properties";
-                        }
+                        mimeType = "extension/" + fileName.substring( fileName.lastIndexOf( "." ) );
                     }
                     if( mimeType != null )
                     {

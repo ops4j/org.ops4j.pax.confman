@@ -76,7 +76,12 @@ public class Activator
                     new AndSpecification(
                         new InstanceOfSpecification( InputStream.class ),
                         new FilterBasedSpecification(
-                            bundleContext.createFilter( "(" + ServiceConstants.MIME_TYPE + "=text/properties)" )
+                            bundleContext.createFilter(
+                                "(|"
+                                + "(" + ServiceConstants.MIME_TYPE + "=extension/properties)"
+                                + "(" + ServiceConstants.MIME_TYPE + "=extension/cfg)"
+                                + ")"
+                            )
                         )
                     )
                 ),
