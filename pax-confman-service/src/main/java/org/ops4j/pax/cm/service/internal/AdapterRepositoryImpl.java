@@ -26,7 +26,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.service.internal.AdapterRepository;
 
 /**
  * AdaptorRepository implementation.

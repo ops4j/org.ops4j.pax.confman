@@ -85,8 +85,8 @@ class Transformation
      * Performs the transformation process. If transformation is successful returns an update conmmand for the
      * transformed configuration source, otherwise returns null. The method can be called multiple times if something
      * changes as for example new adaptor is added.
-     *  
-     * @return an update command or null if transformation fails 
+     *
+     * @return an update command or null if transformation fails
      */
     UpdateCommand execute()
     {
