@@ -22,7 +22,6 @@ import java.util.Dictionary;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.pax.cm.api.ServiceConstants;
-import org.ops4j.pax.cm.commons.internal.processor.Command;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
 import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.Identity;
@@ -53,20 +52,9 @@ public class PidStrategy
     }
 
     /**
-     * Does nothing.
-     *
-     * @see ConfigurationStrategy#prepareTarget(ConfigurationTarget)
-     */
-    @SuppressWarnings( "unchecked" )
-    public void prepareTarget( final ConfigurationTarget target )
-    {
-        // do nothing
-    }
-
-    /**
      * @see ConfigurationStrategy#createUpdateCommand(ConfigurationTarget)
      */
-    public Command<ConfigurationAdmin> createUpdateCommand( final ConfigurationTarget configurationTarget )
+    public UpdateCommand createUpdateCommand( final ConfigurationTarget configurationTarget )
     {
         return new UpdateCommand( configurationTarget )
         {
@@ -85,7 +73,7 @@ public class PidStrategy
     /**
      * @see ConfigurationStrategy#createDeleteCommand(org.ops4j.pax.cm.domain.Identity)
      */
-    public Command<ConfigurationAdmin> createDeleteCommand( final Identity identity )
+    public DeleteCommand createDeleteCommand( final Identity identity )
     {
         return new DeleteCommand( identity )
         {

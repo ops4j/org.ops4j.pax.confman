@@ -43,21 +43,13 @@ public interface ConfigurationStrategy
     void prepareSource( ConfigurationSource source );
 
     /**
-     * Callback before updating a target configuration.
-     * The strategy can for example process the updated properties.
-     *
-     * @param target configuration target
-     */
-    void prepareTarget( ConfigurationTarget target );
-
-    /**
      * Creates a Configuration Admin update configuration command for configuration target.
      *
      * @param configurationTarget configuration target model
      *
      * @return created update configuration command
      */
-    Command<ConfigurationAdmin> createUpdateCommand( ConfigurationTarget configurationTarget );
+    UpdateCommand createUpdateCommand( ConfigurationTarget configurationTarget );
 
     /**
      * Creates a Configuration Admin delete configuration command for specified configuration identity.
@@ -66,5 +58,5 @@ public interface ConfigurationStrategy
      *
      * @return created delete configuration command
      */
-    Command<ConfigurationAdmin> createDeleteCommand( Identity identity );
+    DeleteCommand createDeleteCommand( Identity identity );
 }

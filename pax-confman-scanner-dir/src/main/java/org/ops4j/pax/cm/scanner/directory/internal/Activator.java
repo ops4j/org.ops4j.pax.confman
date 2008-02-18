@@ -66,7 +66,7 @@ public class Activator
     {
         LOG.debug( "Starting OPS4J Pax ConfMan directory scanner" );
 
-        m_processor = new CommandProcessor<ConfigurationManager>( "Pax ConfMan - Directory Scanner - Commands Processor" );
+        m_processor = new CommandProcessor<ConfigurationManager>( "Pax ConfMan - Directory Scanner" );
         m_configurerTracker = new ConfigurerTracker(
             bundleContext,
             new ConfigurerSetter()

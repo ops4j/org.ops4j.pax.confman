@@ -23,7 +23,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.service.internal.AdapterRepository;
 import org.ops4j.pax.cm.api.ConfigurationManager;
 import org.ops4j.pax.cm.commons.internal.processor.CommandProcessor;
 
@@ -48,27 +47,39 @@ public class Activator
     /**
      * Configuration Admin commands processor.
      */
-    private CommandProcessor<ConfigurationAdmin> m_processor;
+    private CommandProcessor<ConfigurationAdmin> m_commandsprocessor;
+    /**
+     * Transformations processor.
+     */
+    private TransformationsProcessor m_transformationsProcessor;
 
     /**
      * @see BundleActivator#start(BundleContext)
      */
     public void start( final BundleContext bundleContext )
     {
-        m_processor = new CommandProcessor<ConfigurationAdmin>( "Pax ConfMan - ConfigurationManager - Commands Processor" );
-        m_processor.start();
+        m_commandsprocessor = new CommandProcessor<ConfigurationAdmin>( "Pax ConfMan - Configuration Manager" );
+        m_commandsprocessor.start();
+
+        m_transformationsProcessor = new TransformationsProcessor( m_commandsprocessor );
+        m_transformationsProcessor.start();
 
         final AdapterRepository adapterRepository = new AdapterRepositoryImpl();
-        final ConfigurationManagerImpl configurer = new ConfigurationManagerImpl( adapterRepository, m_processor );
+        final ConfigurationManagerImpl configurer = new ConfigurationManagerImpl(
+            adapterRepository,
+            m_commandsprocessor,
+            m_transformationsProcessor
+        );
 
-        m_configAdminTracker = createConfigAdminTracker( bundleContext, m_processor );
+        m_configAdminTracker = createConfigAdminTracker( bundleContext, m_commandsprocessor );
         m_configAdminTracker.open();
 
-        m_dictionaryAdaptorTracker = createDictionaryAdaptorTracker( bundleContext, adapterRepository );
+        m_dictionaryAdaptorTracker = createAdaptorTracker(
+            bundleContext, adapterRepository, m_transformationsProcessor
+        );
         m_dictionaryAdaptorTracker.open();
 
         bundleContext.registerService( ConfigurationManager.class.getName(), configurer, null );
-        bundleContext.registerService( AdapterRepository.class.getName(), adapterRepository, null );
     }
 
     /**
@@ -86,10 +97,15 @@ public class Activator
             m_dictionaryAdaptorTracker.close();
             m_dictionaryAdaptorTracker = null;
         }
-        if( m_processor != null )
+        if( m_transformationsProcessor != null )
         {
-            m_processor.stop();
-            m_processor = null;
+            m_transformationsProcessor.stop();
+            m_transformationsProcessor = null;
+        }
+        if( m_commandsprocessor != null )
+        {
+            m_commandsprocessor.stop();
+            m_commandsprocessor = null;
         }
     }
 
@@ -116,8 +132,9 @@ public class Activator
         };
     }
 
-    private static ServiceTracker createDictionaryAdaptorTracker( final BundleContext bundleContext,
-                                                                  final AdapterRepository repository )
+    private static ServiceTracker createAdaptorTracker( final BundleContext bundleContext,
+                                                        final AdapterRepository repository,
+                                                        final TransformationsProcessor transformationsProcessor )
     {
         return new ServiceTracker( bundleContext, Adapter.class.getName(), null )
         {
@@ -126,6 +143,7 @@ public class Activator
             {
                 final Object service = super.addingService( serviceReference );
                 repository.register( (Adapter) service );
+                transformationsProcessor.scheduleFailedTransformations();
                 return service;
             }
 
@@ -134,6 +152,7 @@ public class Activator
             {
                 super.removedService( serviceReference, service );
                 repository.unregister( (Adapter) service );
+                transformationsProcessor.scheduleFailedTransformations();
             }
 
         };

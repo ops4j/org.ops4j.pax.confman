@@ -60,25 +60,16 @@ public class FactoryPidStrategy
     }
 
     /**
-     * Adds SERVICE_FACTORYINSTANCE as into configuration properties. This property is use for sequential updates or
-     * deletes for a specific instance (see find configuration).
-     *
-     * @see ConfigurationStrategy#prepareTarget(ConfigurationTarget)
-     */
-    @SuppressWarnings( "unchecked" )
-    public void prepareTarget( final ConfigurationTarget target )
-    {
-        target.getPropertiesTarget().getProperties().put(
-            ServiceConstants.SERVICE_FACTORYINSTANCE,
-            target.getIdentity().getFactoryInstance()
-        );
-    }
-
-    /**
      * @see ConfigurationStrategy#createUpdateCommand(ConfigurationTarget)
      */
-    public Command<ConfigurationAdmin> createUpdateCommand( final ConfigurationTarget configurationTarget )
+    public UpdateCommand createUpdateCommand( final ConfigurationTarget configurationTarget )
     {
+        // add SERVICE_FACTORYINSTANCE as into configuration properties. This property is use for sequential updates or
+        // deletes for a specific instance (see find configuration).
+        configurationTarget.getPropertiesTarget().getProperties().put(
+            ServiceConstants.SERVICE_FACTORYINSTANCE,
+            configurationTarget.getIdentity().getFactoryInstance()
+        );
         return new UpdateCommand( configurationTarget )
         {
             /**
@@ -96,7 +87,7 @@ public class FactoryPidStrategy
     /**
      * @see ConfigurationStrategy#createDeleteCommand(org.ops4j.pax.cm.domain.Identity)
      */
-    public Command<ConfigurationAdmin> createDeleteCommand( final Identity identity )
+    public DeleteCommand createDeleteCommand( final Identity identity )
     {
         return new DeleteCommand( identity )
         {

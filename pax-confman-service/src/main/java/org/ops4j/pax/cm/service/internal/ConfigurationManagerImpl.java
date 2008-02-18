@@ -23,17 +23,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.api.Adapter;
-import org.ops4j.pax.cm.service.internal.AdapterRepository;
 import org.ops4j.pax.cm.api.ConfigurationManager;
-import org.ops4j.pax.cm.api.ServiceConstants;
-import org.ops4j.pax.cm.commons.internal.processor.Command;
 import org.ops4j.pax.cm.commons.internal.processor.CommandProcessor;
 import org.ops4j.pax.cm.domain.ConfigurationSource;
-import org.ops4j.pax.cm.domain.ConfigurationTarget;
 import org.ops4j.pax.cm.domain.Identity;
 import org.ops4j.pax.cm.domain.PropertiesSource;
-import org.ops4j.pax.cm.domain.PropertiesTarget;
 
 /**
  * ConfigurationManager implementation.
@@ -64,25 +58,34 @@ public class ConfigurationManagerImpl
     /**
      * Configuration Admin commands processor.
      */
-    private final CommandProcessor<ConfigurationAdmin> m_processor;
+    private final CommandProcessor<ConfigurationAdmin> m_commandsProcessor;
+    /**
+     * Transformation processor.
+     */
+    private final TransformationsProcessor m_transformationsProcessor;
 
     /**
      * Constructor.
      *
-     * @param adapterRepository adaptor repository
-     * @param processor         processing queue
+     * @param adapterRepository        adaptor repository
+     * @param commandsProcessor        commands processor
+     * @param transformationsProcessor transformations processor
      *
-     * @throws NullArgumentException - If dictionaryAdapterRepository is null
-     *                               - If processingQueue is null
+     * @throws NullArgumentException - If dictionary adapter repository is null
+     *                               - If commands processor is null
+     *                               - If transformations processor is null
      */
     public ConfigurationManagerImpl( final AdapterRepository adapterRepository,
-                                 final CommandProcessor<ConfigurationAdmin> processor )
+                                     final CommandProcessor<ConfigurationAdmin> commandsProcessor,
+                                     final TransformationsProcessor transformationsProcessor )
     {
         NullArgumentException.validateNotNull( adapterRepository, "Dictionary adapters repository" );
-        NullArgumentException.validateNotNull( processor, "Commands processor" );
+        NullArgumentException.validateNotNull( commandsProcessor, "Commands processor" );
+        NullArgumentException.validateNotNull( transformationsProcessor, "Transformations processor" );
 
         m_adapterRepository = adapterRepository;
-        m_processor = processor;
+        m_commandsProcessor = commandsProcessor;
+        m_transformationsProcessor = transformationsProcessor;
     }
 
     /**
@@ -93,15 +96,18 @@ public class ConfigurationManagerImpl
                         final Object propertiesSource,
                         final Dictionary metadata )
     {
-        updateConfiguration(
-            new ConfigurationSource(
-                new Identity( pid, location ),
-                new PropertiesSource(
-                    propertiesSource,
-                    DictionaryUtils.copy( metadata, new Hashtable() )
-                )
-            ),
-            PID_STRATEGY
+        m_transformationsProcessor.add(
+            new Transformation(
+                new ConfigurationSource(
+                    new Identity( pid, location ),
+                    new PropertiesSource(
+                        propertiesSource,
+                        DictionaryUtils.copy( metadata, new Hashtable() )
+                    )
+                ),
+                PID_STRATEGY,
+                m_adapterRepository
+            )
         );
     }
 
@@ -114,15 +120,18 @@ public class ConfigurationManagerImpl
                         final Object propertiesSource,
                         final Dictionary metadata )
     {
-        updateConfiguration(
-            new ConfigurationSource(
-                new Identity( factoryPid, factoryInstance, location ),
-                new PropertiesSource(
-                    propertiesSource,
-                    DictionaryUtils.copy( metadata, new Hashtable() )
-                )
-            ),
-            FACTORY_PID_STRATEGY
+        m_transformationsProcessor.add(
+            new Transformation(
+                new ConfigurationSource(
+                    new Identity( factoryPid, factoryInstance, location ),
+                    new PropertiesSource(
+                        propertiesSource,
+                        DictionaryUtils.copy( metadata, new Hashtable() )
+                    )
+                ),
+                FACTORY_PID_STRATEGY,
+                m_adapterRepository
+            )
         );
     }
 
@@ -131,9 +140,10 @@ public class ConfigurationManagerImpl
      */
     public void delete( final String pid )
     {
-        deleteConfiguration(
-            new Identity( pid, null ),
-            PID_STRATEGY
+        m_commandsProcessor.add(
+            PID_STRATEGY.createDeleteCommand(
+                new Identity( pid, null )
+            )
         );
     }
 
@@ -143,118 +153,11 @@ public class ConfigurationManagerImpl
     public void delete( final String factoryPid,
                         final String factoryInstance )
     {
-        deleteConfiguration(
-            new Identity( factoryPid, factoryInstance, null ),
-            FACTORY_PID_STRATEGY
+        m_commandsProcessor.add(
+            FACTORY_PID_STRATEGY.createDeleteCommand(
+                new Identity( factoryPid, factoryInstance, null )
+            )
         );
-    }
-
-    /**
-     * Updates configuration using the supplied strategy.
-     *
-     * @param source   configuration source
-     * @param strategy configuration strategy
-     */
-    private void updateConfiguration( final ConfigurationSource source,
-                                      final ConfigurationStrategy strategy )
-    {
-        strategy.prepareSource( source );
-        // try to adapt the source object to a dictionary
-        Dictionary adapted = null;
-        Object sourceObject = source.getPropertiesSource().getSourceObject();
-        // loop adaptors till we have an adapted dictionary or sourceObject becomes null
-        while( adapted == null )
-        {
-            final Adapter adapter = m_adapterRepository.find(
-                source.getPropertiesSource().getMetadata(),
-                sourceObject
-            );
-            if( adapter == null )
-            {
-                // no adaptor found, so let's just get out
-                break;
-            }
-            LOG.trace( "Using adapter " + adapter );
-            final Class previousSourceClass = sourceObject.getClass();
-            sourceObject = adapter.adapt( sourceObject );
-            if( sourceObject == null )
-            {
-                // less probably but if a source object becomes null there is no reason to look further
-                break;
-            }
-            if( sourceObject instanceof Dictionary )
-            {
-                adapted = (Dictionary) sourceObject;
-            }
-            LOG.trace( "Source object converted from " + previousSourceClass + " to " + sourceObject.getClass() );
-            if( previousSourceClass.equals( sourceObject.getClass() ) )
-            {
-                // if still the same class get out to avoid an infinite loop as tere is no reason to believe
-                // that on a next cycle anotehr adapter will be found.
-                // TODO handle situation when an adaptor is added or removed during a cycle 
-                break;
-            }
-        }
-        if( adapted != null )
-        {
-            adapted = copyPropertiesFromMetadata( source.getPropertiesSource().getMetadata(), adapted );
-            LOG.trace( "Adapted configuration properties: " + adapted );
-
-            final ConfigurationTarget target =
-                new ConfigurationTarget( source.getIdentity(), new PropertiesTarget( adapted ) );
-
-            final Command<ConfigurationAdmin> command = strategy.createUpdateCommand( target );
-            if( command != null )
-            {
-                strategy.prepareTarget( target );
-                m_processor.add( command );
-            }
-        }
-        else
-        {
-            LOG.info( "Configuration source object cannot be adapted to a dictionary" );
-        }
-    }
-
-    /**
-     * Deletes configuration using the supplied strategy.
-     *
-     * @param identity configuration identity
-     * @param strategy configuration strategy
-     */
-    private void deleteConfiguration( final Identity identity,
-                                      final ConfigurationStrategy strategy )
-    {
-        m_processor.add( strategy.createDeleteCommand( identity ) );
-    }
-
-    /**
-     * Copy all necessary metadata properties to configuration properties dictionary.
-     *
-     * @param metadata   metadata
-     * @param properties destination
-     *
-     * @return dictionary containing the info prepertties copied from metadata.
-     */
-    private static Dictionary copyPropertiesFromMetadata( final Dictionary metadata,
-                                                          final Dictionary properties )
-    {
-        if( properties == null )
-        {
-            return null;
-        }
-        final Dictionary result = new Hashtable();
-        DictionaryUtils.copy( properties, result );
-        DictionaryUtils.copy(
-            new DictionaryUtils.OrSpecification(
-                new DictionaryUtils.RegexSpecification( ServiceConstants.INFO_PREFIX_AS_REGEX ),
-                new DictionaryUtils.RegexSpecification( ServiceConstants.SERVICE_PID_AS_REGEX ),
-                new DictionaryUtils.RegexSpecification( ServiceConstants.SERVICE_FACTORYPID_AS_REGEX )
-            ),
-            metadata,
-            result
-        );
-        return result;
     }
 
 }
