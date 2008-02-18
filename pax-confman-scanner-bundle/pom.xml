@@ -43,12 +43,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.ops4j.base</groupId>
-      <artifactId>ops4j-base-util-property</artifactId>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>org.ops4j.pax.swissbox</groupId>
       <artifactId>pax-swissbox-optional-jcl</artifactId>
       <scope>compile</scope>
@@ -62,7 +56,7 @@
     </dependency>
     <dependency>
       <groupId>org.ops4j.pax.swissbox</groupId>
-      <artifactId>pax-swissbox-property</artifactId>
+      <artifactId>pax-swissbox-extender</artifactId>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>

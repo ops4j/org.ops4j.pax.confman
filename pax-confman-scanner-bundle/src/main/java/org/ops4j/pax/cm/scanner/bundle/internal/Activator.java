@@ -48,6 +48,10 @@ public class Activator
      * Command processor.
      */
     private CommandProcessor<ConfigurationManager> m_commandsProcessor;
+    /**
+     * Bundle scanner.
+     */
+    private BundleScanner m_bundleScanner;
 
     /**
      * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
@@ -73,10 +77,12 @@ public class Activator
 
             }
         );
+        m_bundleScanner = new BundleScanner( bundleContext, m_commandsProcessor );
 
         // ready to start
         m_configurationManagerTracker.start();
         m_commandsProcessor.start();
+        m_bundleScanner.start();
     }
 
     /**
@@ -86,6 +92,11 @@ public class Activator
     {
         LOG.debug( "Stopping OPS4J Pax ConfMan bundle scanner" );
 
+        if( m_bundleScanner != null )
+        {
+            m_bundleScanner.stop();
+            m_bundleScanner = null;
+        }
         if( m_configurationManagerTracker != null )
         {
             m_configurationManagerTracker.stop();
