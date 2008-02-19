@@ -1,9 +1,0 @@
-# Pax ConfMan bundles
-mvn:org.ops4j.pax.confman/pax-confman-service/0.3.0-SNAPSHOT
-mvn:org.ops4j.pax.confman/pax-confman-adapter-basic/0.3.0-SNAPSHOT
-mvn:org.ops4j.pax.confman/pax-confman-scanner-bundle/0.3.0-SNAPSHOT
-
-# Pax ConfMan samples bundles
-mvn:org.ops4j.pax.confman.samples/samples-logger/0.3.0-SNAPSHOT
-mvn:org.ops4j.pax.confman.samples/samples-scanner-bundle/0.3.0-SNAPSHOT
-
