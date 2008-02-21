@@ -1,0 +1,37 @@
+Bundle-Activator:\
+  org.apache.felix.cm.impl.ConfigurationManager
+
+Bundle-Version>:\
+  ${pom.version}
+
+Bundle-SymbolicName:\
+  ${bundle.symbolicName}
+
+Import-Package:\
+  ${bundle.namespace}.file; version="${pom.version}",\
+  ${bundle.namespace}; version="${pom.version}",\
+  org.osgi.framework; version="[1.0.0,2.0.0)",\
+  org.osgi.service.cm; version="1.2.0",\
+  org.osgi.util.tracker; version="[1.3.0,2.0.0)"
+
+DynamicImport-Package:\
+  org.osgi.service.log
+
+Export-Package:\
+  ${bundle.namespace}; version="${pom.version}",\
+  ${bundle.namespace}.file; version="${pom.version}",\
+  org.osgi.service.cm; version="1.2.0"\
+
+Private-Package:\
+  ${bundle.namespace}.impl.*
+
+Embed-Dependency:\
+  *; scope=compile; type=!pom; inline=true
+
+Embed-Transitive: true
+
+-removeheaders:\
+  Include-Resource,\
+  Private-Package,\
+  Embed-Dependency,\
+  Embed-Transitive
