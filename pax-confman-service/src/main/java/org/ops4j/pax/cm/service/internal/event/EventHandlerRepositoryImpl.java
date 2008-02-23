@@ -17,11 +17,9 @@
  */
 package org.ops4j.pax.cm.service.internal.event;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.ops4j.pax.cm.service.internal.event.Event;
-import org.ops4j.pax.cm.service.internal.event.EventHandler;
-import org.ops4j.pax.cm.service.internal.event.EventHandlerRepository;
 
 /**
  * Implementation of EventHandlerRepository.
@@ -33,17 +31,20 @@ public class EventHandlerRepositoryImpl
     implements EventHandlerRepository
 {
 
-    private final Set<EventHandler<? extends Event>> m_handlers;
+    /**
+     * Set of registered event handlers.
+     */
+    private final Set<EventHandler> m_handlers;
 
     public EventHandlerRepositoryImpl()
     {
-        m_handlers = new HashSet<EventHandler<? extends Event>>();
+        m_handlers = Collections.synchronizedSet( new HashSet<EventHandler>() );
     }
 
     /**
      * @see EventHandlerRepository#addEventHandler(EventHandler)
      */
-    public void addEventHandler( final EventHandler<? extends Event> handler )
+    public void addEventHandler( final EventHandler handler )
     {
         m_handlers.add( handler );
     }
@@ -51,17 +52,30 @@ public class EventHandlerRepositoryImpl
     /**
      * @see EventHandlerRepository#removeEventHandler(EventHandler)
      */
-    public void removeEventHandler( final EventHandler<? extends Event> handler )
+    public void removeEventHandler( final EventHandler handler )
     {
         m_handlers.remove( handler );
     }
 
     /**
      * @throws IllegalStateException - If no handler is registered for the event
-     * @see EventHandlerRepository#getEventHandlerForEvent(Event)
+     * @see EventHandlerRepository#getEventHandler(Event)
      */
-    public EventHandler<? extends Event> getEventHandlerForEvent( final Event event )
+    public Set<EventHandler> getEventHandler( final Event event )
     {
-        throw new IllegalStateException( "No handler registered for handling event " + event );
+        final Set<EventHandler> handlers = new HashSet<EventHandler>();
+        for( EventHandler handler : m_handlers )
+        {
+            if( handler.canHandle( event ) )
+            {
+                handlers.add( handler );
+            }
+        }
+        if( handlers.size() == 0 )
+        {
+            throw new IllegalStateException( "No handler registered for handling event " + event );
+        }
+        return handlers;
     }
+    
 }

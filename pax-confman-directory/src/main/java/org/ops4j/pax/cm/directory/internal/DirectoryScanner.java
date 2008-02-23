@@ -17,24 +17,24 @@
  */
 package org.ops4j.pax.cm.directory.internal;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.felix.cm.PersistenceManager;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.lang.PreConditionException;
 import org.ops4j.pax.cm.service.ChangeSetBean;
 import org.ops4j.pax.cm.service.ChangeSetListener;
 import org.ops4j.pax.cm.service.ChangeSetProducer;
+import org.ops4j.pax.cm.service.ConfigurationProducer;
+import org.ops4j.pax.cm.service.ConfigurationSource;
 
 /**
  * Polls directories for file changes.
@@ -43,7 +43,7 @@ import org.ops4j.pax.cm.service.ChangeSetProducer;
  * @since 0.3.0, February 20, 2008
  */
 class DirectoryScanner
-    implements ChangeSetProducer, PersistenceManager
+    implements ConfigurationProducer, ChangeSetProducer
 {
 
     /**
@@ -142,64 +142,25 @@ class DirectoryScanner
     }
 
     /**
-     * @see PersistenceManager#exists(String)
+     * @see ConfigurationProducer#getConfiguration(String)
      */
-    public boolean exists( final String pid )
+    public ConfigurationSource getConfiguration( final String pid )
     {
         synchronized( m_configurationFiles )
         {
-            LOG.trace( "Checking existence of " + pid );
-            return m_configurationFiles.containsKey( pid );
+            return m_configurationFiles.get( pid );
         }
     }
 
     /**
-     * @see PersistenceManager#load(String)
+     * @see ConfigurationProducer#getConfiguration(String)
      */
-    public Dictionary load( final String pid )
-        throws IOException
+    public Collection<ConfigurationFile> getAllConfigurations()
     {
         synchronized( m_configurationFiles )
         {
-            LOG.trace( "Loading " + pid );
-            return m_configurationFiles.get( pid ).getProperties();
+            return m_configurationFiles.values();
         }
-    }
-
-    /**
-     * @see PersistenceManager#getDictionaries()
-     */
-    public Enumeration getDictionaries()
-        throws IOException
-    {
-        synchronized( m_configurationFiles )
-        {
-            LOG.trace( "Loading all" );
-            final List<Dictionary> dictionaries = new ArrayList<Dictionary>();
-            for( ConfigurationFile config : m_configurationFiles.values() )
-            {
-                dictionaries.add( config.getProperties() );
-            }
-            return Collections.enumeration( dictionaries );
-        }
-    }
-
-    /**
-     * @see PersistenceManager#store(String, Dictionary)
-     */
-    public void store( final String pid, final Dictionary dictionary )
-        throws IOException
-    {
-        throw new IOException( "Unsupported" );
-    }
-
-    /**
-     * @see PersistenceManager#delete(String)
-     */
-    public void delete( final String pid )
-        throws IOException
-    {
-        throw new IOException( "Unsupported" );
     }
 
     /**
@@ -261,22 +222,20 @@ class DirectoryScanner
             // process added configuration files
             for( ConfigurationFile config : diff.getAdded() )
             {
-                final Dictionary properties = config.getProperties();
-                if( properties != null )
+                if( config.getProperties().get() != null )
                 {
                     m_configurationFiles.put( config.getPid(), config );
-                    added.add( properties );
+                    //added.add( properties );
                 }
             }
 
             // process updated configuration files
             for( ConfigurationFile config : diff.getUpdated() )
             {
-                final Dictionary properties = config.getProperties();
-                if( properties != null )
+                if( config.getProperties().get() != null )
                 {
                     m_configurationFiles.put( config.getPid(), config );
-                    updated.add( properties );
+                    //updated.add( properties );
                 }
                 else
                 {

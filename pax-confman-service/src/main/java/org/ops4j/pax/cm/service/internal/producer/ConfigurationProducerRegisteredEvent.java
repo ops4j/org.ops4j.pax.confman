@@ -15,56 +15,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.service.internal.ms;
+package org.ops4j.pax.cm.service.internal.producer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.service.ConfigurationProducer;
 import org.ops4j.pax.cm.service.internal.event.Event;
 
 /**
- * Signals that a ManagedService has been added.
+ * Signals that a configuration producre has been registered.
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 22, 2008
+ * @since 0.3.0, February 23, 2008
  */
-public class ManagedServiceAddedEvent
+public class ConfigurationProducerRegisteredEvent
     implements Event
 {
 
     /**
      * Logger.
      */
-    private static final Log LOG = LogFactory.getLog( ManagedServiceAddedEvent.class );
+    private static final Log LOG = LogFactory.getLog( ConfigurationProducerRegisteredEvent.class );
 
     /**
-     * Service PID of the added ManagedService.
+     * Registered configuration producer.
      */
-    private final String m_pid;
+    private final ConfigurationProducer m_producer;
 
     /**
-     * Consructor.
+     * Constructor.
      *
-     * @param pid service PID of the added ManagedService.
+     * @param producer registered configuration producer
      *
-     * @throws NullArgumentException - If pid is null or empty
+     * @throws NullArgumentException - If producre is null
      */
-    public ManagedServiceAddedEvent( final String pid )
+    public ConfigurationProducerRegisteredEvent( final ConfigurationProducer producer )
     {
-        NullArgumentException.validateNotNull( pid, "Persistent identifier" );
+        NullArgumentException.validateNotNull( producer, "Configuration producer" );
 
-        m_pid = pid;
-        LOG.trace( "Managed Service with service PID " + m_pid + " has been added" );
+        m_producer = producer;
+        LOG.trace( "Configuration producer " + m_producer + " has been registered" );
     }
 
     /**
      * Getter.
      *
-     * @return service PID; cannot be null
+     * @return registered configuration producer; not null
      */
-    public String getPid()
+    public ConfigurationProducer getProducer()
     {
-        return m_pid;
+        return m_producer;
     }
-
 }

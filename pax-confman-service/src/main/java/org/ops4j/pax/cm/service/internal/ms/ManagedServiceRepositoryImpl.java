@@ -22,12 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 import org.osgi.service.cm.ManagedService;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.service.internal.event.ManagedServiceRemovedEvent;
-import org.ops4j.pax.cm.service.internal.ms.ManagedServiceAddedEvent;
 import org.ops4j.pax.cm.service.internal.event.EventDispatcher;
 
 /**
- * TODO Add JavaDoc
+ * Repository of managed services.
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 22, 2008
@@ -36,9 +34,22 @@ public class ManagedServiceRepositoryImpl
     implements ManagedServiceRepository
 {
 
+    /**
+     * Event dispatcher.
+     */
     private final EventDispatcher m_dispatcher;
+    /**
+     * Registered managed services.
+     */
     private final Map<String, ManagedService> m_services;
 
+    /**
+     * Constructor.
+     *
+     * @param dispatcher event dispatcher
+     *
+     * @throws NullArgumentException - If event dispatcher is null
+     */
     public ManagedServiceRepositoryImpl( final EventDispatcher dispatcher )
     {
         NullArgumentException.validateNotNull( dispatcher, "Event dispatcher" );
@@ -47,20 +58,30 @@ public class ManagedServiceRepositoryImpl
         m_services = Collections.synchronizedMap( new HashMap<String, ManagedService>() );
     }
 
-    public void addManagedService( final String pid,
-                                   final ManagedService service )
+    /**
+     * @see ManagedServiceRepository#registerManagedService(String, ManagedService)
+     */
+    public void registerManagedService( final String pid,
+                                        final ManagedService service )
     {
         NullArgumentException.validateNotEmpty( pid, true, "Managed service PID" );
         NullArgumentException.validateNotNull( service, "Managed service" );
 
-        m_services.put( pid, service );
-        m_dispatcher.fireEvent( new ManagedServiceAddedEvent( pid ) );
+        synchronized( m_services )
+        {
+            m_services.put( pid, service );
+            m_dispatcher.fireEvent( new ManagedServiceRegisteredEvent( pid ) );
+        }
     }
 
-    public void removeManagedService( final String pid )
+    /**
+     * @see ManagedServiceRepository#unregisterManagedService(String)
+     */
+    public void unregisterManagedService( final String pid )
     {
         NullArgumentException.validateNotEmpty( pid, true, "Managed service PID" );
 
         m_services.remove( pid );
     }
+
 }

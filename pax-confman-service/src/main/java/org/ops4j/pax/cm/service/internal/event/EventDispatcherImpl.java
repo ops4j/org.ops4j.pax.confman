@@ -22,9 +22,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
-import org.ops4j.pax.cm.service.internal.event.Event;
-import org.ops4j.pax.cm.service.internal.di.RequiresConfigurationProducer;
-import org.ops4j.pax.cm.service.internal.di.RequiresEventDispatcher;
 
 /**
  * TODO Add JavaDoc
@@ -63,7 +60,7 @@ public class EventDispatcherImpl
      *
      * @param eventHandlerRepository event handler repository
      *
-     * @throws NullArgumentException - If event handlr repository is null
+     * @throws NullArgumentException - If event handler repository is null
      */
     public EventDispatcherImpl( final EventHandlerRepository eventHandlerRepository )
     {
@@ -108,28 +105,6 @@ public class EventDispatcherImpl
     }
 
     /**
-     * Sets the required fields from the context. Kind of rudimentary dependency injection.
-     *
-     * @param eventHandler event handler
-     *
-     * @return same event handler as received
-     */
-    private EventHandler<? extends Event> prepareHandler( final EventHandler<? extends Event> eventHandler )
-    {
-        if( eventHandler instanceof RequiresConfigurationProducer )
-        {
-            // TODO set depenency
-            throw new IllegalStateException( "Cannot set required dependency" );
-        }
-        if( eventHandler instanceof RequiresEventDispatcher )
-        {
-            // TODO set depenency
-            throw new IllegalStateException( "Cannot set required dependency" );
-        }
-        return eventHandler;
-    }
-
-    /**
      * Dispacher thread.
      */
     private class Dispatcher
@@ -138,7 +113,7 @@ public class EventDispatcherImpl
 
         public void run()
         {
-            while( !m_dispatcherThreadActive )
+            while( m_dispatcherThreadActive )
             {
                 try
                 {
@@ -146,7 +121,10 @@ public class EventDispatcherImpl
                     try
                     {
                         LOG.trace( "Handling event " + event );
-                        prepareHandler( m_eventHandlerRepository.getEventHandlerForEvent( event ) ).handle( event );
+                        for( EventHandler handler : m_eventHandlerRepository.getEventHandler( event ) )
+                        {
+                            handler.handle( event );
+                        }
                     }
                     catch( Exception ignore )
                     {

@@ -12,8 +12,8 @@ import org.osgi.service.cm.ManagedService;
 public interface ManagedServiceRepository
 {
 
-    void addManagedService( String pid, ManagedService service );
+    void registerManagedService( String pid, ManagedService service );
 
-    void removeManagedService( String pid );
+    void unregisterManagedService( String pid );
 
 }

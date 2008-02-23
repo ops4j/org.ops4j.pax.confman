@@ -9,11 +9,10 @@ import org.ops4j.pax.cm.service.internal.event.Event;
  * Time: 7:22:30 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface EventHandler<T extends Event>
+public interface EventHandler
 {
+    boolean canHandle( Event event );
 
-    Class<T> getHandledEventType();
-
-    void handle( T event );
+    void handle( Event event );
 
 }

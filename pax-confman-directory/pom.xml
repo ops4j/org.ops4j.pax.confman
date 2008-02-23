@@ -82,12 +82,6 @@
       <version>0.3.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.ops4j.pax.confman</groupId>
-      <artifactId>pax-confman-fca</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!-- Testing dependencies (not transitive) -->
     <dependency>

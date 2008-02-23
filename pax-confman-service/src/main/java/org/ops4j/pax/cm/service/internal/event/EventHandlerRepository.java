@@ -17,6 +17,7 @@
  */
 package org.ops4j.pax.cm.service.internal.event;
 
+import java.util.Set;
 import org.ops4j.pax.cm.service.internal.event.Event;
 
 /**
@@ -33,23 +34,23 @@ public interface EventHandlerRepository
      *
      * @param handler to be added
      */
-    void addEventHandler( EventHandler<? extends Event> handler );
+    void addEventHandler( EventHandler handler );
 
     /**
      * Removes the specified event handler from repository.
      *
      * @param handler to be removed
      */
-    void removeEventHandler( EventHandler<? extends Event> handler );
+    void removeEventHandler( EventHandler handler );
 
     /**
-     * Returns an event handler for the specified event. If an event handler cannot be found it should throw an
+     * Returns a set of event handlers for the specified event. If an event handler cannot be found it should throw an
      * exception, so it should never return null.
      *
      * @param event event
      *
-     * @return matched event handler
+     * @return matched event handlers
      */
-    EventHandler<? extends Event> getEventHandlerForEvent( Event event );
+    Set<EventHandler> getEventHandler( Event event );
 
 }

@@ -21,7 +21,7 @@ package org.ops4j.pax.cm.service.internal;
  * TODO Add JavaDoc
  *
  * @author Alin Dreghiciu
- * @since 0.3.0, February 22, 2008
+ * @since 0.3.0, February 23, 2008
  */
 public class Template
 {

@@ -59,7 +59,7 @@ public class ManagedServiceTracker
      *                               - If repository is null
      */
     public ManagedServiceTracker( final BundleContext bundleContext,
-                           final ManagedServiceRepository repository )
+                                  final ManagedServiceRepository repository )
     {
         NullArgumentException.validateNotNull( bundleContext, "Bundle context" );
         NullArgumentException.validateNotNull( repository, "Managed service repository" );
@@ -93,7 +93,7 @@ public class ManagedServiceTracker
                     return null;
                 }
                 final ManagedService service = (ManagedService) super.addingService( serviceReference );
-                m_repository.addManagedService(
+                m_repository.registerManagedService(
                     (String) servicePid,
                     service
                 );
@@ -121,7 +121,7 @@ public class ManagedServiceTracker
             {
                 // we do not need to verify anymore if the service pid is set
                 super.removedService( serviceReference, service );
-                m_repository.removeManagedService(
+                m_repository.unregisterManagedService(
                     (String) serviceReference.getProperty( Constants.SERVICE_PID )
                 );
             }
@@ -133,6 +133,7 @@ public class ManagedServiceTracker
      */
     public synchronized void start()
     {
+        LOG.trace( "Starting tracking ManagedService(s)" );
         m_serviceTracker.open();
     }
 
@@ -142,6 +143,7 @@ public class ManagedServiceTracker
     public synchronized void stop()
     {
         m_serviceTracker.close();
+        LOG.trace( "Stopped tracking ManagedService(s)" );
     }
 
 }

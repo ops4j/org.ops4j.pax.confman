@@ -21,12 +21,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.Properties;
-import org.osgi.framework.Constants;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.service.ConfigurationProperties;
+import org.ops4j.pax.cm.service.ConfigurationPropertiesVO;
+import org.ops4j.pax.cm.service.ConfigurationSource;
 
 /**
  * A file that can be used as a configuration.
@@ -35,6 +34,7 @@ import org.ops4j.lang.NullArgumentException;
  * @since 0.3.0, February 19, 2008
  */
 class ConfigurationFile
+    implements ConfigurationSource
 {
 
     /**
@@ -61,7 +61,7 @@ class ConfigurationFile
     /**
      * Lazy loaded properties.
      */
-    private Dictionary m_properties;
+    private ConfigurationProperties m_properties;
     /**
      * True if properties are not yet loaded.
      */
@@ -107,6 +107,16 @@ class ConfigurationFile
     public String getFactoryPid()
     {
         return m_factoryPid;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return always null
+     */
+    public String getBundleLocation()
+    {
+        return null;
     }
 
     /**
@@ -244,7 +254,7 @@ class ConfigurationFile
      *
      * @return properties
      */
-    public Dictionary getProperties()
+    public ConfigurationProperties getProperties()
     {
         if( m_propertiesNotLoaded )
         {
@@ -253,17 +263,11 @@ class ConfigurationFile
             {
                 final Properties properties = new Properties();
                 properties.load( new BufferedInputStream( new FileInputStream( m_configurationFile ) ) );
-                m_properties = new Hashtable( properties );
-                // add default properties
-                m_properties.put( Constants.SERVICE_PID, m_pid );
-                if( m_factoryPid != null )
-                {
-                    m_properties.put( ConfigurationAdmin.SERVICE_FACTORYPID, m_factoryPid );
-                }
+                m_properties = new ConfigurationPropertiesVO( properties );
             }
             catch( IOException ignore )
             {
-                //TODO log exception
+                // TODO log exception
             }
         }
         return m_properties;

@@ -75,11 +75,12 @@
 
   <properties>
     <dependency.base.version>0.5.0</dependency.base.version>
-    <dependency.swissbox.version>0.1.0</dependency.swissbox.version>
+    <dependency.swissbox.version>0.2.0</dependency.swissbox.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      
       <!-- OPS4J Base -->
       <dependency>
         <groupId>org.ops4j.base</groupId>
@@ -113,26 +114,7 @@
         <artifactId>org.osgi.compendium</artifactId>
         <version>4.0.1</version>
       </dependency>
-      <!-- Felix -->
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.configadmin</artifactId>
-      <version>1.0.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>org.osgi.core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>org.osgi.foundation</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>org.osgi.compendium</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+
     </dependencies>
   </dependencyManagement>
 

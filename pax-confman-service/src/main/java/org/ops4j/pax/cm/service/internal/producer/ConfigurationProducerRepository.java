@@ -15,24 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.pax.cm.service;
+package org.ops4j.pax.cm.service.internal.producer;
 
-import java.util.Map;
+import org.ops4j.pax.cm.service.ConfigurationProducer;
 
 /**
- * Configuration properties.
+ * TODO Add JavaDoc
  *
  * @author Alin Dreghiciu
  * @since 0.3.0, February 23, 2008
  */
-public interface ConfigurationProperties
+public interface ConfigurationProducerRepository
 {
 
     /**
-     * Returns a map of properties.
+     * Adds a configurations producer.
      *
-     * @return map of properties
+     * @param producer to add
      */
-    Map<String, Object> get();
+    void registerConfigurationProducer( ConfigurationProducer producer );
+
+    /**
+     * Removes a configuration producer.
+     *
+     * @param producer to remove
+     */
+    void unregisterConfigurationProducer( ConfigurationProducer producer );
 
 }

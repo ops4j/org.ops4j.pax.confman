@@ -17,10 +17,10 @@
  */
 package org.ops4j.pax.cm.directory.internal;
 
-import org.apache.felix.cm.PersistenceManager;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.ops4j.lang.NullArgumentException;
+import org.ops4j.pax.cm.service.ConfigurationProducer;
 
 /**
  * Registers / unregisters itself as a service in service registry
@@ -66,7 +66,7 @@ class DirectoryScannerService
         {
             super.start();
             m_registration = m_bundleContext.registerService(
-                PersistenceManager.class.getName(),
+                ConfigurationProducer.class.getName(),
                 this,
                 null
             );

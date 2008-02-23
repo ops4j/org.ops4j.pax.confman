@@ -17,6 +17,8 @@
  */
 package org.ops4j.pax.cm.service;
 
+import java.util.Collection;
+
 /**
  * TODO Add JavaDoc
  *
@@ -26,6 +28,20 @@ package org.ops4j.pax.cm.service;
 public interface ConfigurationProducer
 {
 
+    /**
+     * Returns configuration for the pid. If there is no configuration available for the pid it should return null.
+     *
+     * @param pid configuration persistent identifier
+     *
+     * @return found configuration or null
+     */
     ConfigurationSource getConfiguration( String pid );
+
+    /**
+     * Returns all configurations.
+     *
+     * @return all configurations
+     */
+    Collection<? extends ConfigurationSource> getAllConfigurations();
 
 }
