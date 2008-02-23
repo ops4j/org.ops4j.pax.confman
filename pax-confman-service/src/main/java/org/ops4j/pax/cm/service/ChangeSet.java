@@ -1,4 +1,4 @@
-package org.apache.felix.cm;
+package org.ops4j.pax.cm.service;
 
 import java.util.Dictionary;
 

@@ -29,12 +29,12 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.felix.cm.ChangeSetBean;
-import org.apache.felix.cm.ChangeSetListener;
-import org.apache.felix.cm.ChangeSetSource;
 import org.apache.felix.cm.PersistenceManager;
 import org.ops4j.lang.NullArgumentException;
 import org.ops4j.lang.PreConditionException;
+import org.ops4j.pax.cm.service.ChangeSetBean;
+import org.ops4j.pax.cm.service.ChangeSetListener;
+import org.ops4j.pax.cm.service.ChangeSetProducer;
 
 /**
  * Polls directories for file changes.
@@ -43,7 +43,7 @@ import org.ops4j.lang.PreConditionException;
  * @since 0.3.0, February 20, 2008
  */
 class DirectoryScanner
-    implements ChangeSetSource, PersistenceManager
+    implements ChangeSetProducer, PersistenceManager
 {
 
     /**
@@ -126,7 +126,7 @@ class DirectoryScanner
     }
 
     /**
-     * @see ChangeSetSource#addListener(ChangeSetListener)
+     * @see org.ops4j.pax.cm.service.ChangeSetProducer#addListener(ChangeSetListener)
      */
     public void addListener( final ChangeSetListener listener )
     {
@@ -134,7 +134,7 @@ class DirectoryScanner
     }
 
     /**
-     * @see ChangeSetSource#removeListener(ChangeSetListener)
+     * @see org.ops4j.pax.cm.service.ChangeSetProducer#removeListener(ChangeSetListener)
      */
     public void removeListener( final ChangeSetListener listener )
     {

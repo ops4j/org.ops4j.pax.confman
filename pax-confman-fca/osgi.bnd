@@ -18,20 +18,13 @@ DynamicImport-Package:\
   org.osgi.service.log
 
 Export-Package:\
-  ${bundle.namespace}; version="${pom.version}",\
+  ${bundle.namespace}; version="${pom.version}"; -split-package:=merge-first,\
   ${bundle.namespace}.file; version="${pom.version}",\
   org.osgi.service.cm; version="1.2.0"\
 
 Private-Package:\
-  ${bundle.namespace}.impl.*
-
-Embed-Dependency:\
-  *; scope=compile; type=!pom; inline=true
-
-Embed-Transitive: true
+  ${bundle.namespace}.impl.*; -split-package:=merge-first
 
 -removeheaders:\
   Include-Resource,\
-  Private-Package,\
-  Embed-Dependency,\
-  Embed-Transitive
+  Private-Package

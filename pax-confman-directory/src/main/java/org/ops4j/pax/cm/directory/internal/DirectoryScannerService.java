@@ -17,16 +17,6 @@
  */
 package org.ops4j.pax.cm.directory.internal;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.apache.felix.cm.ChangeSetBean;
-import org.apache.felix.cm.ChangeSetListener;
 import org.apache.felix.cm.PersistenceManager;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;

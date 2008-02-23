@@ -1,4 +1,4 @@
-package org.apache.felix.cm;
+package org.ops4j.pax.cm.service;
 
 /**
  * Created by IntelliJ IDEA.
@@ -7,7 +7,7 @@ package org.apache.felix.cm;
  * Time: 3:37:07 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ChangeSetSource
+public interface ChangeSetProducer
 {
 
     void addListener( ChangeSetListener listener );

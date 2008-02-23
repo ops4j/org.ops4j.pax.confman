@@ -34,6 +34,7 @@
 
   <modules>
     <module>pax-confman-fca</module>
+    <module>pax-confman-service</module>
     <module>pax-confman-directory</module>
   </modules>
 
