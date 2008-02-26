@@ -33,8 +33,7 @@
   </issueManagement>
 
   <modules>
-    <module>pax-confman-service</module>
-    <module>pax-confman-directory</module>
+    <module>propsloader</module>
   </modules>
 
   <build>
@@ -61,7 +60,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>1.2.1</version>
+          <version>1.2.0</version>
           <extensions>true</extensions>
           <configuration>
             <instructions>
@@ -75,32 +74,21 @@
 
   <properties>
     <dependency.base.version>0.5.0</dependency.base.version>
-    <dependency.swissbox.version>0.2.0</dependency.swissbox.version>
+    <dependency.swissbox.version>0.1.0</dependency.swissbox.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      
       <!-- OPS4J Base -->
       <dependency>
         <groupId>org.ops4j.base</groupId>
         <artifactId>ops4j-base-lang</artifactId>
         <version>${dependency.base.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.ops4j.base</groupId>
-        <artifactId>ops4j-base-util-property</artifactId>
-        <version>${dependency.base.version}</version>
-      </dependency>
       <!-- OPS4J Pax Swissbox -->
       <dependency>
         <groupId>org.ops4j.pax.swissbox</groupId>
         <artifactId>pax-swissbox-optional-jcl</artifactId>
-        <version>${dependency.swissbox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.ops4j.pax.swissbox</groupId>
-        <artifactId>pax-swissbox-property</artifactId>
         <version>${dependency.swissbox.version}</version>
       </dependency>
       <!-- OSGi Alliance -->
@@ -114,7 +102,6 @@
         <artifactId>org.osgi.compendium</artifactId>
         <version>4.0.1</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 

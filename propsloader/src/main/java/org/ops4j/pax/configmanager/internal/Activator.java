@@ -3,13 +3,13 @@ package org.ops4j.pax.configmanager.internal;
 import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ops4j.pax.configmanager.IConfigurationFileHandler;
+import org.ops4j.pax.configmanager.internal.handlers.PropertiesFileConfigurationHandler;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
-import org.ops4j.pax.configmanager.IConfigurationFileHandler;
-import org.ops4j.pax.configmanager.internal.handlers.PropertiesFileConfigurationHandler;
 
 public final class Activator implements BundleActivator
 {
