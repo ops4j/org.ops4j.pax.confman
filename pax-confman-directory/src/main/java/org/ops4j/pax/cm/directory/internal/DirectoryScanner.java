@@ -18,6 +18,7 @@
 package org.ops4j.pax.cm.directory.internal;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -25,7 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
@@ -69,13 +72,9 @@ class DirectoryScanner
     private final Map<String, ConfigurationFile> m_configurationFiles;
 
     /**
-     * Scanning thread. Null if not active.
+     * Sheduled executor service.
      */
-    private Thread m_scanningThread;
-    /**
-     * Signal sent to scanning thread in order to stop it.
-     */
-    private boolean m_stopSignal;
+    private ScheduledExecutorService m_executor;
 
     /**
      * Constructor.
@@ -103,12 +102,10 @@ class DirectoryScanner
      */
     synchronized void start()
     {
-        if( m_scanningThread == null )
+        if( m_executor == null )
         {
-            m_scanningThread = new Thread(
-                new Scanner(), "Pax ConfMan - " + m_configurationDirectory
-            );
-            m_scanningThread.start();
+            m_executor = Executors.newSingleThreadScheduledExecutor();
+            m_executor.scheduleWithFixedDelay( new Scanner(), 0, m_pollInterval, TimeUnit.MILLISECONDS );
         }
     }
 
@@ -117,11 +114,10 @@ class DirectoryScanner
      */
     synchronized void stop()
     {
-        if( m_scanningThread != null )
+        if( m_executor != null )
         {
-            m_stopSignal = true;
-            m_scanningThread.interrupt();
-            m_scanningThread = null;
+            m_executor.shutdown();
+            m_executor = null;
         }
     }
 
@@ -172,31 +168,19 @@ class DirectoryScanner
 
         public void run()
         {
-            while( !m_stopSignal )
+            try
             {
-                try
+                synchronized( m_configurationFiles )
                 {
-                    try
-                    {
-                        synchronized( m_configurationFiles )
-                        {
-                            scan();
-                        }
-                    }
-                    catch( Throwable ignore )
-                    {
-                        // catch everything as we should not die if something goes wrong during scanning
-                        LOG.error( "Exception while scanning " + m_configurationDirectory, ignore );
-                    }
-
-                    Thread.sleep( m_pollInterval );
-                }
-                catch( InterruptedException ignore )
-                {
-                    // ignore
+                    scan();
                 }
             }
-            m_stopSignal = false;
+            catch( Throwable ignore )
+            {
+                // catch everything as we should not die if something goes wrong during scanning
+                LOG.error( "Exception while scanning " + m_configurationDirectory, ignore );
+            }
+
         }
 
     }
