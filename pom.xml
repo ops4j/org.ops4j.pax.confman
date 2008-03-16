@@ -10,7 +10,7 @@
 
   <groupId>org.ops4j.pax</groupId>
   <artifactId>confman</artifactId>
-  <version>0.2.2</version>
+  <version>0.2.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>OPS4J Pax ConfMan</name>
@@ -19,8 +19,8 @@
   </description>
 
   <scm>
-    <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/pax/confman-0.2.2</connection>
-    <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/pax/confman-0.2.2</developerConnection>
+    <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/confman</connection>
+    <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/pax/confman</developerConnection>
   </scm>
 
   <issueManagement>
