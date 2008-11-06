@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.lang.NullArgumentException;
@@ -36,14 +37,14 @@ import org.osgi.service.cm.ConfigurationAdmin;
 
 /**
  * {@code ConfigurationAdminFacade} has most of the code from the old {@code Activator}.
- *
+ * 
  * @author Edward Yakop
  * @author Makas Tzavellas
  */
 final class ConfigurationAdminFacade
 {
 
-    private static final Log LOGGER = LogFactory.getLog( ConfigurationAdminFacade.class );
+    private static final Log LOGGER = LogFactory.getLog(ConfigurationAdminFacade.class);
 
     public static final String DIRECTORY_NAME_FACTORIES = "factories";
     public static final String DIRECTORY_NAME_SERVICES = "services";
@@ -67,17 +68,18 @@ final class ConfigurationAdminFacade
         m_handlers = new ArrayList<IConfigurationFileHandler>();
     }
 
+
     /**
      * Add the specified {@code handler} to this {@code ConfigurationAdminFacade}. The handler will be used to handle
      * configuration file during {@code registerConfigurations}.
-     *
+     * 
      * @param handler The file handler. This argument must not be {@code null}.
-     *
+     * 
      * @throws IllegalArgumentException Thrown if the specified {@code handler} is {@code null}.
      * @since 1.0.0
      */
     final void addFileHandler( IConfigurationFileHandler handler )
-        throws IllegalArgumentException
+    throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( handler, "handler" );
 
@@ -88,7 +90,7 @@ final class ConfigurationAdminFacade
             // Reload all configurations just in case if this is added later
             try
             {
-                registerConfigurations( null, false );
+                registerConfigurations(null, false);
             } catch( IOException e )
             {
                 String msg = "IOException by either getting the configuration admin or loading the configuration file.";
@@ -100,18 +102,19 @@ final class ConfigurationAdminFacade
         }
     }
 
+
     /**
      * Registers configuration for OSGi Managed services.
-     *
+     * 
      * @param configuration if null then all configuration found will be registered.
      * @param overwrite     A {@code boolean} indicator to overwrite the configuration
-     *
+     * 
      * @throws IOException            Thrown if there is an IO problem during loading of {@code configuration}.
      * @throws InvalidSyntaxException Thrown if there is an invalid exception during retrieval of configurations.
      * @throws IllegalStateException  Thrown if the configuration admin service is not available.
      */
     final void registerConfigurations( String configuration, boolean overwrite )
-        throws IOException, InvalidSyntaxException, IllegalStateException
+    throws IOException, InvalidSyntaxException, IllegalStateException
     {
         if( m_configAdminService == null )
         {
@@ -138,18 +141,18 @@ final class ConfigurationAdminFacade
         {
             for( Configuration existingConfig : existingConfigurations )
             {
-                configCache.add( existingConfig.getPid() );
+                configCache.add(existingConfig.getPid());
             }
         }
 
         // Create configuration for ManagedServiceFactory
-        createConfiguration( configuration, configDir, configCache, true );
+        createConfiguration(configuration, configDir, configCache, true);
         // Create configuration for ManagedService
-        createConfiguration( configuration, configDir, configCache, false );
+        createConfiguration(configuration, configDir, configCache, false);
     }
 
     private void createConfiguration( String configuration, File configDir, Set<String> configCache, boolean isFactory )
-        throws IOException
+    throws IOException
     {
         File dir;
         if( isFactory )
@@ -168,29 +171,19 @@ final class ConfigurationAdminFacade
         }
 
         String[] files = dir.list();
-        for( String configFile : files )
+        for( String configFileName : files )
         {
-            createConfigurationForFile( configuration, configFile, configCache, dir, isFactory );
+            createConfigurationForFile( configuration, configFileName, configCache, dir, isFactory );
         }
     }
 
-    private void createConfigurationForFile(
-        String configuration, String configFile, Set<String> configCache, File dir, boolean isFactory
-    )
-        throws IOException
+
+    private void createConfigurationForFile( String configuration, String configFileName,
+        Set<String> configCache, File dir, boolean isFactory )
+    throws IOException
     {
-        if( configuration != null && !configFile.equals( configuration ) )
-        {
-            return;
-        }
 
-        // If configuration already exist for the service, dont update. Will be empty if iIsOverwrite is true.
-        if( configCache.contains( configFile ) )
-        {
-            return;
-        }
-
-        File f = new File( dir, configFile );
+        File f = new File( dir, configFileName );
         if( !f.isDirectory() )
         {
             List<IConfigurationFileHandler> handlers;
@@ -200,15 +193,35 @@ final class ConfigurationAdminFacade
                 handlers = new ArrayList<IConfigurationFileHandler>( m_handlers );
             }
 
+            // since the configFileName might end with a file type suffix, we have to check
+            // all file handlers
             for( IConfigurationFileHandler handler : handlers )
             {
+                // check if we have the correct file handler for the file
                 if( handler.canHandle( f ) )
                 {
-                    handle( handler, configFile, f, isFactory );
+                    // get the service PID
+                    String servicePid = handler.getServicePID( configFileName );
+
+                    // check if the service is already configured
+                    if( configCache.contains( servicePid ) )
+                    {
+                        return;
+                    }
+
+                    // check if the service is the one that should be configured
+                    if( (configuration != null) && !servicePid.equals( configuration ) )
+                    {
+                        return;
+                    }
+
+                    // configure the service
+                    handle( handler, configFileName, f, isFactory );
                 }
             }
         }
     }
+
 
     /**
      * Handle the extraction and registration of the configuration into the config service.
@@ -222,14 +235,13 @@ final class ConfigurationAdminFacade
      * in your client code that registeres the managed service.
      */
     private void handle( IConfigurationFileHandler handler, String configFile, File file, boolean isFactory )
-        throws IOException
+    throws IOException
     {
         String servicePid = handler.getServicePID( configFile );
-        Properties prop = handler.handle( file );
+        Properties prop = handler.handle(file);
 
         // Find out if a service.pid property is included, use it if it does
-
-        String str = (String) prop.get( Constants.SERVICE_PID );
+        String str = (String) prop.get(Constants.SERVICE_PID);
         if( str != null )
         {
             servicePid = str;
@@ -244,7 +256,7 @@ final class ConfigurationAdminFacade
             else
             {
                 Configuration conf = m_configAdminService.getConfiguration( servicePid, null );
-                conf.update( prop );
+                conf.update(prop);
             }
         }
 
@@ -264,7 +276,7 @@ final class ConfigurationAdminFacade
         }
 
         LOGGER.info( "Using configuration from [" + configArea + "]" );
-        File dir = new File( configArea );
+        File dir = new File(configArea);
         if( !dir.exists() )
         {
             String absolutePath = dir.getAbsolutePath();
@@ -273,6 +285,7 @@ final class ConfigurationAdminFacade
         }
         return dir;
     }
+
 
     /**
      * Dispose this {@code ConfigurationAdminFacade} instance. Once this object instance is disposed, it is not meant to
@@ -290,66 +303,67 @@ final class ConfigurationAdminFacade
 
         if( configDir == null )
         {
-            writer.println( "Configuration dir is not setup." );
+            writer.println("Configuration dir is not setup.");
             return;
         }
 
         if( fileName != null )
         {
-            printConfiguration( writer, fileName, configDir );
+            printConfiguration(writer, fileName, configDir);
             return;
         }
 
         String configAbsolutePath = configDir.getAbsolutePath();
-        writer.println( "config dir: [" + configAbsolutePath + "] contains the following config files:" );
+        writer.println("config dir: [" + configAbsolutePath + "] contains the following config files:");
         String[] files = configDir.list();
         for( String file : files )
         {
-            writer.println( file );
+            writer.println(file);
         }
     }
 
     private void printConfiguration( PrintWriter writer, String fileName, File configDir )
     {
-        File configFile = new File( configDir, fileName );
+        File configFile = new File(configDir, fileName);
         String absolutePath = configFile.getAbsolutePath();
         if( !configFile.canRead() || !configFile.exists() )
         {
-            writer.println( "Can't read configfile [" + absolutePath + "]" );
+            writer.println("Can't read configfile [" + absolutePath + "]");
             return;
         }
 
         Properties props = new Properties();
         try
         {
-            InputStream in = new FileInputStream( configFile );
-            props.load( in );
+            InputStream in = new FileInputStream(configFile);
+            props.load(in);
         }
         catch( Exception e )
         {
             String message = "Can't read configfile [" + absolutePath + "] - not a correct config file";
-            writer.println( message );
+            writer.println(message);
             return;
         }
 
-        writer.println( "Config file: [" + absolutePath + "]" );
+        writer.println("Config file: [" + absolutePath + "]");
         for( Object keyObject : props.keySet() )
         {
             String key = (String) keyObject;
-            String value = props.getProperty( key );
-            writer.println( key + " = " + value );
+            String value = props.getProperty(key);
+            writer.println(key + " = " + value);
         }
     }
 
+
     /**
      * Remove the specified {@code handler} from this {@code ConfigurationAdminFacade}.
-     *
+     * 
      * @param handler The handler to be removed. This argument must not be {@code null}.
-     *
+     * 
      * @throws IllegalArgumentException Thrown if the specified {@code handler} is {@code null}.
      */
     final void removeFileHandler( IConfigurationFileHandler handler )
-        throws IllegalArgumentException
+    throws IllegalArgumentException
     {
         NullArgumentException.validateNotNull( handler, "handler" );
 
@@ -359,9 +373,10 @@ final class ConfigurationAdminFacade
         }
     }
 
+
     /**
      * Set the configuration admin service. Sets to {@code null} if the configuration admin service is not available.
-     *
+     * 
      * @param configurationAdminService The configuration admin.
      */
     final void setConfigurationAdminService( ConfigurationAdmin configurationAdminService )
@@ -381,12 +396,12 @@ final class ConfigurationAdminFacade
 
         /**
          * Returns the value of the specified property.
-         *
+         * 
          * @param key the name of the requested property
-         *
+         * 
          * @return the value of the requested property, or null if not available
          */
-        String getProperty( String key );
+        String getProperty(String key);
 
     }
 }
