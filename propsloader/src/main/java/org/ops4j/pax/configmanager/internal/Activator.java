@@ -16,9 +16,11 @@
 package org.ops4j.pax.configmanager.internal;
 
 import java.util.Hashtable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ops4j.pax.configmanager.IConfigurationFileHandler;
+import org.ops4j.pax.configmanager.IConfigurationUpdater;
 import org.ops4j.pax.configmanager.internal.handlers.PropertiesFileConfigurationHandler;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -34,8 +36,9 @@ public final class Activator implements BundleActivator
 
     private ServiceTracker m_configTracker;
     private ConfigurationFileHandlerServiceTracker m_configFileTracker;
-    private ServiceRegistration m_registration;
+    private ServiceRegistration m_propertyFileHandlerRegistration;
     private ConfigurationAdminFacade m_configAdminFacade;
+    private ServiceRegistration m_configUpdaterRegistration;
 
     public void start( final BundleContext context )
         throws Exception
@@ -48,19 +51,18 @@ public final class Activator implements BundleActivator
         }
 
         PropertiesFileConfigurationHandler handler = new PropertiesFileConfigurationHandler();
-        m_registration = context.registerService( SERVICE_NAME, handler, new Hashtable() );
-        m_configAdminFacade = new ConfigurationAdminFacade(
-            new ConfigurationAdminFacade.PropertyResolver()
-            {
+        m_propertyFileHandlerRegistration = context.registerService( Activator.SERVICE_NAME, handler, new Hashtable() );
+        m_configAdminFacade = new ConfigurationAdminFacade( new ConfigurationAdminFacade.PropertyResolver()
+        {
 
-                /**
-                 * Resolves properties from bundle context.
-                 * @see ConfigurationAdminFacade.PropertyResolver#getProperty(String)
-                 */
-                public String getProperty( final String key )
-                {
-                    return context.getProperty( key );
-                }
+            /**
+             * Resolves properties from bundle context.
+             * @see ConfigurationAdminFacade.PropertyResolver#getProperty(String)
+             */
+            public String getProperty( final String key )
+            {
+                return context.getProperty( key );
+            }
 
             }
         );
@@ -70,6 +72,10 @@ public final class Activator implements BundleActivator
 
         m_configFileTracker = new ConfigurationFileHandlerServiceTracker( context, m_configAdminFacade );
         m_configFileTracker.open();
+
+        ConfigurationUpdater configurationUpdater = new ConfigurationUpdater( this.m_configAdminFacade );
+        this.m_configUpdaterRegistration = context.registerService( IConfigurationUpdater.class.getName(),
+            configurationUpdater, new Hashtable() );
     }
 
     public void stop( BundleContext context )
@@ -82,8 +88,11 @@ public final class Activator implements BundleActivator
             LOGGER.debug( "Stopping [" + symbolicName + "]" );
         }
 
-        m_registration.unregister();
-        m_registration = null;
+        m_propertyFileHandlerRegistration.unregister();
+        m_propertyFileHandlerRegistration = null;
+
+        m_configUpdaterRegistration.unregister();
+        m_configUpdaterRegistration = null;
 
         m_configFileTracker.close();
         m_configFileTracker = null;
