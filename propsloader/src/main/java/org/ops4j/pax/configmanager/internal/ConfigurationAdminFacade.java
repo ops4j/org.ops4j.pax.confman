@@ -88,16 +88,21 @@ final class ConfigurationAdminFacade
             m_handlers.add( 0, handler );
 
             // Reload all configurations just in case if this is added later
-            try
-            {
-                registerConfigurations(null, false);
-            } catch( IOException e )
-            {
-                String msg = "IOException by either getting the configuration admin or loading the configuration file.";
-                LOGGER.error( msg, e );
-            } catch( InvalidSyntaxException e )
-            {
-                LOGGER.error( "Invalid syntax. This should not happened.", e );
+            // Only do this though if the config admin service is available. If
+            // the config admin service is not currently available, the registerConfigurations
+            // call is delayed until the config admin service is available
+            if (m_configAdminService != null) {
+                try
+                {
+                    registerConfigurations(null, false);
+                } catch( IOException e )
+                {
+                    String msg = "IOException by either getting the configuration admin or loading the configuration file.";
+                    LOGGER.error( msg, e );
+                } catch( InvalidSyntaxException e )
+                {
+                    LOGGER.error( "Invalid syntax. This should not happened.", e );
+                }
             }
         }
     }
