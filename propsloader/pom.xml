@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.ops4j.pax</groupId>
     <artifactId>confman</artifactId>
-    <version>0.2.3-SNAPSHOT</version>
+    <version>0.2.3</version>
   </parent>
 
   <groupId>org.ops4j.pax.confman</groupId>
   <artifactId>pax-confman-propsloader</artifactId>
-  <version>0.2.3-SNAPSHOT</version>
+  <version>0.2.3</version>
   <packaging>bundle</packaging>
 
   <name>OPS4J Pax ConfMan - Properties Loader</name>
