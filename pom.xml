@@ -19,8 +19,8 @@
   </description>
 
   <scm>
-    <connection>scm:git@github.com:ops4j/org.ops4j.pax.confman.git</connection>
-    <developerConnection>scm:git@github.com:ops4j/org.ops4j.pax.confman.git</developerConnection>
+    <connection>scm:git:git@github.com:ops4j/org.ops4j.pax.confman.git</connection>
+    <developerConnection>scm:git:git@github.com:ops4j/org.ops4j.pax.confman.git</developerConnection>
     <url>git@github.com:ops4j/org.ops4j.pax.confman.git</url>
   </scm>
 
